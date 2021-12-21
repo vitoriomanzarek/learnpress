@@ -50,6 +50,15 @@ document.addEventListener( 'DOMContentLoaded', function( event ) {
 	if ( document.querySelector( '#widgets-editor' ) ) {
 		$( document ).on( 'widget-added', function( event, widget ) {
 			autocompleteWidget( widget );
+
+			const displayType = $(
+				"#widget-learnpress_widget_course_info-1-display_type"
+			).val();
+			if (displayType != "course_id") {
+				$("#widget-learnpress_widget_course_info-1-course_id")
+					.closest("p")
+					.hide();
+			}
 		} );
 	} else {
 		$( document ).on( 'learnpress/widgets/select', function() {
@@ -58,4 +67,24 @@ document.addEventListener( 'DOMContentLoaded', function( event ) {
 
 		autocompleteWidget();
 	}
+	$(document).on(
+		"change",
+		"#widget-learnpress_widget_course_info-1-display_type",
+		function () {
+			if (this.value == "course_id") {
+				$("#widget-learnpress_widget_course_info-1-course_id")
+					.closest("p")
+					.show();
+			} else {
+				console.log('ccc');
+				$("#widget-learnpress_widget_course_info-1-course_id")
+					.closest("p")
+					.hide();
+			}
+		}
+	);
 } );
+
+
+
+
