@@ -4,7 +4,12 @@ function formatCourse( repo ) {
 	if ( repo.loading ) {
 		return repo.text;
 	}
-	const markup = "<div class='select2-result-course_title'>" + repo.id + ' - ' + repo.title.rendered + '</div>';
+	const markup =
+		"<div class='select2-result-course_title'>" +
+		repo.id +
+		' - ' +
+		repo.title.rendered +
+		'</div>';
 	return markup;
 }
 
@@ -46,10 +51,38 @@ function autocompleteWidget( widget = null ) {
 	} );
 }
 
+function loadWidgetCourseInfo() {
+	const elements = $( '#widget-learnpress_widget_course_info-1-display_type' );
+
+	if ( ! elements.length > 0 ) {
+		return;
+	}
+	const displayType = elements.val();
+
+	if ( displayType != 'course_id' ) {
+		$( '#widget-learnpress_widget_course_info-1-course_id' ).closest( 'p' ).hide();
+	}
+}
+
+function changeActionWidgetCourseInfo() {
+	$( document ).on(
+		'change',
+		'#widget-learnpress_widget_course_info-1-display_type',
+		function() {
+			if ( this.value == 'course_id' ) {
+				$( '#widget-learnpress_widget_course_info-1-course_id' ).closest( 'p' ).show();
+			} else {
+				$( '#widget-learnpress_widget_course_info-1-course_id' ).closest( 'p' ).hide();
+			}
+		}
+	);
+}
+
 document.addEventListener( 'DOMContentLoaded', function( event ) {
 	if ( document.querySelector( '#widgets-editor' ) ) {
 		$( document ).on( 'widget-added', function( event, widget ) {
 			autocompleteWidget( widget );
+			loadWidgetCourseInfo();
 		} );
 	} else {
 		$( document ).on( 'learnpress/widgets/select', function() {
@@ -58,4 +91,5 @@ document.addEventListener( 'DOMContentLoaded', function( event ) {
 
 		autocompleteWidget();
 	}
+	changeActionWidgetCourseInfo();
 } );
