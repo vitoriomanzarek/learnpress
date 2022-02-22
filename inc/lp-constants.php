@@ -2,19 +2,19 @@
 /**
  * Define common constants used by LearnPress
  */
-include_once ABSPATH . 'wp-admin/includes/plugin.php';
+require_once ABSPATH . 'wp-admin/includes/plugin.php';
 $upload_dir  = wp_upload_dir();
 $plugin_info = get_plugin_data( LP_PLUGIN_FILE );
 
 // version.
 define( 'LEARNPRESS_VERSION', $plugin_info['Version'] );
 
-//define( 'LP_WP_CONTENT', basename( WP_CONTENT_DIR ) );
+// define( 'LP_WP_CONTENT', basename( WP_CONTENT_DIR ) );
 
 // Plugin paths and urls.
 define( 'LP_PLUGIN_PATH', trailingslashit( plugin_dir_path( LP_PLUGIN_FILE ) ) );
 define( 'LP_TEMPLATE_PATH', LP_PLUGIN_PATH . 'templates/' );
-//define( 'LP_CONTENT_PATH', '/' . LP_WP_CONTENT . '/plugins/learnpress/' );
+// define( 'LP_CONTENT_PATH', '/' . LP_WP_CONTENT . '/plugins/learnpress/' );
 define( 'LP_PLUGIN_URL', trailingslashit( plugins_url( '/', LP_PLUGIN_FILE ) ) );
 define( 'LP_JS_URL', LP_PLUGIN_URL . 'assets/js/' );
 define( 'LP_CSS_URL', LP_PLUGIN_URL . 'assets/css/' );
@@ -43,7 +43,7 @@ const LP_TEACHER_ROLE = 'lp_teacher';
 const ADMIN_ROLE      = 'administrator';
 
 // Turn debug mode on/off.
-//define( 'LP_DEBUG', true );
+// define( 'LP_DEBUG', true );
 
 // Options.
 define( 'LP_USE_ATTRIBUTES', false );
@@ -108,3 +108,7 @@ const LP_LAZY_LOAD_ANIMATION = true;
  * Thim Market library
  */
 define( 'TMP_ROOT', LP_PLUGIN_PATH . 'inc/libraries/' );
+
+// addon to core LP
+define( 'LP_COURSE_REVIEW_PER_PAGE', 1 );
+

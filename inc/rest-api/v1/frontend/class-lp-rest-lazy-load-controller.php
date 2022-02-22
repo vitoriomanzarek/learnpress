@@ -40,6 +40,13 @@ class LP_REST_Lazy_Load_Controller extends LP_Abstract_REST_Controller {
 					'permission_callback' => '__return_true',
 				),
 			),
+			'course-review'           => array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'course_review' ),
+					'permission_callback' => '__return_true',
+				),
+			),
 		);
 
 		parent::register_routes();
@@ -304,6 +311,53 @@ class LP_REST_Lazy_Load_Controller extends LP_Abstract_REST_Controller {
 
 			$response->data     = $content;
 			$response->item_ids = wp_list_pluck( $section_items['results'], 'ID' );
+		} catch ( \Throwable $th ) {
+			$response->message = $th->getMessage();
+		}
+
+		return rest_ensure_response( $response );
+	}
+
+	/**
+	 * Load course review on the single course
+	 *
+	 * @param WP_REST_Request $request
+	 *
+	 * @return void
+	 * @author minhpd
+	 * @since 4.1.5
+	 * @version 1.0.0
+	 */
+	public function course_review( WP_REST_Request $request ) {
+		$params    = $request->get_params();
+		$course_id = absint( $params['courseId'] ?? 0 );
+
+		$response       = new LP_REST_Response();
+		$response->data = '';
+
+		try {
+			if ( empty( $course_id ) ) {
+				throw new Exception( esc_html__( 'Course is invalid!', 'learnpress' ) );
+			}
+			$user            = learn_press_get_current_user();
+			$course_rate_res = learn_press_get_course_rate( $course_id, false );
+			$course_review   = LP_Course_Reviews_DB::getInstance()->learn_press_get_course_review( $course_id, 1 );
+
+			if ( ! $user->has_course_status( $course_id, array( 'enrolled', 'completed', 'finished' ) ) ) {
+				throw new Exception( esc_html__( 'Please enroll or finish your course before reviewing! ', 'learnpress' ) );
+			}
+
+			$response->data   = learn_press_get_template_content(
+				'single-course/tabs/reviews/reviews.php',
+				array(
+					'course_id'       => $course_id,
+					'user'            => $user,
+					'course_rate_res' => $course_rate_res,
+					'course_review'   => $course_review,
+				)
+			);
+			$response->status = 'success';
+
 		} catch ( \Throwable $th ) {
 			$response->message = $th->getMessage();
 		}

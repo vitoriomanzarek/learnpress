@@ -3869,3 +3869,69 @@ add_filter(
 		return $theme_template_id;
 	}
 );
+
+/**
+ * Get ratings by course ID
+ *
+ * @param $course_id
+ */
+function _learn_press_get_ratings( $course_id ) {
+
+	static $course_rates = array();
+	if ( ! is_array( $course_id ) ) {
+		$ids = array( $course_id );
+	} else {
+		$ids = $course_id;
+	}
+	foreach ( $ids as $cid ) {
+		if ( ! isset( $course_rates[ $cid ] ) ) {
+			$course_rates[ $cid ] = LP_Course_Reviews_DB::getInstance()->leanr_press_get_ratings_result( $cid );
+		}
+	}
+
+	return $course_rates;
+}
+
+/**
+ * @param $course_id
+ * @param $field
+ *
+ * @return mixed
+ */
+function learn_press_get_course_rate( $course_id, $field = 'rated' ) {
+	$ratings = _learn_press_get_ratings( $course_id );
+	$rate    = ( $field && array_key_exists( $field, $ratings[ $course_id ] ) ) ? $ratings[ $course_id ][ $field ] : $ratings[ $course_id ];
+
+	return apply_filters( 'learn_press_get_course_rate', $rate );
+}
+
+/**
+ * show meta data course review in single course
+ * @param $course_id
+ * @param $field
+ *
+ * @return mixed
+ */
+
+function learn_press_course_meta_primary_review() {
+
+	$course = LP_Global::course();
+	if ( LP_COURSE_CPT !== get_post_type() ) {
+		return;
+	}
+
+	$course_rate_res = learn_press_get_course_rate( get_the_ID(), false );
+	?>
+	<div class="meta-item meta-item-review">
+		<div class="meta-item__value">
+			<div>
+				<?php learn_press_get_template( 'single-course/tabs/reviews/rating-stars.php', array( 'rated' => $course_rate_res['rated'] ) ); ?>
+			</div>
+			<label><?php esc_html_e( 'Review', 'learnpress' ); ?></label>
+		</div>
+	</div>
+	<?php
+}
+add_filter( 'learn-press/course-meta-primary-left', 'learn_press_course_meta_primary_review', 30 );
+
+

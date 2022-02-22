@@ -20,7 +20,7 @@ if ( ! class_exists( 'LP_Shortcode_Become_A_Teacher' ) ) {
 		protected static $messages = array();
 
 		/**
-		 * LP_Checkout_Shortcode constructor.
+		 * LP_Shortcode_Become_A_Teacher constructor.
 		 *
 		 * @param mixed $atts
 		 */

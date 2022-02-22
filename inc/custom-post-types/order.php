@@ -428,8 +428,19 @@ if ( ! class_exists( 'LP_Order_Post_Type' ) ) {
 			$s = $wp_query->get( 's' );
 
 			if ( $s ) {
+
+				preg_match( '/#/', $s, $matches_id );
+				if ( ! empty( $matches_id ) ) {
+					$s = str_replace( $matches_id[0], '', $s );
+				}
+				if ( is_numeric( $s ) ) {
+					$s = absint( $s );
+				}
+
 				$s = '%' . $wpdb->esc_like( $s ) . '%';
+
 				preg_match( "#{$wpdb->posts}\.post_title LIKE#", $where, $matches2 );
+
 				$sql = " {$wpdb->posts}.ID IN (
 					SELECT
 						IF( p.post_parent >0, p.post_parent, p.ID)
@@ -448,7 +459,6 @@ if ( ! class_exists( 'LP_Order_Post_Type' ) ) {
 						OR {$wpdb->posts}.ID LIKE %s
 					) ";
 				$sql = $wpdb->prepare( $sql, array( LP_ORDER_CPT, '_user_id', $s, $s, $s, $s, $s ) );
-				// print_r($sql);die('ccc');
 				// search order via course name
 				$sql .= ' OR ' . $wpdb->prepare(
 					" {$wpdb->posts}.ID IN (

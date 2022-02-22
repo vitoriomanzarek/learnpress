@@ -1,8 +1,9 @@
+/* eslint-disable @wordpress/no-unused-vars-before-return */
 import SingleCourse from './single-course/index';
-import { addQueryArgs } from '@wordpress/url';
 import lpModalOverlayCompleteItem from './show-lp-overlay-complete-item';
 import lpModalOverlay from '../utils/lp-modal-overlay';
 import courseCurriculumSkeleton from './single-curriculum/skeleton';
+import courseReviewSkeleton from './single-course/course-review/reviews';
 
 export default SingleCourse;
 
@@ -332,28 +333,30 @@ const accordionExtraTab = () => {
 };
 
 const courseContinue = () => {
-	const formContinue = document.querySelector( 'form.continue-course' );
+	const formContinue = document.querySelectorAll( 'form.continue-course' );
 
-	if ( formContinue != null ) {
-		const getResponse = async ( ele ) => {
-			const response = await wp.apiFetch( {
-				path: 'lp/v1/courses/continue-course',
-				method: 'POST',
-				data: {
-					courseId: lpGlobalSettings.post_id || '',
-					userId: lpGlobalSettings.user_id || '',
-				},
+	formContinue.forEach( function( form ) {
+		if ( form != null ) {
+			const getResponse = async ( ele ) => {
+				const response = await wp.apiFetch( {
+					path: 'lp/v1/courses/continue-course',
+					method: 'POST',
+					data: {
+						courseId: lpGlobalSettings.post_id || '',
+						userId: lpGlobalSettings.user_id || '',
+					},
+				} );
+
+				return response;
+			};
+			getResponse( form ).then( function( result ) {
+				if ( result.status === 'success' ) {
+					form.style.display = 'block';
+					form.action = result.data;
+				}
 			} );
-
-			return response;
-		};
-		getResponse( formContinue ).then( function( result ) {
-			if ( result.status === 'success' ) {
-				formContinue.style.display = 'block';
-				formContinue.action = result.data;
-			}
-		} );
-	}
+		}
+	} );
 };
 
 export {
@@ -376,4 +379,5 @@ $( window ).on( 'load', () => {
 	courseContinue();
 	lpModalOverlayCompleteItem.init();
 	courseCurriculumSkeleton();
+	courseReviewSkeleton();
 } );

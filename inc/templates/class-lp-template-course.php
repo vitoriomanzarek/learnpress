@@ -647,6 +647,30 @@ class LP_Template_Course extends LP_Abstract_Template {
 	}
 
 	/**
+	 * Get template content course review
+	 */
+	public function course_review() {
+		$course = LP_Global::course();
+		if ( ! $course ) {
+			return;
+		}
+		?>
+		<div class="learnpress-course-review" data-id="<?php echo $course->get_id(); ?>">
+			<ul class="lp-skeleton-animation">
+				<li style="width: 100%; height: 20px"></li>
+				<li style="width: 100%; height: 20px"></li>
+				<li style="width: 100%; height: 20px"></li>
+				<li style="width: 100%; height: 20px"></li>
+				<li style="width: 100%; height: 20px"></li>
+				<li style="width: 100%; height: 20px"></li>
+				<li style="width: 100%; height: 20px"></li>
+			</ul>
+		</div>
+		<?php
+	}
+
+
+	/**
 	 * Get template content item's course
 	 */
 	public function course_content_item() {
@@ -711,7 +735,8 @@ class LP_Template_Course extends LP_Abstract_Template {
 		// End
 
 		// Get timestamp remaining duration of course
-		/*$course_item = $item->get_course();
+		/*
+		$course_item = $item->get_course();
 		if ( ! $course_item ) {
 			return;
 		}*/

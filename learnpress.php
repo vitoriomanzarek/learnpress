@@ -264,6 +264,7 @@ if ( ! class_exists( 'LearnPress' ) ) {
 			require_once 'inc/databases/class-lp-question-db.php';
 			require_once 'inc/databases/class-lp-user-items-db.php';
 			require_once 'inc/databases/class-lp-user-item-results-db.php';
+			require_once 'inc/databases/class-lp-course-reviews-db.php';
 
 			// curds .
 			require_once 'inc/curds/class-lp-helper-curd.php';
