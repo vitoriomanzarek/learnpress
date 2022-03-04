@@ -53,50 +53,58 @@ if ( ! class_exists( 'LP_Shortcode_Course_Review' ) ) {
 
 				$atts      = $this->_atts;
 				$course_id = $atts['course_id'];
-				if ( ! $course_id ) {
-					$course_id = get_the_ID();
-				}
 
-				if ( $atts['show_rate'] == 'yes' ) {
-					$course_rate_res = learn_press_get_course_rate( $course_id, false );
-					if ( $course_rate_res['total'] ) {
-						$rated = $course_rate_res['rated'];
-						$total = $course_rate_res['total'];
-						learn_press_get_template(
-							'single-course/tabs/reviews/count-rated.php',
-							array(
-								'rated'           => $rated,
-								'course_rate_res' => $course_rate_res,
-								'total'           => $total,
-							)
-						);
-					} else {
-						$message = esc_html__( 'No stars for course !', 'learnpress' );
-					}
-				}
+				if ( ! empty( $course_id ) || is_singular( LP_COURSE_CPT ) ) {
 
-				if ( $atts['show_review'] == 'yes' ) {
-					$course_review = LP_Course_Reviews_DB::getInstance()->learn_press_get_course_review( $course_id, 1, $atts['display_amount'] );
-					if ( $course_review['total'] ) {
-						$reviews = $course_review['reviews'];
-						$paged   = $course_review['paged'];
-						$pages   = $course_review['pages'];
-						learn_press_get_template(
-							'single-course/tabs/reviews/loop-review.php',
-							array(
-								'reviews'       => $reviews,
-								'course_id'     => $course_id,
-								'course_review' => $course_review,
-								'paged'         => $paged,
-								'pages'         => $pages,
-							)
-						);
-					} else {
-						$message = esc_html__( 'No reviews for course !', 'learnpress' );
+					if ( is_singular( LP_COURSE_CPT ) && empty( $course_id ) ) {
+						$course_id = get_the_ID();
 					}
+
+					if ( $atts['show_rate'] == 'yes' ) {
+						$course_rate_res = learn_press_get_course_rate( $course_id, false );
+						if ( $course_rate_res['total'] ) {
+							$rated = $course_rate_res['rated'];
+							$total = $course_rate_res['total'];
+							learn_press_get_template(
+								'single-course/tabs/reviews/count-rated.php',
+								array(
+									'rated'           => $rated,
+									'course_rate_res' => $course_rate_res,
+									'total'           => $total,
+								)
+							);
+						} else {
+							$message = esc_html__( 'No stars for course !', 'learnpress' );
+						}
+					}
+
+					if ( $atts['show_review'] == 'yes' ) {
+						$course_review = LP_Course_Reviews_DB::getInstance()->learn_press_get_course_review( $course_id, 1, $atts['display_amount'] );
+						if ( $course_review['total'] ) {
+							$reviews = $course_review['reviews'];
+							$paged   = $course_review['paged'];
+							$pages   = $course_review['pages'];
+							learn_press_get_template(
+								'single-course/tabs/reviews/loop-review.php',
+								array(
+									'reviews'       => $reviews,
+									'course_id'     => $course_id,
+									'course_review' => $course_review,
+									'paged'         => $paged,
+									'pages'         => $pages,
+								)
+							);
+						} else {
+							$message = esc_html__( 'No reviews for course !', 'learnpress' );
+						}
+					}
+				} else {
+					$message = esc_html__( 'Please enter the course_id attribute or view in the single course page !', 'learnpress' );
 				}
 			} else {
-				$message = esc_html__( 'Please enable option Review Course in Settings LearnPress !', 'learnpress' );
+				if ( ! class_exists( 'LP_Addon_Course_Review' ) ) {
+					$message = esc_html__( 'Please enable option Review Course in Settings LearnPress or active plugin LearnPress-Course Review !', 'learnpress' );
+				}
 			}
 			if ( $message ) {
 				learn_press_display_message( $message, 'error' );

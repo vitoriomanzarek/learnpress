@@ -10,7 +10,7 @@
 // Prevent loading this file directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! $reviews || ! $course_review || ! $paged || ! $course_id || ! $pages ) {
+if ( empty( $reviews ) || empty( $course_review ) || empty( $paged ) || empty( $course_id ) || empty( $pages ) ) {
 	return;
 }
 

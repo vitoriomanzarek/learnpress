@@ -36,114 +36,103 @@ export default function courseReviewSkeleton() {
 		}
 
 		skeleton && skeleton.remove();
+
+		addReviewStar();
+
 	};
 
 	skeletonTab();
 
-	// create review and submit
-	// let submitting = false;
-	// const reviewForm = $( '#course-review' );
-	// const btnReview = $( 'button.write-a-review' );
-	// const stars = $( '.review-fields ul > li span' ).each( function( i ) {
-	// 	$( this ).hover( function() {
-	// 		if ( submitting ) {
-	// 			return;
-	// 		}
-	// 		stars.map( function( j ) {
-	// 			$( this ).toggleClass( 'hover', j <= i );
-	// 		} );
-	// 	}, function() {
-	// 		if ( submitting ) {
-	// 			return;
-	// 		}
-	// 		const selected = reviewForm.find( 'input[name="rating"]' ).val();
-	// 		if ( selected ) {
-	// 			stars.map( function( j ) {
-	// 				$( this ).toggleClass( 'hover', j < selected );
-	// 			} );
-	// 		} else {
-	// 			stars.removeClass( 'hover' );
-	// 		}
-	// 	} ).on( 'click', function( e ) {
-	// 		if ( submitting ) {
-	// 			return;
-	// 		}
-	// 		e.preventDefault();
-	// 		reviewForm.find( 'input[name="rating"]' ).val( stars.index( $( this ) ) + 1 );
-	// 	} );
-	// } );
+	const addReviewStar = () => {
+		const reviewStar = document.querySelector('ul.review-stars');
+		if( ! reviewStar ) {
+			return;
+		}
+		const stars = reviewStar.querySelectorAll('li.review-title');
+		let clicked = false;
 
-	// const emptyForm = function() {
-	// 	$( 'button, input[type="text"], textarea', reviewForm ).prop( 'disabled', false );
-	// 	reviewForm.removeClass( 'submitting' ).data( 'selected', '' );
-	// 	stars.removeClass( 'hover' );
-	// };
+		const addClassReview = (stars, title) => {
+			[...stars].map( (starHover) => {
+				const titleHover = starHover.getAttribute('title');
 
-	// const closeForm = () => {
-	// 	reviewForm.find( 'input[name="rating"]' ).val( '' );
-	// 	reviewForm.fadeOut( emptyForm );
-	// };
+				if ( titleHover <= title ) {
+					starHover.querySelector('span').classList.add('hover');
+				} else {
+					starHover.querySelector('span').classList.remove('hover');
+				}
+			});
+		}
 
-	// const submitReview = async ( id, rate, title, content ) => {
-	// 	try {
-	// 		const response = await wp.apiFetch( {
-	// 			path: 'learnpress/v1/review/submit',
-	// 			method: 'POST',
-	// 			data: { id, rate, title, content },
-	// 		} );
+		stars && stars.forEach( (star,index) => {
+			const title = star.getAttribute('title');
+			star.addEventListener('mouseover', () => {
+				if( ! clicked ) {
+					addClassReview( stars, title )
+				};
+			});
 
-	// 		const { status, message } = response;
+			star.addEventListener('click', () => {
+				console.log('object');
+				clicked = true;
+				addClassReview( stars, title );
+				document.querySelector( 'ul.review-fields li.review-actions input[name="rating"]').value = title;
+			});
+		});
 
-	// 		if ( status == 'success' ) {
-	// 			submitting = false;
-	// 			closeForm();
-	// 			LP.reload();
-	// 		} else {
-	// 			reviewForm.find( 'ul.review-fields' ).append( `<li class="lp-ajax-message error" style="display:block" >${ message }</li>` );
-	// 		}
-	// 	} catch ( error ) {
-	// 		reviewForm.find( 'ul.review-fields' ).append( `<li class="lp-ajax-message error" style="display:block" >${ error }</li>` );
-	// 	}
-	// };
+		reviewStar.addEventListener('mouseout', () => {
+			stars.forEach( (starHover) => {
+				!clicked && starHover.querySelector('span').classList.remove('hover');
+			});
+		})
+	}
 
-	// btnReview.on( 'click', function( e ) {
-	// 	e.preventDefault();
-	// 	reviewForm.fadeIn();
-	// } );
+	const submitReview = async ( btnReviewForm ) => {
+		const parenNode = document.querySelector('.learnpress-course-review ul.review-fields');
+		if ( ! parenNode ) {
+			return;
+		}
 
-	// reviewForm.on( 'click', '.review-actions .close', function( e ) {
-	// 	e.preventDefault();
-	// 	closeForm();
-	// } );
+		const reviewTitle = parenNode.querySelector('input[name="review_title"]').value || '';
+		const reviewContent = parenNode.querySelector('textarea[name="review_content"]').value || '';
+		const rating = parenNode.querySelector( 'input[name="rating"]' ).value;
+		const courseID = btnReviewForm.dataset.id;
+		const emptyTitle = parenNode.querySelector( 'input[name="empty_title"]' ).value;
+		const emptyContent = parenNode.querySelector( 'input[name="empty_content"]' ).value;
+		const emptyRating = parenNode.querySelector( 'input[name="empty_rating"]' ).value;
 
-	// reviewForm.on( 'click', '.review-actions .submit-review', function( e ) {
-	// 	e.preventDefault();
-	// 	const reviewTitle = reviewForm.find( 'input[name="review_title"]' ).val();
-	// 	const reviewContent = reviewForm.find( 'textarea[name="review_content"]' ).val();
-	// 	const rating = reviewForm.find( 'input[name="rating"]' ).val();
-	// 	const courseID = $( this ).attr( 'data-id' );
-	// 	const emptyTitle = reviewForm.find( 'input[name="empty_title"]' ).val();
-	// 	const emptyContent = reviewForm.find( 'input[name="empty_content"]' ).val();
-	// 	const emptyRating = reviewForm.find( 'input[name="empty_rating"]' ).val();
+		if ( 0 == reviewTitle.length ) {
+			alert(emptyTitle);
+			return;
+		}
 
-	// 	if ( 0 == reviewTitle.length ) {
-	// 		alert( emptyTitle );
-	// 		return;
-	// 	}
+		if ( 0 == reviewContent.length ) {
+			alert(emptyContent);
+			return;
+		}
 
-	// 	if ( 0 == reviewContent.length ) {
-	// 		alert( emptyContent );
-	// 		return;
-	// 	}
+		if ( 0 == rating ) {
+			alert(emptyRating);
+			return;
+		}
 
-	// 	if ( 0 == rating.length ) {
-	// 		alert( emptyRating );
-	// 		return;
-	// 	}
-	// 	submitReview( courseID, rating, reviewTitle, reviewContent );
-	// } );
+		try {
+			const response = await wp.apiFetch( {
+				path: 'learnpress/v1/review/submit',
+				method: 'POST',
+				data: { id:courseID, rate:rating, title:reviewTitle, content:reviewContent },
+			} );
 
-	// load more review course
+			const { status, message } = response;
+
+			if ( status == 'success' ) {
+				LP.reload();
+			} else {
+				parenNode.innerHTML += `<li class="lp-ajax-message error" style="display:block">${ message }</li>`;
+			}
+		} catch ( error ) {
+			parenNode.innerHTML += `<li class="lp-ajax-message error" style="display:block">${ error }</li>`;
+		}
+	};
 
 	const showMoreReview = async ( ele, id, page, btnLoadReview = false ) => {
 		try {
@@ -177,11 +166,20 @@ export default function courseReviewSkeleton() {
 
 	document.addEventListener( 'click', function( e ) {
 		const btnLoadReview = document.querySelector( '.course-review-load-more' );
-		btnLoadReview.classList.add( 'loading' );
-		const paged = btnLoadReview && btnLoadReview.dataset.paged;
-		const courseID = btnLoadReview && btnLoadReview.dataset.id;
-		const element = document.querySelector( '.course-reviews-list' );
 
-		showMoreReview( element, courseID, paged, btnLoadReview );
+		if ( btnLoadReview &&  btnLoadReview.contains( e.target)  ) {
+			btnLoadReview.classList.add( 'loading' );
+			const paged = btnLoadReview && btnLoadReview.dataset.paged;
+			const courseID = btnLoadReview && btnLoadReview.dataset.id;
+			const element = document.querySelector( '.course-reviews-list' );
+			showMoreReview( element, courseID, paged, btnLoadReview );
+		}
+
+		const btnReviewForm = document.querySelector('li.review-actions .submit-review');
+
+		if ( btnReviewForm &&  btnReviewForm.contains( e.target)  ) {
+			submitReview( btnReviewForm );
+		}
+
 	} );
 }

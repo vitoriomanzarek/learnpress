@@ -10,7 +10,7 @@
 // Prevent loading this file directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! $review ) {
+if ( empty( $review ) ) {
 	return;
 }
 

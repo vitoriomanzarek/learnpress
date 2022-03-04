@@ -10,7 +10,7 @@
 // Prevent loading this file directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! $course_rate_res || ! $rated || ! $total ) {
+if ( empty( $course_rate_res ) || empty( $rated ) || empty( $total ) ) {
 	return;
 }
 ?>

@@ -209,6 +209,26 @@ class LP_Settings_Courses extends LP_Abstract_Settings_Page {
 							'type' => 'sectionend',
 						),
 					)
+				),
+				apply_filters(
+					'learn-press/course-settings-fields/tabs',
+					array(
+						array(
+							'title' => esc_html__( 'Tabs Settings', 'learnpress' ),
+							'type'  => 'title',
+						),
+						array(
+							'title'    => esc_html__( 'Course review', 'learnpress' ),
+							'id'       => 'course_review',
+							'default'  => 'no',
+							'type'     => 'checkbox',
+							'desc_tip' => esc_html__( 'If you are using addon Learnpress - Course Review then please uncheck this option and vice versa', 'learnpress' ),
+							'desc'     => __( 'Enable review courses.', 'learnpress' ),
+						),
+						array(
+							'type' => 'sectionend',
+						),
+					)
 				)
 			)
 		);

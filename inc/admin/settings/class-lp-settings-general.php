@@ -149,14 +149,6 @@ class LP_Settings_General extends LP_Abstract_Settings_Page {
 					'type'    => 'checkbox',
 				),
 				array(
-					'title'    => esc_html__( 'Course review', 'learnpress' ),
-					'id'       => 'course_review',
-					'default'  => 'no',
-					'type'     => 'checkbox',
-					'desc_tip' => esc_html__( 'If you are using addon Learnpress - Course Review then please uncheck this option and vice versa', 'learnpress' ),
-					'desc'     => __( 'Enable review courses.', 'learnpress' ),
-				),
-				array(
 					'type' => 'sectionend',
 				),
 			)

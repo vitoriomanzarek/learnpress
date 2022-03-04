@@ -163,34 +163,7 @@
 	justify-content: center;
 }
 
-.course-review-wrapper {
-	display: none;
-	position: fixed;
-	z-index: 99999;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	text-align: center;
-}
-
-.review-overlay {
-	position: fixed;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	opacity: 0.6;
-	background: #000;
-}
-
 .review-form {
-	display: inline-block;
-	position: relative;
-	width: 80%;
-	max-width: 600px;
-	margin-top: 50px;
-	padding: 20px;
 	background-color: white;
 	text-align: left;
 

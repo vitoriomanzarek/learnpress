@@ -57,38 +57,43 @@ class LP_Widget_Course_Review extends LP_Widget {
 
 	public function lp_rest_api_content( $instance, $params ) {
 
-		if ( LP_Settings::get_option( 'course_review' ) == 'no' ) {
-			return new WP_Error( 'no_option', esc_html__( 'Error: Please enable option Review Course in Settings LearnPress.', 'learnpress' ) );
+		if ( LP_Settings::get_option( 'course_review' ) == 'no' && ! class_exists( 'LP_Addon_Course_Review' ) ) {
+			return new WP_Error( 'no_option', esc_html__( 'Error: Please enable option Review Course in Settings LearnPress or active plugin LearnPress-Course Review.', 'learnpress' ) );
 		}
 
 		if ( ! empty( $instance['course_id'] ) ) {
 			$course_id = absint( $instance['course_id'] );
 			// show rate course widget
 			$course_rate = learn_press_get_course_rate( $course_id, false );
-			$rate_args   = array(
-				'course_id'   => $course_id,
-				'course_rate' => $course_rate,
-			);
+
 			// show review course widget
 			$amount        = ! empty( $instance['amount'] ) ? $instance['amount'] : 1;
 			$course_review = LP_Course_Reviews_DB::getInstance()->learn_press_get_course_review( $course_id, 1, $amount );
-			$review_args   = array(
-				'course_id'     => $course_id,
-				'course_review' => $course_review,
-			);
 
 			if ( $course_rate['total'] ) {
 				if ( ! empty( $instance['option_show'] ) ) {
 					switch ( $instance['option_show'] ) {
 						case 'show_rate':
-							return learn_press_get_template_content( 'widgets/course-review/course-rate.php', $rate_args );
+							return learn_press_get_template_content(
+								'widgets/course-review/widget-course-rate.php',
+								array(
+									'course_rate' => $course_rate,
+									'course_id'   => $course_id,
+								)
+							);
 							break;
 						case 'show_review':
-							return learn_press_get_template_content( 'widgets/course-review/course-review.php', $review_args );
+							return learn_press_get_template_content(
+								'widgets/course-review/widget-course-review.php',
+								array(
+									'course_review' => $course_review,
+									'course_id'     => $course_id,
+								)
+							);
 							break;
 						default:
 							return learn_press_get_template_content(
-								'widgets/course-review/reviews.php',
+								'widgets/course-review/widget-reviews.php',
 								array(
 									'course_id'     => $course_id,
 									'course_review' => $course_review,

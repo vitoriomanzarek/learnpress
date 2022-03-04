@@ -9,7 +9,7 @@
 
 defined( 'ABSPATH' ) || exit();
 
-if ( ! $course_id || ! $user || ! $course_rate_res || ! $course_review ) {
+if ( empty( $course_id ) || empty( $user ) || empty( $course_rate_res ) || empty( $course_review ) ) {
 	return;
 }
 $rated = $course_rate_res['rated'];
@@ -51,15 +51,11 @@ if ( $course_review['total'] ) {
 if ( $user->has_course_status( $course_id, array( 'enrolled', 'completed', 'finished' ) ) ) {
 	if ( ! LP_Course_Reviews_DB::getInstance()->learn_press_get_user_rate( $course_id ) ) {
 		?>
-			<button class="write-a-review"><?php _e( 'Write a review', 'learnpress' ); ?></button>
 			<div class="course-review-wrapper" id="course-review">
-				<div class="review-overlay"></div>
 				<div class="review-form" id="review-form">
-					<div class="form-overlay-review"></div>
 					<form>
 						<h3>
 							<?php _e( 'Write a review', 'learnpress' ); ?>
-							<a href="" class="close dashicons dashicons-no-alt"></a>
 						</h3>
 						<ul class="review-fields">
 							<?php do_action( 'learn_press_before_review_fields' ); ?>
@@ -82,10 +78,9 @@ if ( $user->has_course_status( $course_id, array( 'enrolled', 'completed', 'fini
 							</li>
 							<?php do_action( 'learn_press_after_review_fields' ); ?>
 							<li class="review-actions">
-								<button type="button" class="submit-review"
-										data-id="<?php the_ID(); ?>"><?php _e( 'Add review', 'learnpress' ); ?></button>
+								<button type="button" class="lp-button submit-review"
+										data-id="<?php echo $course_id; ?>"><?php _e( 'Add review', 'learnpress' ); ?></button>
 								<span class="ajaxload"></span>
-								<button type="button" class="close"><?php _e( 'Cancel', 'learnpress' ); ?></button>
 								<span class="error"></span>
 								<?php wp_nonce_field( 'learn_press_course_review_' . get_the_ID(), 'review-nonce' ); ?>
 								<input type="hidden" name="rating" value="0">
@@ -103,3 +98,12 @@ if ( $user->has_course_status( $course_id, array( 'enrolled', 'completed', 'fini
 	}
 }
 
+$args           = array(
+	'user_id' => learn_press_get_current_user_id(),
+	'post_id' => $course_id,
+);
+$comments_count = get_comments( $args );
+
+if ( ! empty( $comments_count ) && ! $comments_count[0]->comment_approved ) {
+	echo '<div class="learn-press-message success">Your review has been submitted and is awaiting approve. </div>';
+}

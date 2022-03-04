@@ -2,7 +2,6 @@
 /**
  * Template for displaying rating stars.
  *
- *
  * @author  ThimPress
  * @package LearnPress/Course-Review/Templates
  * @version  1.0.0
@@ -11,7 +10,7 @@
 // Prevent loading this file directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! $rated ) {
+if ( empty( $rated ) ) {
 	return;
 }
 

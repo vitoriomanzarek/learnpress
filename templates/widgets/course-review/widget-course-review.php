@@ -9,7 +9,7 @@
 
 // Prevent loading this file directly
 defined( 'ABSPATH' ) || exit;
-if ( ! $course_review || ! $course_rate || ! $course_id ) {
+if ( empty( $course_review ) || empty( $course_id ) ) {
 	return;
 }
 
