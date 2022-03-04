@@ -37,6 +37,7 @@ const buildPackages = [
 	'frontend/custom',
 	'frontend/profile',
 	'frontend/widgets',
+	'blocks/index',
 ];
 
 const {
