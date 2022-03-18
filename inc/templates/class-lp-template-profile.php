@@ -159,6 +159,37 @@ class LP_Template_Profile extends LP_Abstract_Template {
 	}
 
 	/**
+	 * Get template tab wishlist
+	 *
+	 * @deprecated 4.1.6
+	 */
+	public static function tab_wishlist() {
+		$user = LP_Profile::instance()->get_user();
+
+		$args_query_user_courses_wishlist = apply_filters(
+			'lp/profile/args/user_courses_wishlist',
+			array(
+				'is_template' => true,
+				'paged'       => 1,
+				'is_wishlist' => 1,
+			)
+		);
+
+		if ( ! empty( $user ) ) {
+			$user_wishlist = get_user_meta( $user->get_id(), '_lpr_wish_list', true );
+			learn_press_get_template(
+				'profile/tabs/wishlist',
+				array(
+					'user_id'                          => $user->get_id(),
+					'user_wishlist'                    => $user_wishlist,
+					'args_query_user_courses_wishlist' => $args_query_user_courses_wishlist,
+				)
+			);
+		}
+
+	}
+
+	/**
 	 * @author tungnx
 	 * @deprecated 4.1.6
 	 */

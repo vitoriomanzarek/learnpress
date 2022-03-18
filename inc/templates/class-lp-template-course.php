@@ -351,6 +351,33 @@ class LP_Template_Course extends LP_Abstract_Template {
 	}
 
 	/**
+	 * Show button add or remove wishlist course
+	 *
+	 * @throws Exception
+	 * @deprecated 4.1.6
+	 */
+	public function course_wishlist_button() {
+		$user   = LP_Global::user();
+		$course = LP_Global::course();
+
+		$user_id   = $user->get_id();
+		$course_id = $course->get_id();
+
+		// If user or course are invalid then return.
+		if ( ! $user_id || ! $course_id ) {
+			return;
+		}
+
+		learn_press_get_template(
+			'single-course/buttons/wishlist.php',
+			array(
+				'user_id'   => $user_id,
+				'course_id' => $course_id,
+			)
+		);
+	}
+
+	/**
 	 * Show button retake course
 	 *
 	 * @throws Exception
@@ -649,6 +676,20 @@ class LP_Template_Course extends LP_Abstract_Template {
 	}
 
 	/**
+	 * add button remove wishlist in course page profile
+	 */
+	public function button_remove_course_wishlist_profile() {
+		$is_tab_wishlist = $_REQUEST['is_wishlist'];
+
+		if ( $is_tab_wishlist ) {
+			?>
+			<div class="course-remove-wishlist" data-id ="<?php echo get_the_ID(); ?>" title="<?php echo __( 'Remove from Wishlist', 'learnpress' ); ?>" >
+				<span><i class="fas fa-heart"></i></span>
+			</div>
+			<?php
+		}
+	}
+	/**
 	 * Get template content item's course
 	 */
 	public function course_content_item() {
@@ -713,7 +754,8 @@ class LP_Template_Course extends LP_Abstract_Template {
 		// End
 
 		// Get timestamp remaining duration of course
-		/*$course_item = $item->get_course();
+		/*
+		$course_item = $item->get_course();
 		if ( ! $course_item ) {
 			return;
 		}*/

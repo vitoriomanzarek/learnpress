@@ -212,6 +212,22 @@ a {
 						}
 					}
 				}
+				.course-remove-wishlist{
+					position: absolute;
+					top: 7px;
+					right: 10px;
+					z-index: 1000;
+					cursor: pointer;
+					color: var(--lp-primary-color);
+					i {
+						font-size: 24px;
+					}
+					&:hover{
+						i{
+							color:var(--global--color-primary);
+						}
+					}
+				}
 
 				// Should change effect when hovering on wrap element instead of thumbnail only.
 				&:hover {
@@ -1100,22 +1116,29 @@ a {
 							margin-top: 30px;
 							padding: 0;
 						}
+						form.course-wishlist{
+							.learn-press-course-wishlist {
+								color: #fff;
+								display: flex;
+								justify-content: center;
+								align-items: center;
+								font-size: 14px;
 
-						.learn-press-course-wishlist {
-							color: #fff;
-							background: transparent !important;
-							font-size: 0;
-
-							&.on,
-							&:hover {
-								color: var(--lp-primary-color);
+								&::before {
+									font-family: "Font Awesome 5 Free";
+									font-size: 16px;
+									font-weight: 900;
+									content: "\f004";
+									margin-right: 5px;
+								}
+								&.loading{
+									&::before {
+										content: "\f110";
+									}
+								}
 							}
-
-							&::before {
-								font-family: "Font Awesome 5 Free";
-								font-size: 26px;
-								font-weight: 900;
-								content: "\f004";
+							.learn-press-message.wishlist{
+								margin-top: 15px;
 							}
 						}
 

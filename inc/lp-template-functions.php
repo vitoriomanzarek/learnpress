@@ -23,6 +23,7 @@ if ( ! function_exists( 'learn_press_add_course_buttons' ) ) {
 		add_action( 'learn-press/course-buttons', LP()->template( 'course' )->func( 'button_retry' ), 20 );
 		add_action( 'learn-press/course-buttons', LP()->template( 'course' )->func( 'course_continue_button' ), 25 );
 		add_action( 'learn-press/course-buttons', LP()->template( 'course' )->func( 'course_finish_button' ), 30 );
+		add_action( 'learn-press/course-buttons', LP()->template( 'course' )->func( 'course_wishlist_button' ), 35 );
 	}
 }
 
@@ -34,6 +35,7 @@ if ( ! function_exists( 'learn_press_remove_course_buttons' ) ) {
 		remove_action( 'learn-press/course-buttons', LP()->template( 'course' )->func( 'button_retry' ), 20 );
 		remove_action( 'learn-press/course-buttons', LP()->template( 'course' )->func( 'course_continue_button' ), 25 );
 		remove_action( 'learn-press/course-buttons', LP()->template( 'course' )->func( 'course_finish_button' ), 30 );
+		remove_action( 'learn-press/course-buttons', LP()->template( 'course' )->func( 'course_wishlist_button' ), 35 );
 	}
 }
 

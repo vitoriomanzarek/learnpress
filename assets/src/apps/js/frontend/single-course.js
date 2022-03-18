@@ -356,6 +356,57 @@ const courseContinue = () => {
 	}
 };
 
+const courseWishlist = () => {
+	const formWishList = document.querySelector( 'form.course-wishlist' );
+
+	if ( formWishList.length > 0 ) {
+
+		const submit = async ( id, btnWishlist ) => {
+			try {
+				const response = await wp.apiFetch( {
+					path: 'learnpress/v1/wishlist/toggle',
+					method: 'POST',
+					data: { id },
+				} );
+
+				btnWishlist.classList.remove( 'loading' );
+				btnWishlist.disabled = false;
+
+				const { status, message } = response;
+				const type = response.data.type;
+				let text = response.data.text.remove;
+
+				if ( type == 'remove' ) {
+					text = response.data.text.add
+				}
+
+				if ( message && status ) {
+					btnWishlist.innerText = text;
+					const messageWishlist = document.querySelector('.learn-press-message.wishlist.success');
+
+					if ( messageWishlist ){
+						messageWishlist.innerText = message;
+					} else {
+						formWishList.innerHTML += `<div class="learn-press-message wishlist success">${ message }</div>`;
+					}
+				}
+			} catch ( error ) {
+				alert( error.message && error.message);
+				window.location.reload();
+			}
+		};
+
+		formWishList.addEventListener( 'submit', ( event ) => {
+			event.preventDefault();
+			const id = formWishList.querySelector( 'input[name=course-id]' ).value;
+			const btnWishlist = formWishList.querySelector( 'button.learn-press-course-wishlist' );
+			btnWishlist.classList.add( 'loading' );
+			btnWishlist.disabled = true;
+			submit( id, btnWishlist );
+		} );
+	}
+}
+
 export {
 	initCourseTabs,
 	initCourseSidebar,
@@ -376,4 +427,5 @@ $( window ).on( 'load', () => {
 	courseContinue();
 	lpModalOverlayCompleteItem.init();
 	courseCurriculumSkeleton();
+	courseWishlist();
 } );

@@ -3869,3 +3869,25 @@ add_filter(
 		return $theme_template_id;
 	}
 );
+
+/**
+ * Check user has course in wishlist.
+ *
+ * @param null $course_id
+ * @param null $user_id
+ *
+ * @return bool
+ */
+function learn_press_user_wishlist_has_course( $course_id = null, $user_id = null ) {
+	if ( ! $course_id ) {
+		$course_id = get_the_ID();
+	}
+
+	if ( ! $user_id ) {
+		$user_id = learn_press_get_user_id();
+	}
+
+	$wish_list = (array) get_user_meta( $user_id, '_lpr_wish_list', true );
+
+	return in_array( $course_id, $wish_list );
+}

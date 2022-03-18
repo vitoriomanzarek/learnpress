@@ -43,6 +43,7 @@ class LP_Jwt_RestApi {
 			'course_category' => 'LP_Jwt_Course_Category_V1_Controller',
 			'sections'        => 'LP_Jwt_Sections_V1_Controller',
 			'section-items'   => 'LP_Jwt_Section_Items_V1_Controller',
+			'wishlist'        => 'LP_Jwt_Wishlist_V1_Controller',
 		);
 	}
 

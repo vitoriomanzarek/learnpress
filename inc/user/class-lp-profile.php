@@ -249,6 +249,13 @@ if ( ! class_exists( 'LP_Profile' ) ) {
 						'priority' => 1,
 						'icon'     => '<i class="fas fa-book-open"></i>',
 					),
+					'wishlist'       => array(
+						'title'    => esc_html__( 'Wishlist', 'learnpress' ),
+						'slug'     => $settings->get( 'profile_endpoints.wishlist', 'wishlist' ),
+						'callback' => array( LP_Template_Profile::class, 'tab_wishlist' ),
+						'priority' => 10,
+						'icon'     => '<i class="fas fa-heart"></i>',
+					),
 					'quizzes'       => array(
 						'title'    => esc_html__( 'Quizzes', 'learnpress' ),
 						'slug'     => $settings->get( 'profile_endpoints.quizzes', 'quizzes' ),

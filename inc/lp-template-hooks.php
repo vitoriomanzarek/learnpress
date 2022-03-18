@@ -186,6 +186,13 @@ add_action(
 	1000
 );
 
+//button remove course wishlist page profile;
+add_action(
+	'learn-press/after-courses-loop-item',
+	LP()->template( 'course' )->func( 'button_remove_course_wishlist_profile' ),
+	1010
+);
+
 /** END: Archive course loop item */
 
 /** Archive course pagination */
