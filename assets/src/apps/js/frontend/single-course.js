@@ -359,8 +359,7 @@ const courseContinue = () => {
 const courseWishlist = () => {
 	const formWishList = document.querySelector( 'form.course-wishlist' );
 
-	if ( formWishList.length > 0 ) {
-
+	if ( formWishList != null ) {
 		const submit = async ( id, btnWishlist ) => {
 			try {
 				const response = await wp.apiFetch( {
