@@ -222,6 +222,14 @@
 			textarea {
 				width: 100%;
 			}
+
+			button{
+				&.loading{
+					&::before{
+						margin-right: 7px;
+					}
+				}
+			}
 		}
 	}
 

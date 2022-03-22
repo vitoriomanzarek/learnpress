@@ -115,6 +115,8 @@ export default function courseReviewSkeleton() {
 			return;
 		}
 
+		btnReviewForm.classList.add( 'loading' );
+
 		try {
 			const response = await wp.apiFetch( {
 				path: 'learnpress/v1/review/submit',
@@ -125,6 +127,7 @@ export default function courseReviewSkeleton() {
 			const { status, message } = response;
 
 			if ( status == 'success' ) {
+				btnReviewForm.classList.remove( 'loading' );
 				LP.reload();
 			} else {
 				parenNode.innerHTML += `<li class="lp-ajax-message error" style="display:block">${ message }</li>`;
@@ -179,6 +182,7 @@ export default function courseReviewSkeleton() {
 
 		if ( btnReviewForm &&  btnReviewForm.contains( e.target)  ) {
 			submitReview( btnReviewForm );
+
 		}
 
 	} );

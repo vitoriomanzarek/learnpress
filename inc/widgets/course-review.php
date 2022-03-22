@@ -58,7 +58,7 @@ class LP_Widget_Course_Review extends LP_Widget {
 	public function lp_rest_api_content( $instance, $params ) {
 
 		if ( LP_Settings::get_option( 'course_review' ) == 'no' && ! class_exists( 'LP_Addon_Course_Review' ) ) {
-			return new WP_Error( 'no_option', esc_html__( 'Error: Please enable option Review Course in Settings LearnPress or active plugin LearnPress-Course Review.', 'learnpress' ) );
+			return new WP_Error( 'no_option', esc_html__( 'Error: Please enable option Review Course in Settings LearnPress.', 'learnpress' ) );
 		}
 
 		if ( ! empty( $instance['course_id'] ) ) {
