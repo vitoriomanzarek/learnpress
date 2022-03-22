@@ -68,7 +68,7 @@ class LP_Page_Controller {
 		if ( in_array( $post->post_type, $course_item_types ) ) {
 			$section_id = LP_Section_DB::getInstance()->get_section_id_by_item_id( $item_id );
 
-			if ( $section_id ) {
+			if ( ! $section_id ) {
 				return $post_link;
 			}
 
@@ -80,6 +80,7 @@ class LP_Page_Controller {
 
 			$course    = learn_press_get_course( $course_id );
 			$post_link = $course->get_item_link( $item_id );
+
 		} elseif ( LP_COURSE_CPT === $post->post_type ) {
 			// Abort early if the placeholder rewrite tag isn't in the generated URL
 			if ( false === strpos( $post_link, '%' ) ) {
@@ -900,6 +901,31 @@ class LP_Page_Controller {
 			return $q;
 		}
 
+		// Exclude item not assign
+		if ( $q->is_search() ) {
+			// Exclude item not assign any course
+			$course_item_types = learn_press_get_course_item_types();
+			$list_ids_exclude  = array();
+
+			foreach ( $course_item_types as $item_type ) {
+				$filter            = new LP_Post_Type_Filter();
+				$filter->post_type = $item_type;
+				$exclude_item      = LP_Course_DB::getInstance()->get_item_ids_unassigned( $filter );
+				$exclude_item      = LP_Course_DB::get_values_by_key( $exclude_item );
+
+				$list_ids_exclude = array_merge( $list_ids_exclude, $exclude_item );
+			}
+
+			// Exclude question not assign any quiz
+			$question_ids     = LP_Question_DB::getInstance()->get_questions_not_assign_quiz();
+			$question_ids     = LP_Course_DB::get_values_by_key( $question_ids );
+			$list_ids_exclude = array_merge( $list_ids_exclude, $question_ids );
+
+			if ( ! empty( $list_ids_exclude ) ) {
+				$q->set( 'post__not_in', $list_ids_exclude );
+			}
+		}
+
 		$is_archive_course = false;
 
 		// Handle 404 if user are viewing course item directly.
@@ -942,8 +968,10 @@ class LP_Page_Controller {
 			$is_archive_course = 1;
 		}
 
+		$apply_lazy_load_for_theme = apply_filters( 'lp/page/courses/query/lazy_load', false );
+
 		if ( $is_archive_course ) {
-			if ( lp_is_archive_course_load_via_api() && ! class_exists( 'TP' ) ) {
+			if ( ( lp_is_archive_course_load_via_api() && ! class_exists( 'TP' ) ) || $apply_lazy_load_for_theme ) {
 				LP()->template( 'course' )->remove_callback( 'learn-press/after-courses-loop', 'loop/course/pagination.php', 10 );
 				/**
 				 * If page is archive course - query set posts_per_page = 1

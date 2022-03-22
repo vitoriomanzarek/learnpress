@@ -519,7 +519,7 @@ if ( ! class_exists( 'LP_Course' ) ) {
 				$filter->sort_by = (array) $filter->sort_by;
 				foreach ( $filter->sort_by as $sort_by ) {
 					$filter_tmp                      = clone $filter;
-					$filter_tmp->fields              = array( 'ID' );
+					$filter_tmp->only_fields         = array( 'ID' );
 					$filter_tmp->return_string_query = true;
 
 					switch ( $sort_by ) {
@@ -530,7 +530,7 @@ if ( ! class_exists( 'LP_Course' ) ) {
 							$filter_tmp = $lp_course_db->get_courses_sort_by_feature( $filter_tmp );
 							break;
 						default:
-							$filter_tmp = apply_filters( 'lp/courses/filter/sort_by' . $sort_by, $filter_tmp );
+							$filter_tmp = apply_filters( 'lp/courses/filter/sort_by/' . $sort_by, $filter_tmp );
 							break;
 					}
 
@@ -545,6 +545,8 @@ if ( ! class_exists( 'LP_Course' ) ) {
 					case 'price_low':
 						if ( 'price_low' === $filter->order_by ) {
 							$filter->order = 'ASC';
+						} else {
+							$filter->order = 'DESC';
 						}
 
 						$filter = $lp_course_db->get_courses_order_by_price( $filter );

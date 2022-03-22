@@ -5,7 +5,7 @@ const lpArchiveAddQueryArgs = ( endpoint, args ) => {
 	const url = new URL( endpoint );
 
 	Object.keys( args ).forEach( ( arg ) => {
-		url.searchParams.append( arg, args[ arg ] );
+		url.searchParams.set( arg, args[ arg ] );
 	} );
 
 	return url;
@@ -18,34 +18,18 @@ const lpArchiveCourse = () => {
 		return;
 	}
 
-	if ( 'IntersectionObserver' in window ) {
-		const eleObserver = new IntersectionObserver( ( entries, observer ) => {
-			entries.forEach( ( entry ) => {
-				if ( entry.isIntersecting ) {
-					const ele = entry.target;
-
-					if ( ! lpArchiveSkeleton ) {
-						return;
-					}
-
-					//setTimeout( function() {
-					lpArchiveRequestCourse( lpArchiveSkeleton );
-					//}, 600 );
-
-					eleObserver.unobserve( ele );
-				}
-			} );
-		} );
-
-		[ ...elements ].map( ( ele ) => eleObserver.observe( ele ) );
+	if ( ! lpArchiveSkeleton ) {
+		return;
 	}
+
+	lpArchiveRequestCourse( lpArchiveSkeleton );
 };
 
 let skeleton;
 let skeletonClone;
 let isLoading = false;
 let firstLoad = 1;
-const lpArchiveRequestCourse = ( args ) => {
+window.lpArchiveRequestCourse = ( args, callBackSuccess ) => {
 	const wpRestUrl = lpGlobalSettings.lp_rest_url;
 
 	if ( ! wpRestUrl ) {
@@ -102,6 +86,12 @@ const lpArchiveRequestCourse = ( args ) => {
 				lpArchivePaginationCourse();
 			}
 		}
+
+		wp.hooks.doAction( 'lp-js-get-courses', response );
+
+		if ( typeof callBackSuccess === 'function' ) {
+			callBackSuccess( response );
+		}
 	} ).catch( ( error ) => {
 		listCourse.innerHTML += `<div class="lp-ajax-message error" style="display:block">${ error.message || 'Error: Query lp/v1/courses/archive-course' }</div>`;
 	} ).finally( () => {
@@ -110,7 +100,9 @@ const lpArchiveRequestCourse = ( args ) => {
 
 		jQuery( 'form.search-courses button' ).removeClass( 'loading' );
 
-		//LPArchiveCourseInit();
+		// Push url
+		const urlPush = lpArchiveAddQueryArgs( document.location, args );
+		window.history.pushState( '', '', urlPush );
 
 		// Scroll to archive element
 		if ( ! firstLoad ) {
@@ -125,8 +117,8 @@ const lpArchiveSearchCourse = () => {
 	const searchForm = document.querySelectorAll( 'form.search-courses' );
 
 	searchForm.forEach( ( s ) => {
-		const search = s.querySelector( 'input[name="s"]' );
-		const action = s.getAttribute( 'action' );
+		const search = s.querySelector( 'input[name="c_search"]' );
+		const urlAction = s.getAttribute( 'action' );
 		const postType = s.querySelector( '[name="post_type"]' ).value || '';
 		const taxonomy = s.querySelector( '[name="taxonomy"]' ).value || '';
 		const termID = s.querySelector( '[name="term_id"]' ).value || '';
@@ -136,7 +128,7 @@ const lpArchiveSearchCourse = () => {
 		search.addEventListener( 'keyup', ( event ) => {
 			event.preventDefault();
 
-			const s = event.target.value;
+			const s = event.target.value.trim();
 
 			if ( ! s || ( s && s.length > 2 ) ) {
 				if ( undefined !== timeOutSearch ) {
@@ -148,14 +140,20 @@ const lpArchiveSearchCourse = () => {
 
 					delete lpArchiveSkeleton.paged;
 
-					lpArchiveRequestCourse( { ...lpArchiveSkeleton, s } );
+					const url = new URL( urlAction );
+					const urlCurrent = new URL( document.location );
+					urlCurrent.searchParams.set( 'c_search', s );
+					const strParams = urlCurrent.searchParams.toString();
+					const params = strParams.split( '&' );
 
-					const url = lpArchiveAddQueryArgs( action, {
-						post_type: postType,
-						taxonomy,
-						term_id: termID,
-						s,
+					const objectParams = {};
+					params.forEach( ( val, i ) => {
+						const keyVal = val.split( '=' );
+						objectParams[ keyVal[ 0 ] ] = keyVal[ 1 ];
+						url.searchParams.append( keyVal[ 0 ], keyVal[ 1 ] );
 					} );
+
+					lpArchiveRequestCourse( { ...objectParams } );
 
 					window.history.pushState( '', '', url );
 				}, 800 );
@@ -165,7 +163,7 @@ const lpArchiveSearchCourse = () => {
 		s.addEventListener( 'submit', ( e ) => {
 			e.preventDefault();
 
-			const eleSearch = s.querySelector( 'input[name="s"]' );
+			const eleSearch = s.querySelector( 'input[name="c_search"]' );
 			eleSearch && eleSearch.dispatchEvent( new Event( 'keyup' ) );
 		} );
 	} );
@@ -230,6 +228,6 @@ function LPArchiveCourseInit() {
 	lpArchiveGridListCourse();
 }
 
-//document.addEventListener( 'DOMContentLoaded', function( event ) {
-LPArchiveCourseInit();
-//} );
+document.addEventListener( 'DOMContentLoaded', function( event ) {
+	LPArchiveCourseInit();
+} );

@@ -114,7 +114,7 @@ class LP_REST_Courses_Controller extends LP_Abstract_REST_Controller {
 		try {
 			$filter             = new LP_Course_Filter();
 			$filter->page       = absint( $request['paged'] ?? 1 );
-			$filter->post_title = LP_Helper::sanitize_params_submitted( $request['s'] ?? '' );
+			$filter->post_title = LP_Helper::sanitize_params_submitted( $request['c_search'] ?? '' );
 			$fields_str         = LP_Helper::sanitize_params_submitted( $request['c_fields'] ?? '' );
 			$fields_exclude_str = LP_Helper::sanitize_params_submitted( $request['c_exclude_fields'] ?? '' );
 			if ( ! empty( $fields_str ) ) {
@@ -126,7 +126,12 @@ class LP_REST_Courses_Controller extends LP_Abstract_REST_Controller {
 				$filter->exclude_fields = $fields_exclude;
 			}
 			$filter->post_author = LP_Helper::sanitize_params_submitted( $request['c_author'] ?? 0 );
-			$term_ids_str        = LP_Helper::sanitize_params_submitted( $request['term_id'] ?? '' );
+			$author_ids_str      = LP_Helper::sanitize_params_submitted( $request['c_authors'] ?? 0 );
+			if ( ! empty( $author_ids_str ) ) {
+				$author_ids           = explode( ',', $author_ids_str );
+				$filter->post_authors = $author_ids;
+			}
+			$term_ids_str = LP_Helper::sanitize_params_submitted( $request['term_id'] ?? '' );
 			if ( ! empty( $term_ids_str ) ) {
 				$term_ids         = explode( ',', $term_ids_str );
 				$filter->term_ids = $term_ids;
@@ -137,8 +142,8 @@ class LP_REST_Courses_Controller extends LP_Abstract_REST_Controller {
 			$on_feature                            = absint( $request['on_feature'] ?? '0' );
 			1 === $on_feature ? $filter->sort_by[] = 'on_feature' : '';
 
-			$filter->order_by = LP_Helper::sanitize_params_submitted( $request['order_by'] ?? 'post_date' );
-			$filter->order    = LP_Helper::sanitize_params_submitted( $request['order'] ?? 'DESC' );
+			$filter->order_by = LP_Helper::sanitize_params_submitted( ! empty( $request['order_by'] ) ? $request['order_by'] : 'post_date' );
+			$filter->order    = LP_Helper::sanitize_params_submitted( ! empty( $request['order'] ) ? $request['order'] : 'DESC' );
 			$filter->limit    = LP_Settings::get_option( 'archive_course_limit', 10 );
 
 			$total_rows = 0;
@@ -190,6 +195,23 @@ class LP_REST_Courses_Controller extends LP_Abstract_REST_Controller {
 				}
 
 				$response->data->content = ob_get_clean();
+				$response->data->totals  = $total_rows;
+
+				$from = 1 + ( $filter->page - 1 ) * $filter->limit;
+				$to   = ( $filter->page * $filter->limit > $total_rows ) ? $total_rows : $filter->page * $filter->limit;
+
+				if ( 0 === $total_rows ) {
+					$response->data->from_to = '';
+				} elseif ( 1 === $total_rows ) {
+					$response->data->from_to = esc_html__( 'Showing only one result', 'learnpress' );
+				} else {
+					if ( $from == $to ) {
+						$response->data->from_to = sprintf( esc_html__( 'Showing last course of %s results', 'learnpress' ), $total_rows );
+					} else {
+						$from_to                 = $from . '-' . $to;
+						$response->data->from_to = sprintf( esc_html__( 'Showing %1$s of %2$s results', 'learnpress' ), $from_to, $total_rows );
+					}
+				}
 			}
 
 			$response->status = 'success';

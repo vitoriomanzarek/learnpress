@@ -647,22 +647,22 @@ class LP_Database {
 		}
 
 		// Query
+		$query = "SELECT $FIELDS FROM $COLLECTION AS $ALIAS_COLLECTION
+		$INNER_JOIN
+		$WHERE
+		$GROUP_BY
+		$ORDER_BY
+		$LIMIT
+		";
+
+		if ( $filter->return_string_query ) {
+			return $query;
+		} elseif ( ! empty( $filter->union ) ) {
+			$query  = implode( ' UNION ', array_unique( $filter->union ) );
+			$query .= $LIMIT;
+		}
+
 		if ( ! $filter->query_count ) {
-			$query = "SELECT $FIELDS FROM $COLLECTION AS $ALIAS_COLLECTION
-			$INNER_JOIN
-			$WHERE
-			$GROUP_BY
-			$ORDER_BY
-			$LIMIT
-			";
-
-			if ( $filter->return_string_query ) {
-				return $query;
-			} elseif ( ! empty( $filter->union ) ) {
-				$query  = implode( ' UNION ', array_unique( $filter->union ) );
-				$query .= $LIMIT;
-			}
-
 			$result = $this->wpdb->get_results( $query );
 		}
 
@@ -678,5 +678,20 @@ class LP_Database {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * @param array $arr_object
+	 * @param string $key
+	 *
+	 * @return array
+	 */
+	public static function get_values_by_key( array $arr_object, string $key = 'ID' ): array {
+		$arr_object_ids = array();
+		foreach ( $arr_object as $object ) {
+			$arr_object_ids[] = $object->{$key};
+		}
+
+		return $arr_object_ids;
 	}
 }

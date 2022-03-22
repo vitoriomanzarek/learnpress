@@ -3,7 +3,7 @@ Contributors: thimpress, tungnx89, nhamdv, hungkv, manhnl, tunnhn, phonglq.foobl
 Donate link:
 Tags: elearning, education, course, lms, learning management system
 Requires at least: 5.6
-Tested up to: 5.8
+Tested up to: 5.9
 Requires PHP: 7.0
 Stable tag: 4.1.6
 License: GPLv2 or later
@@ -15,18 +15,25 @@ A WordPress LMS Plugin to create WordPress Learning Management System. Turn your
 
 **<a href="https://thimpress.com/learnpress" target="_blank">WordPress LMS Plugin</a>** - LearnPress is a comprehensive *WordPress LMS Plugin* for WordPress. This is one of the best WordPress LMS Plugins which can be used to easily create & sell courses online. You can create a course curriculum with lessons & quizzes included which is managed with an easy-to-use interface for users. Having this WordPress LMS Plugin, now you have a chance to quickly and easily create education, online school, online-course websites with no coding knowledge required.
 
-<a href="https://university.thimpress.com/" target="_blank">Live Demo</a> | <a href="https://1.envato.market/G5Ook" target="_blank">LearnPress Themes</a> | <a href="https://thimpress.com/forums/forum/plugins/learnpress-plugin/" target="_blank">Support</a> | <a href="https://docspress.thimpress.com/learnpress-4-0/" target="_blank">Documentation</a>
+<a href="https://university.thimpress.com/" target="_blank">Live Demo</a> | <a href="https://1.envato.market/G5Ook" target="_blank">LearnPress Themes</a> | <a href="https://thimpress.com/eduma-mobile-app" target="_blank">LearnPress Mobile App</a> | <a href="https://thimpress.com/forums/forum/plugins/learnpress-plugin/" target="_blank">Support</a> | <a href="https://docspress.thimpress.com/learnpress-4-0/" target="_blank">Documentation</a>
 
 LearnPress is free and always will be, but it is still a premium high-quality WordPress Plugin that definitely helps you with making money from your **WordPress based LMS**. Just try and see how it is. LearnPress WordPress Online Course plugin is lightweight and super powerful with lots of Add-Ons to empower its core system.
 
 > Highly recommended by LearnPress users, we are pleased to introduce you to our best Education WordPress Themes which have LearnPress Theme Bundle included already.
-> [Eduma – Education WordPress Theme](https://1.envato.market/G5Ook) (#1 Selling Education WordPress Theme).
+> [Eduma | Education WordPress Theme](https://1.envato.market/G5Ook) (#1 Selling Education WordPress Theme).
 > [Coaching | Life & Fitness Coaching WordPress Theme](https://1.envato.market/Xq2Ra) (Rising Star).
 > [CorpTrain | Corporate Training WordPress Theme](https://1.envato.market/13Zkd) (Potential).
 
-###LMS & Education WordPress Themes###
+###ONLINE LMS & EDUCATION WORDPRESS THEMES###
 
-Take a look at **[Premium Theme](https://1.envato.market/AoKx3D)** (someone calls it LMS WordPress Template) we designed to work with LearnPress. All developers are welcome to develop WordPress LMS Theme based on LMS Plugin for WordPress - LearnPress. More WordPress LMS Themes are coming soon, both free and premium WordPress Themes for LearnPress.
+Take a look at **[Premium Online LMS & Education WordPress Themes](https://1.envato.market/AoKx3D)** that are developed to work perfectly with LearnPress LMS WordPress Plugin. These incredible WordPress Themes are the best for your Online LMS & Education websites using LearnPress with the clean and modern design. From more than 50 demos, you can easily chose the most suitable one which fits your purpose and customize it as your style.
+
+
+###LEARNPRESS MOBILE APP###
+
+ **[LearnPress Mobile App](https://thimpress.com/eduma-mobile-app)**  is an LMS Mobile App for iOS & Android built with React Native Technology. If you have Online Education & LMS websites using WordPress Themes or LearnPress Plugin, LearnPress Mobile App supports you to convert your current websites to LMS Mobile App easily. Your LMS Mobile App will be on both App Store and Google Play Store. All courses will be synced immediately between your Online Education & LMS Website and your LMS Mobile App.This LMS Mobile App brings to your students a new learning experience when they can manage and track their courses as well as instructors.
+
+
 
 ###LearnPress Tutorials###
 
@@ -67,11 +74,11 @@ Education should be free and we want you to bring it to as many people as you ca
 **LearnPress is actively developed**
 We are developing and improving LearnPress day by day and bringing you more new features cos we want LearnPress to become the **best WordPress LMS plugin**.
 
-<a href="https://docspress.thimpress.com/learnpress" target="_blank">LearnPress WordPress LMS Plugin Documentation</a>
+<a href="https://docspress.thimpress.com/learnpress-4-0" target="_blank">LearnPress WordPress LMS Plugin Documentation</a>
 
 ###Free add-ons for LearnPress WordPress LMS Plugin###
 
-- [LearnPress Wishlist](https://wordpress.org/vilugins/learnpress-wishlist) - add courses to a wishlist for students.
+- [LearnPress Wishlist](https://wordpress.org/plugins/learnpress-wishlist) - add courses to a wishlist for students.
 - [LearnPress Course Review](https://wordpress.org/plugins/learnpress-course-review) - review courses for enrolled students.
 - [LearnPress Import/Export](https://wordpress.org/plugins/learnpress-import-export) - export or import courses out-of-box.
 - [LearnPress Prerequisites Courses](https://wordpress.org/plugins/learnpress-prerequisites-courses) - require students need to pass the prerequisite course items to access the next ones.
@@ -134,7 +141,7 @@ We are developing and improving LearnPress day by day and bringing you more new 
 - Attach restriction to lesson
 - Presentation support (maybe support SlideShare)
 - Student ranks
-- REST API for mobile app
+- REST API for mobile app (DONE)
 - No distraction mode (when doing quiz)
 - Report/feedback about a question/quiz/lesson
 - Commission for payment method (DONE)
@@ -142,7 +149,7 @@ We are developing and improving LearnPress day by day and bringing you more new 
 - Private message from Admin to teacher
 - Group payment
 
-Any suggestions for this WordPress LMS Plugin? Send us <a href="https://thimpress.com/learnpress-suggestion/" target="_blank">here</a>.
+Any suggestions for this WordPress LMS Plugin? Send us via email: support@thimpress.com
 
 == Installation ==
 
@@ -161,22 +168,22 @@ Any suggestions for this WordPress LMS Plugin? Send us <a href="https://thimpres
 LearnPress is a plugin for LMS website to spread out courses and sell courses online.
 
 = Where can I find LearnPress documentation and user guides? =
-If you want to use LearnPress to build a Learning Management System website, please refer to our user guides in <a href="https://docspress.thimpress.com/learnpress/" target="_blank">LearnPress official site.</a>
+If you want to use LearnPress to build a Learning Management System website, please refer to our user guides in <a href="https://docspress.thimpress.com/learnpress-4-0/" target="_blank">LearnPress official site.</a>
 And if you want to extend or use LearnPress, see our <a href="https://github.com/LearnPress/LearnPress/wiki" target="_blank">Wiki.</a>
 
 = Where can I get support or talk to other users? =
 If you get troubles when using LearnPress you can ask for help on the <a href="https://wordpress.org/support/plugin/learnpress">LearnPress Support Forum</a> or <a href="https://www.facebook.com/groups/learnpress/" target="_blank">join the private Facebook group</a>. You could share your feedback about LearnPress. And let us know which feature you want us to build next.
 
-For help with premium add-ons, use our <a href="https://thimpress.com/forums/forum/learnpress">helpdesk</a>.
+For help with premium add-ons, use our <a href="https://thimpress.com/forums/forum/plugins/learnpress-premium-add-ons">helpdesk</a>.
 
 = Where can I ask for new features, suggest new ideas or new themes for LearnPress? =
-You can send us your thoughts through form <a href="https://thimpress.com/learnpress-suggestion/" target="_blank">here.</a>
+You can send us your thoughts through via email: support@thimpress.com
 
 = Where can I report bugs or contribute to the project? =
 You can also report bugs on LearnPress Support Forum or LearnPress <a href="https://github.com/LearnPress/LearnPress" target="_blank">Github Repository</a>.
 
 = Where can I find the REST API documentation? =
-We will provide documentation about LearnPress REST API really soon.
+You can find the REST API documentation <a href="https://docspress.thimpress.com/developer-learnpress/#sections-6">here</a>.
 
 = LearnPress is great, can I contribute to it? =
 Yes, you can and we appreciate it. Join in our <a href="https://github.com/LearnPress/LearnPress" target="_blank">Github Repository</a>.
@@ -197,9 +204,20 @@ https://www.transifex.com/projects/p/learnpress/
 
 == Changelog ==
 
-= 4.1.6 (2022-xx-xx) =
+= 4.1.6 (2022-03-14) =
+~ Compatible: with "Polylang" plugin.
+~ Compatible LP Shortcode with Elementor.
+~ Compatible: with block theme (Gutenberg).
+~ Added: set -1 value for no limit Retake Quiz.
+~ Added: order by popular courses on API.
 ~ Fixed: case set duration quiz = 0.
 ~ Fixed: case set password for quiz.
+~ Fixed: create new question didn't set type.
+~ Fixed: when search global WP with ?s= will not search item's course and question not assign.
+~ Fixed: "Active Courses" empty on the Profile page.
+~ Fixed: security does not sanitise and escape the lp-dismiss-notice.
+~ Fixed: error many times redirect when access link domain/type/not_found.
+~ Fixed: compare string answer not set "Match case" type Fill In Blank Question.
 
 = 4.1.5 (2022-01-24) =
 ~ Modified: optimize, handle cache for query courses.
@@ -680,5 +698,5 @@ In this version, we have to change the database structure, so that if you have i
 In this version, we have changed a little bit about LearnPress Plugin directory structure and moved all add-ons to become independent plugins. If you face any problems related to add-ons, please completely remove old version and re-install LearnPress. It does not affect your current data. Thank you.
 
 == Other note ==
-<a href="https://docspress.thimpress.com/learnpress" target="_blank">Documentation</a> is available in ThimPress site.
+<a href="https://docspress.thimpress.com/learnpress-4-0" target="_blank">Documentation</a> is available in ThimPress site.
 <a href="https://github.com/LearnPress/LearnPress/" target="_blank">LearnPress github repo</a>.

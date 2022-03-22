@@ -415,34 +415,51 @@ class LP_Course_DB extends LP_Database {
 	 * @param string $item_type (type item Lesson, Quiz, Assignment, H5P ...)
 	 *
 	 * @return int
+	 * @throws Exception
+	 * @author tungnx
+	 * @version 1.0.1
 	 * @since 4.1.4.1
+	 */
+	public function get_total_item_unassigned( string $item_type ): int {
+		$filter              = new LP_Post_Type_Filter();
+		$filter->post_type   = $item_type;
+		$filter->query_count = true;
+		$filter->post_status = array();
+		$filter->field_count = 'p.ID';
+
+		return $this->get_item_ids_unassigned( $filter );
+	}
+
+	/**
+	 * list id item are unassigned to any courses.
+	 *
+	 * @param LP_Post_Type_Filter $filter
+	 *
+	 * @return array|int|string|null
+	 * @throws Exception
 	 * @author tungnx
 	 * @version 1.0.0
+	 * @since 4.1.6
 	 */
-	function get_total_item_unassigned( string $item_type ): int {
-		$query_append = '';
-		if ( ! current_user_can( 'administrator' ) ) {
-			$query_append .= $this->wpdb->prepare( ' AND post_author = %d', get_current_user_id() );
+	public function get_item_ids_unassigned( LP_Post_Type_Filter $filter = null ) {
+		if ( is_null( $filter ) ) {
+			$filter = new LP_Post_Type_Filter();
 		}
 
-		$query = $this->wpdb->prepare(
-			"SELECT COUNT(p.ID) as total
-            FROM $this->tb_posts AS p
-            WHERE p.post_type = %s
-            AND p.ID NOT IN(
-                SELECT si.item_id
-                FROM {$this->tb_lp_section_items} AS si
-                WHERE si.item_type = %s
-            )
-            AND p.post_status NOT IN(%s, %s)
-            $query_append",
-			$item_type,
-			$item_type,
-			'auto-draft',
-			'trash'
-		);
+		$filter_section_items                      = new LP_Section_Items_Filter();
+		$filter_section_items->return_string_query = true;
+		$filter_section_items->only_fields         = array( 'si.item_id' );
+		$filter_section_items->where[]             = $this->wpdb->prepare( 'AND si.item_type = %s', $filter->post_type );
+		$query_item_ids_assigned                   = LP_Section_Items_DB::getInstance()->get_section_items( $filter_section_items );
 
-		return (int) $this->wpdb->get_var( $query );
+		$filter->only_fields      = array( 'p.ID' );
+		$filter->collection       = $this->tb_posts;
+		$filter->collection_alias = 'p';
+		$filter->where[]          = $this->wpdb->prepare( 'AND p.post_type = %s', $filter->post_type );
+		$filter->where[]          = 'AND ID NOT IN(' . $query_item_ids_assigned . ')';
+		$filter->where[]          = $this->wpdb->prepare( 'AND p.post_status not IN(%s, %s)', 'trash', 'auto-draft' );
+
+		return $this->execute( $filter );
 	}
 
 	/**
@@ -505,7 +522,7 @@ class LP_Course_DB extends LP_Database {
 		// Authors
 		if ( ! empty( $filter->post_authors ) ) {
 			$post_authors_format = LP_Helper::db_format_array( $filter->post_authors, '%d' );
-			$filter->where[]     = $this->wpdb->prepare( 'AND p.ID IN (' . $post_authors_format . ')', $filter->post_authors );
+			$filter->where[]     = $this->wpdb->prepare( 'AND p.post_author IN (' . $post_authors_format . ')', $filter->post_authors );
 		}
 
 		$filter = apply_filters( 'lp/course/query/filter', $filter );
@@ -619,6 +636,27 @@ class LP_Course_DB extends LP_Database {
 		$filter->union[] = $query_course_not_attend;
 
 		return $filter;
+	}
+
+	/**
+	 * Get total courses of Author
+	 *
+	 * @param int $author_id
+	 *
+	 * @return LP_Course_Filter
+	 * @since 4.1.6
+	 * @version 1.0.0
+	 * @throws Exception
+	 */
+	public function count_courses_publish_of_author( int $author_id ): LP_Course_Filter {
+		$filter_course              = new LP_Course_Filter();
+		$filter_course->only_fields = array( 'ID' );
+		$filter_course->post_author = $author_id;
+		$filter_course->post_status = 'publish';
+		$filter_course->field_count = 'ID';
+		$filter_course->query_count = true;
+
+		return apply_filters( 'lp/user/course/query/filter/count-users-attend-courses-of-author', $filter_course );
 	}
 }
 
