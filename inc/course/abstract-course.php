@@ -123,15 +123,37 @@ if ( ! function_exists( 'LP_Abstract_Course' ) ) {
 		/**
 		 * Read course data.
 		 * - Curriculum: sections, items, etc...
+		 *
+		 * @since 3.0.0
+		 * @editor tungnx
+		 * @version 1.0.1
 		 */
 		public function load() {
-
 			if ( $this->_loaded ) {
 				return;
 			}
 
 			$this->load_data();
-			$this->load_curriculum();
+
+			$can_load_curriculum = false;
+			// Check if edit course, single course, single item can be load
+			if ( in_array( LP_Page_Controller::page_current(), array( LP_PAGE_SINGLE_COURSE, LP_PAGE_SINGLE_COURSE_CURRICULUM ) ) ) {
+				$can_load_curriculum = true;
+			} elseif ( is_admin() && is_callable( 'get_current_screen' ) ) {
+				$current_screen = get_current_screen();
+				if ( $current_screen && LP_COURSE_CPT === $current_screen->id ) {
+					$can_load_curriculum = true;
+				}
+			} elseif ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+				if ( isset( $_REQUEST['sectionID'] ) || isset( $_REQUEST['sectionId'] ) ) {
+					$can_load_curriculum = true;
+				}
+			}
+
+			if ( $can_load_curriculum ) {
+				$this->load_curriculum();
+			}
+
 			$this->_loaded = true;
 		}
 
@@ -343,7 +365,7 @@ if ( ! function_exists( 'LP_Abstract_Course' ) ) {
 		 * @return bool|int
 		 * @deprecated
 		 */
-		public function get_request_item( $field = 'id' ) {
+		/*public function get_request_item( $field = 'id' ) {
 
 			_deprecated_function( __CLASS__ . '::' . __FUNCTION__, '3.0.11' );
 
@@ -360,7 +382,7 @@ if ( ! function_exists( 'LP_Abstract_Course' ) ) {
 			}
 
 			return $return;
-		}
+		}*/
 
 		/**
 		 * Course is exists if the post is not empty
@@ -1047,9 +1069,18 @@ if ( ! function_exists( 'LP_Abstract_Course' ) ) {
 		 * @Todo: view and rewrite this function
 		 */
 		public function count_students(): int {
+			$key_cache = "{$this->get_id()}/total-students";
+			$total     = LP_Course_Cache::instance()->get_cache( $key_cache );
+
+			if ( $total ) {
+				return $total;
+			}
+
 			$lp_course_db = LP_Course_DB::getInstance();
 			$total        = $lp_course_db->get_total_user_enrolled( $this->get_id() );
 			$total       += $this->get_fake_students();
+
+			LP_Course_Cache::instance()->set_cache( $key_cache, $total, 6 * HOUR_IN_SECONDS );
 
 			return $total;
 		}
