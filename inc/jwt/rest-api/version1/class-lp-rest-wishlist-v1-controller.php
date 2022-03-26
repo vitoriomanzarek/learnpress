@@ -69,29 +69,22 @@ if ( class_exists( 'LP_REST_Jwt_Posts_Controller' ) ) {
 					throw new Exception( esc_html__( 'Login to continue', 'learnpress' ) );
 				}
 
-				$user_wishlist = get_user_meta( $user_id, '_lpr_wish_list', true );
+				$user_wishlist            = get_user_meta( $user_id, '_lpr_wish_list', true );
+				$response->data->template = '';
 
 				if ( ! empty( $user_wishlist ) ) {
-					$response->data->items = $this->rest_do_course_request( $user_wishlist );
+					$paged                 = ! empty( $request->get_param( 'paged' ) ) ? absint( $request->get_param( 'paged' ) ) : 1;
+					$per_page              = ! empty( $request->get_param( 'per_page' ) ) ? absint( $request->get_param( 'per_page' ) ) : LP_Settings::get_option( 'archive_course_limit', 6 );
+					$courses               = $this->rest_do_course_request( $user_wishlist, $paged, $per_page );
+					$response->data->items = $courses;
 
 					if ( $is_template ) {
-						$paged                    = $request->get_param( 'paged' );
-						$page_current             = $request->get_param( 'pageCurrent' );
-						$filter                   = new LP_Course_Filter();
-						$filter->only_fields      = array( 'ID' );
-						$filter->collection       = LP_Database::getInstance()->tb_posts;
-						$filter->collection_alias = 'p';
-						$filter->page             = $paged;
-						$filter->limit            = ! empty( $page_current ) && absint( $page_current ) > 1 ? ( ( absint( $page_current ) - 1 ) * LP_Settings::get_option( 'archive_course_limit', 6 ) ) : LP_Settings::get_option( 'archive_course_limit', 6 );
-						$filter->where[]          = LP_Database::getInstance()->wpdb->prepare( 'AND p.post_type = %s', LP_COURSE_CPT );
-						$filter->post_ids         = $user_wishlist;
-						$courses                  = LP_Course_DB::getInstance()->get_courses( $filter );
 						$response->data->template = learn_press_get_template_content(
 							'profile/tabs/wishlist/list.php',
 							array(
 								'user_id'      => $user_id,
 								'courses'      => $courses,
-								'num_pages'    => ceil( count( $user_wishlist ) / $filter->limit ),
+								'num_pages'    => ceil( count( $user_wishlist ) / $per_page ),
 								'current_page' => absint( $paged ),
 							)
 						);
@@ -199,14 +192,20 @@ if ( class_exists( 'LP_REST_Jwt_Posts_Controller' ) ) {
 			return rest_ensure_response( $response );
 		}
 
-		public function rest_do_course_request( $course_ids ) {
+		public function rest_do_course_request( $course_ids, $paged = 1, $per_page = 10 ) {
 			if ( empty( $course_ids ) ) {
 				return array();
 			}
 
 			$requests = new WP_REST_Request( 'GET', '/learnpress/v1/courses' );
 
-			$requests->set_query_params( array( 'include' => $course_ids ) );
+			$requests->set_query_params(
+				array(
+					'include'  => $course_ids,
+					'page'     => $paged,
+					'per_page' => $per_page,
+				)
+			);
 			$responses = rest_do_request( $requests );
 			$server    = rest_get_server();
 			$data      = $server->response_to_data( $responses, false );

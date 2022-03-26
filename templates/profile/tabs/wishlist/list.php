@@ -22,9 +22,10 @@ if ( empty( $user_id ) || empty( $courses ) || empty( $current_page ) || empty( 
 		<?php
 		global $post;
 
-		foreach ( $courses as $courseID ) {
-			$course = learn_press_get_course( $courseID->ID );
-			$post   = get_post( $courseID->ID );
+		foreach ( $courses as $course_item ) {
+
+			$course = learn_press_get_course( $course_item['id'] );
+			$post   = get_post( $course_item['id'] );
 			setup_postdata( $post );
 
 			learn_press_get_template( 'content-course.php' );
