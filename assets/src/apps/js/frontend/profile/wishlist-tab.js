@@ -42,14 +42,14 @@ const courseWishList = () => {
 				if ( numberPage <= paged ) {
 					viewMoreEle.remove();
 				}
-				localStorage.setItem('pageCurrent', parseInt(viewMoreEle.dataset.pagedWishlist) + 1 );
-				viewMoreEle.dataset.pagedWishlist = localStorage.getItem('pageCurrent');
+
+				viewMoreEle.dataset.pagedWishlist = parseInt( paged ) + 1;
 
 			} else {
 				viewMoreWishlist( ele, dataset );
 			}
 			//remove course
-			removeWishlist();
+			removeWishlist( dataset );
 
 		} ).catch( ( err ) => {
 			if ( append ) {
@@ -68,9 +68,7 @@ const courseWishList = () => {
 
 	const dataParams = JSON.parse( elArgWishlist.value );
 
-	localStorage.setItem('pageCurrent', 1 );
-
-	getResponse( elements, dataParams , true, false );
+	getResponse( elements, {...dataParams, ...{ perPage : 3 } } , true, false );
 
 	const viewMoreWishlist = (ele,dataset) => {
 		const viewMoreEle = document.querySelector( 'button.view-more-wishlist' );
@@ -78,15 +76,15 @@ const courseWishList = () => {
 		if ( viewMoreEle ) {
 			viewMoreEle.addEventListener( 'click', ( e ) => {
 				e.preventDefault();
-				const paged = viewMoreEle && viewMoreEle.dataset.pagedWishlist;
-
+				const paged = viewMoreEle && parseInt( viewMoreEle.dataset.pagedWishlist );
 				viewMoreEle.classList.add( 'loading' );
 				getResponse( ele.querySelector( '.learn-press-courses' ), { ...dataset, ...{ paged } }, true , viewMoreEle );
 			} );
 		}
 	};
 
-	const removeWishlist = () =>{
+	const removeWishlist = ( dataset ) => {
+
 		const btnRemoveWishlist = document.querySelectorAll( '.course-remove-wishlist' );
 
 		if ( btnRemoveWishlist.length > 0 ) {
@@ -106,12 +104,14 @@ const courseWishList = () => {
 							//append new course when remove old course
 							if ( append ) {
 								alert(response.message);
-								dataParams.paged = 1;
-								const pageCurrent = localStorage.getItem('pageCurrent');
-								getResponse(elements,{ ...dataParams , ...{ pageCurrent } }, true, false );
+								if ( dataset.paged > 1 ){
+									dataset.perPage = dataset.paged * dataset.perPage;
+									dataset.paged = 1;
+								}
+								getResponse( elements, dataset , true, false );
 							}
-						}else{
-							alert(response.message);
+						} else {
+							alert( response.message );
 							window.location.reload();
 						}
 

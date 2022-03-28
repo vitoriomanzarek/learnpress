@@ -10,7 +10,7 @@
  */
 
 defined( 'ABSPATH' ) || exit();
-if ( empty( $user_id ) || empty( $courses ) || empty( $current_page ) || empty( $num_pages ) ) {
+if ( empty( $user_id ) || empty( $courses ) || empty( $current_page ) || empty( $num_pages ) || empty( $per_page ) ) {
 	return;
 }
 
@@ -42,7 +42,7 @@ if ( empty( $user_id ) || empty( $courses ) || empty( $current_page ) || empty( 
 <?php if ( $num_pages > 1 && $current_page < $num_pages && $current_page === 1 ) : ?>
 	<div class="lp_profile_course_progress__nav">
 		<button class="lp-button view-more-wishlist" data-paged-wishlist="<?php echo absint( $current_page + 1 ); ?>"
-				data-number="<?php echo absint( $num_pages ); ?>">
+				data-number="<?php echo absint( $num_pages ); ?>" data-per-page ="<?php echo absint( $per_page ); ?>">
 			<?php esc_html_e( 'View more', 'learnpress' ); ?>
 		</button>
 	</div>

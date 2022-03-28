@@ -74,7 +74,7 @@ if ( class_exists( 'LP_REST_Jwt_Posts_Controller' ) ) {
 
 				if ( ! empty( $user_wishlist ) ) {
 					$paged                 = ! empty( $request->get_param( 'paged' ) ) ? absint( $request->get_param( 'paged' ) ) : 1;
-					$per_page              = ! empty( $request->get_param( 'per_page' ) ) ? absint( $request->get_param( 'per_page' ) ) : LP_Settings::get_option( 'archive_course_limit', 6 );
+					$per_page              = ! empty( $request->get_param( 'perPage' ) ) ? absint( $request->get_param( 'perPage' ) ) : LP_Settings::get_option( 'archive_course_limit', 6 );
 					$courses               = $this->rest_do_course_request( $user_wishlist, $paged, $per_page );
 					$response->data->items = $courses;
 
@@ -86,6 +86,7 @@ if ( class_exists( 'LP_REST_Jwt_Posts_Controller' ) ) {
 								'courses'      => $courses,
 								'num_pages'    => ceil( count( $user_wishlist ) / $per_page ),
 								'current_page' => absint( $paged ),
+								'per_page'     => $per_page,
 							)
 						);
 					}
