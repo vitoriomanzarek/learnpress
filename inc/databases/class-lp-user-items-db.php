@@ -32,7 +32,7 @@ class LP_User_Items_DB extends LP_Database {
 	 * Get items by user_item_id | this is id where item_id = course_id
 	 *
 	 * @param LP_User_Items_Filter $filter
-	 * @param bool $force_cache
+	 * @param bool                 $force_cache
 	 *
 	 * @return object
 	 * @throws Exception
@@ -97,7 +97,8 @@ class LP_User_Items_DB extends LP_Database {
 		return $this->wpdb->query( $query );
 	}
 
-	/*public function get_item_status( $item_id, $course_id ) {
+	/*
+	public function get_item_status( $item_id, $course_id ) {
 		$query = $this->wpdb->prepare(
 			"
 			SELECT status FROM {$this->tb_lp_user_items}
@@ -180,6 +181,7 @@ class LP_User_Items_DB extends LP_Database {
 
 	/**
 	 * Re-set current item
+	 *
 	 * @param $course_id
 	 * @param $item_id
 	 * @editor hungkv
@@ -222,7 +224,7 @@ class LP_User_Items_DB extends LP_Database {
 	/**
 	 * Get total courses is has graduation is 'in_progress'
 	 *
-	 * @param int $user_id
+	 * @param int    $user_id
 	 * @param string $status
 	 * @return int
 	 * @throws Exception
@@ -288,7 +290,7 @@ class LP_User_Items_DB extends LP_Database {
 	 * Get the newest item is course of user
 	 *
 	 * @param LP_User_Items_Filter $filter {course_id, user_id}
-	 * @param bool $force_cache Reset first cache
+	 * @param bool                 $force_cache Reset first cache
 	 *
 	 * @return null|object
 	 * @throws Exception
@@ -327,7 +329,7 @@ class LP_User_Items_DB extends LP_Database {
 	 * Get item of user and course
 	 *
 	 * @param LP_User_Items_Filter $filter {parent_id, item_id, user_id}
-	 * @param bool $force_cache Reset first cache
+	 * @param bool                 $force_cache Reset first cache
 	 *
 	 * @return null|object
 	 * @throws Exception
@@ -480,7 +482,7 @@ class LP_User_Items_DB extends LP_Database {
 	 */
 	public function get_item_ids_of_user_course( LP_User_Items_Filter $filter ): array {
 		if ( empty( $filter->user_item_ids ) ) {
-			return [];
+			return array();
 		}
 
 		$where = 'WHERE 1=1 ';
@@ -508,7 +510,8 @@ class LP_User_Items_DB extends LP_Database {
 	 */
 	public function remove_user_item_ids( LP_User_Items_Filter $filter ) {
 		// Check valid user.
-		/*if ( ! is_user_logged_in() || ( ! current_user_can( ADMIN_ROLE ) && get_current_user_id() != $filter->user_id ) ) {
+		/*
+		if ( ! is_user_logged_in() || ( ! current_user_can( ADMIN_ROLE ) && get_current_user_id() != $filter->user_id ) ) {
 			throw new Exception( __( 'User invalid!', 'learnpress' ) . ' | ' . __FUNCTION__ );
 		}*/
 
@@ -541,7 +544,8 @@ class LP_User_Items_DB extends LP_Database {
 	 */
 	public function remove_user_itemmeta( LP_User_Items_Filter $filter ) {
 		// Check valid user.
-		/*if ( ! is_user_logged_in() || ( ! current_user_can( ADMIN_ROLE ) && get_current_user_id() != $filter->user_id ) ) {
+		/*
+		if ( ! is_user_logged_in() || ( ! current_user_can( ADMIN_ROLE ) && get_current_user_id() != $filter->user_id ) ) {
 			throw new Exception( __( 'User invalid!', 'learnpress' ) . ' | ' . __FUNCTION__ );
 		}*/
 
@@ -573,12 +577,13 @@ class LP_User_Items_DB extends LP_Database {
 	 * @version 1.0.0
 	 */
 	public function delete_user_items_old( int $user_id = 0, int $course_id = 0 ) {
-		$lp_user_items_db     = LP_User_Items_DB::getInstance();
+		$lp_user_items_db     = self::getInstance();
 		$lp_user_item_results = LP_User_Items_Result_DB::instance();
 
 		try {
 			// Check valid user.
-			/*if ( ! is_user_logged_in() || ( ! current_user_can( ADMIN_ROLE ) && get_current_user_id() != $user_id ) ) {
+			/*
+			if ( ! is_user_logged_in() || ( ! current_user_can( ADMIN_ROLE ) && get_current_user_id() != $user_id ) ) {
 				throw new Exception( __( 'User invalid!', 'learnpress' ) . ' | ' . __FUNCTION__ );
 			}*/
 
@@ -634,6 +639,7 @@ class LP_User_Items_DB extends LP_Database {
 
 	/**
 	 * Count items by type and total by status
+	 *
 	 * @throws Exception
 	 *
 	 * @return null|object
@@ -643,7 +649,7 @@ class LP_User_Items_DB extends LP_Database {
 		$count_item_types = count( $item_types );
 		$i                = 0;
 
-		//$user_course = $this->get_last_user_course( $filter );
+		// $user_course = $this->get_last_user_course( $filter );
 
 		$query_count  = '';
 		$query_count .= $this->wpdb->prepare( 'SUM(ui.status = %s) AS count_status,', $filter->status );
@@ -725,7 +731,7 @@ class LP_User_Items_DB extends LP_Database {
 	 * Get courses only by course's user are learning
 	 *
 	 * @param LP_User_Items_Filter $filter
-	 * @param int $total_rows
+	 * @param int                  $total_rows
 	 *
 	 * @author tungnx
 	 * @version 1.0.0
@@ -799,6 +805,43 @@ class LP_User_Items_DB extends LP_Database {
 		$filter->query_count = true;
 
 		return apply_filters( 'lp/user/course/query/filter/count-users-attend-courses-of-author', $filter );
+	}
+
+	/**
+	 * It returns the user ids of users who have attended a course
+	 *
+	 * @param int course_id The ID of the course you want to get the users for.
+	 * @param array field use to query
+	 */
+	public function get_user_ids_attend_courses( int $course_id, array $extra_query ) {
+
+		$limit = LP_Settings::get_option( 'archive_course_limit', 10 );
+
+		if ( $extra_query['calc'] ) { // get total count
+			$sql_limit = '';
+		} else {
+			$offset    = ( absint( $extra_query['paged'] ) - 1 ) * $limit;
+			$sql_limit = $this->wpdb->prepare( 'LIMIT %d, %d', $offset, $limit );
+		}
+
+		$where = $this->wpdb->prepare( ' item_id = %d AND item_type = %s', absint( $course_id ), LP_COURSE_CPT );
+
+		if ( ! empty( $extra_query['status'] ) ) {
+			$where .= $this->wpdb->prepare( ' AND status = %s ', $extra_query['status'] );
+		}
+
+		$query = "SELECT DISTINCT(user_id) FROM {$this->tb_lp_user_items} WHERE $where $sql_limit";
+
+		$result = $this->wpdb->get_col( $query );
+
+		if ( $extra_query['calc'] ) {
+			$result = $this->wpdb->get_var( 'SELECT FOUND_ROWS()' );
+		}
+
+		$this->check_execute_has_error();
+
+		return $result;
+
 	}
 }
 

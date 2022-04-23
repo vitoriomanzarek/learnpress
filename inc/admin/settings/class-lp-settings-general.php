@@ -149,6 +149,13 @@ class LP_Settings_General extends LP_Abstract_Settings_Page {
 					'type'    => 'checkbox',
 				),
 				array(
+					'title'   => esc_html__( 'Students List', 'learnpress' ),
+					'desc'    => esc_html__( 'Enable option if you want to display in tabs single course', 'learnpress' ),
+					'id'      => 'student_list',
+					'default' => 'no',
+					'type'    => 'checkbox',
+				),
+				array(
 					'type' => 'sectionend',
 				),
 			)

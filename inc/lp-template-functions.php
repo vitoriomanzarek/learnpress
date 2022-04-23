@@ -75,6 +75,14 @@ if ( ! function_exists( 'learn_press_get_course_tabs' ) ) {
 			'callback' => LP()->template( 'course' )->callback( 'single-course/tabs/instructor.php' ),
 		);
 
+		if ( LP_Settings::get_option( 'student_list' ) == 'yes' ) {
+			$defaults['students'] = array(
+				'title'    => esc_html__( 'Students List', 'learnpress' ),
+				'priority' => 60,
+				'callback' => LP()->template( 'course' )->callback( 'single-course/tabs/student-list.php' ),
+			);
+		}
+
 		if ( $course->get_faqs() ) {
 			$defaults['faqs'] = array(
 				'title'    => esc_html__( 'FAQs', 'learnpress' ),

@@ -40,6 +40,13 @@ class LP_REST_Lazy_Load_Controller extends LP_Abstract_REST_Controller {
 					'permission_callback' => '__return_true',
 				),
 			),
+			'student-list'            => array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'student_list' ),
+					'permission_callback' => '__return_true',
+				),
+			),
 		);
 
 		parent::register_routes();
@@ -316,6 +323,76 @@ class LP_REST_Lazy_Load_Controller extends LP_Abstract_REST_Controller {
 				$response->data     = $content;
 				$response->item_ids = wp_list_pluck( $section_items['results'], 'ID' );
 			}
+		} catch ( \Throwable $th ) {
+			$response->message = $th->getMessage();
+		}
+
+		return rest_ensure_response( $response );
+	}
+
+	/**
+	 * It returns a list of students in a course
+	 *
+	 * @param WP_REST_Request request The request object.
+	 *
+	 * @return The response is being returned.
+	 */
+	public function student_list( WP_REST_Request $request ) {
+
+		$params    = $request->get_params();
+		$course_id = absint( $params['courseId'] ?? 0 );
+		$status    = $params['status'] ?? '';
+		$paged     = absint( $params['paged'] ?? 1 );
+		$limit     = LP_Settings::get_option( 'archive_course_limit', 10 );
+
+		$extra_query = apply_filters(
+			'lp/api/courses/student-list/extra-query',
+			array(
+				'status' => $status,
+				'paged'  => $paged,
+				'calc'   => false,
+			)
+		);
+		$response    = new LP_REST_Response();
+
+		try {
+			if ( empty( $course_id ) ) {
+				throw new Exception( esc_html__( 'Course is invalid!', 'learnpress' ) );
+			}
+
+			$course = learn_press_get_course( $course_id );
+
+			if ( ! $course ) {
+				throw new Exception( esc_html__( 'Course is invalid!', 'learnpress' ) );
+			}
+
+			$total_student = LP_User_Items_DB::getInstance()->get_user_ids_attend_courses(
+				$course_id,
+				wp_parse_args(
+					array( 'calc' => true ),
+					$extra_query,
+				)
+			);
+
+			$students = LP_User_Items_DB::getInstance()->get_user_ids_attend_courses( $course_id, $extra_query );
+
+			if ( empty( $students ) ) {
+				throw new Exception( esc_html__( 'No user errolled in course !', 'learnpress' ) );
+			}
+
+			$content = learn_press_get_template_content(
+				'loop/single-course/loop-student',
+				array(
+					'students'     => $students,
+					'course'       => $course,
+					'current_page' => $paged,
+					'num_pages'    => ceil( $total_student / $limit ),
+				)
+			);
+
+			$response->status        = 'success';
+			$response->data->content = $content;
+
 		} catch ( \Throwable $th ) {
 			$response->message = $th->getMessage();
 		}

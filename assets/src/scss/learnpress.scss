@@ -318,6 +318,90 @@ footer {
 	&.course-tabs {
 		margin-top: 54px;
 	}
+	.course-students-list{
+		display: flex;
+		flex-wrap: wrap;
+
+		.filter-students{
+			width:100%;
+			margin-bottom: 20px;
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+
+			label {
+				margin-bottom: 0;
+			}
+
+			select.students-list-filter{
+				margin-left: 10px;
+				line-height: 20px;
+				padding: 5px 10px;
+				min-width: 200px;
+			}
+		}
+		.learnpress-course-student-list{
+			width:100%;
+			padding-top: 20px;
+			border-top: 1px solid #eeeded;
+
+			ul.students{
+				list-style: none;
+				padding-left: 0;
+				display: flex;
+				flex-wrap:wrap;
+				align-items: center;
+				justify-content: space-between;
+
+				li.students-enrolled{
+					width: 48%;
+					margin-bottom: 25px;
+					display: flex;
+					align-items: center;
+					flex-wrap: wrap;
+					.user-image{
+						max-width: 60px;
+						margin-right: 15px;
+						img {
+							width:100%;
+							height:100%;
+							border-radius: 50%;
+						}
+					}
+					.user-info{
+						width: calc(100% - 75px);
+						a.name{
+							font-weight: bold;
+							font-style: italic;
+							font-size: 16px;
+							display: block;
+							line-height:20px;
+							&:hover{
+								color:var(--lp-primary-color);
+							}
+						}
+						.lp-course-status{
+							line-height:20px;
+							margin-bottom: 5px;
+							span {
+								font-size: 15px;
+							}
+						}
+						.learn-press-progress{
+							width: 100%;
+						}
+					}
+				}
+			}
+			.lp_student_list_button{
+				margin-top: 15px;
+				button.lp-button{
+					padding: 10px 20px;
+					font-size: 14px;
+				}
+			}
+		}
+	}
 }
 
 /* Archive */
