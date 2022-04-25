@@ -15,7 +15,7 @@ if ( empty( $students ) || empty( $course ) || empty( $current_page ) || empty( 
 
 ?>
 <?php if ( $current_page === 1 ) : ?>
-	<ul class="students">
+	<ul class="students" data-id ="<?php echo $course->get_id(); ?>">
 		<?php endif; ?>
 			<?php
 			$students_list_avatar_size = apply_filters( 'learn_press_students_list_avatar_size', 60 );

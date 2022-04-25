@@ -12,13 +12,15 @@
 /**
  * @var LP_Course $course
  */
-$course = LP_Global::course();
+if ( empty( $course ) ) {
+	$course = LP_Global::course();
+}
 
 defined( 'ABSPATH' ) || exit();
 ?>
 
 <?php do_action( 'learn_press_before_students_list' ); ?>
-<div class="course-students-list">
+<div class="wrap-students-list">
 	<?php
 	$filters = apply_filters(
 		'learn_press_get_students_list_filter',

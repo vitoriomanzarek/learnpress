@@ -815,26 +815,33 @@ class LP_User_Items_DB extends LP_Database {
 	 */
 	public function get_user_ids_attend_courses( int $course_id, array $extra_query ) {
 
-		$limit = LP_Settings::get_option( 'archive_course_limit', 10 );
+		$default = array(
+			'status' => '',
+			'calc'   => false,
+			'paged'  => 1,
+			'limit'  => LP_Settings::get_option( 'archive_course_limit', 10 ),
+		);
 
-		if ( $extra_query['calc'] ) { // get total count
+		$args = wp_parse_args( $extra_query, $default );
+
+		if ( $args['calc'] ) { // get total count
 			$sql_limit = '';
 		} else {
-			$offset    = ( absint( $extra_query['paged'] ) - 1 ) * $limit;
-			$sql_limit = $this->wpdb->prepare( 'LIMIT %d, %d', $offset, $limit );
+			$offset    = ( absint( $args['paged'] ) - 1 ) * $args['limit'];
+			$sql_limit = $this->wpdb->prepare( 'LIMIT %d, %d', $offset, $args['limit'] );
 		}
 
 		$where = $this->wpdb->prepare( ' item_id = %d AND item_type = %s', absint( $course_id ), LP_COURSE_CPT );
 
-		if ( ! empty( $extra_query['status'] ) ) {
-			$where .= $this->wpdb->prepare( ' AND status = %s ', $extra_query['status'] );
+		if ( ! empty( $args['status'] ) ) {
+			$where .= $this->wpdb->prepare( ' AND status = %s ', $args['status'] );
 		}
 
 		$query = "SELECT DISTINCT(user_id) FROM {$this->tb_lp_user_items} WHERE $where $sql_limit";
 
 		$result = $this->wpdb->get_col( $query );
 
-		if ( $extra_query['calc'] ) {
+		if ( $args['calc'] ) {
 			$result = $this->wpdb->get_var( 'SELECT FOUND_ROWS()' );
 		}
 

@@ -15,6 +15,7 @@ require_once dirname( __FILE__ ) . '/widgets/course-progress.php';
 require_once dirname( __FILE__ ) . '/widgets/featured-courses.php';
 require_once dirname( __FILE__ ) . '/widgets/popular-courses.php';
 require_once dirname( __FILE__ ) . '/widgets/recent-courses.php';
+require_once dirname( __FILE__ ) . '/widgets/students-list.php';
 
 add_action(
 	'widgets_init',
@@ -25,6 +26,7 @@ add_action(
 		register_widget( 'LP_Widget_Featured_Courses' );
 		register_widget( 'LP_Widget_Popular_Courses' );
 		register_widget( 'LP_Widget_Recent_Courses' );
+		register_widget( 'LP_Widget_Students_List' );
 	}
 );
 
