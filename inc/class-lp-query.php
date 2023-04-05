@@ -101,6 +101,7 @@ class LP_Query {
 	 */
 	function add_rewrite_tags() {
 		$tags = [
+			'%course-name%'       => '([^&]+)',
 			'%course-item%'       => '([^&]+)',
 			'%item-type%'         => '([^&]+)',
 			'%question%'          => '([^&]+)',
@@ -200,8 +201,8 @@ class LP_Query {
 		} else {
 			foreach ( $course_item_slugs as $post_type => $course_item_slug ) {
 				$rules['course-items'][ $post_type ] = [
-					"^{$course_slug}/([^/]+)(?:/{$course_item_slug}/([^/]+))?/?$" =>
-					'index.php?' . LP_COURSE_CPT . '=$matches[1]&course-item=$matches[2]&item-type=' . $post_type,
+					"^{$course_slug}/([^/]+)/{$course_item_slug}/([^/]+)/?$" =>
+					'index.php?course-name=$matches[1]&'.$post_type.'=$matches[2]',
 				];
 			}
 
