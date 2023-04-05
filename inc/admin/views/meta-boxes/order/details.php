@@ -88,6 +88,23 @@ $user_ip      = $order->get_user_ip_address();
 				<?php if ( $order->is_multi_users() ) : ?>
 					<label><?php esc_html_e( 'Customers:', 'learnpress' ); ?></label>
 					<ul id="list-users" class="advanced-list <?php echo esc_attr( $order->get_status() === 'completed' ? 'locked' : '' ); ?>">
+						<?php
+							$list_users = $order->get_users();
+							if ( ! empty( $list_users ) ) {
+								foreach( $list_users as $user_id ) {
+									$user = learn_press_get_user( $user_id );
+									$user_email = $user->get_data( 'email' );
+									$user_login   = $user->get_data( 'user_login' );
+									?>
+									<li class="lp-user" data-id="<?php echo $user_id; ?>">
+										<span class="remove-item"></span>
+										<span><?php echo sprintf( '%s (%s)', $user_login, $user_email ); ?></span>
+										<input type="hidden" name="order-customer[]" value="<?php echo $user_id; ?>">
+									</li>
+									<?php
+								}
+							};
+						?>
 					</ul>
 
 					<?php if ( 'pending' === $order->get_status() ) : ?>
@@ -152,6 +169,9 @@ $user_ip      = $order->get_user_ip_address();
 				<p class="order-note description"><?php echo wp_kses_post( $note ); ?></p>
 			<?php endif; ?>
 		</div>
+
+		<!-- modal add user to order -->
+		<?php learn_press_admin_view('meta-boxes/order/search/modal-search-users'); ?>
 	</div>
 
 	<div class="order-items">
@@ -228,6 +248,8 @@ $user_ip      = $order->get_user_ip_address();
 	</div>
 </div>
 
+
+<!-- search modal v2 not use -->
 <script type="text/html" id="tmpl-order-data-user">
 	<# if(!data.multiple){ #>
 		<div class="order-data-field order-data-user">
@@ -255,6 +277,7 @@ $user_ip      = $order->get_user_ip_address();
 		<input type="hidden" name="order-customer[]" value="{{id}}">
 	</li>
 </script>
+<!-- end search modal v2 not use -->
 
 <?php
 $assets = learn_press_admin_assets();

@@ -126,42 +126,44 @@
 			} );
 		} );
 
-		$( document ).on( 'click', '.change-user', function( e ) {
-			e.preventDefault();
-			LP.$modalSearchUsers.open( {
-				data: {
-					context: 'order-items',
-					contextId: $( '#post_ID' ).val(),
-					show: true,
-					multiple: $( this ).data( 'multiple' ) === 'yes',
-					exclude: getAddedUsers(),
-					textFormat: orderOptions.userTextFormat,
-				},
-				callbacks: {
-					addUsers( data ) {
-						if ( this.multiple ) {
-							if ( ! $listUsers.length ) {
-								$listUsers = $( LP.template( 'tmpl-order-data-user' )( { multiple: true } ) );
-								$listUsers.LP( 'AdvancedList', advancedListOptions );
+		// search modal v2 not use
+		// $( document ).on( 'click', '.change-user', function( e ) {
+		// 	e.preventDefault();
+		// 	LP.$modalSearchUsers.open( {
+		// 		data: {
+		// 			context: 'order-items',
+		// 			contextId: $( '#post_ID' ).val(),
+		// 			show: true,
+		// 			multiple: $( this ).data( 'multiple' ) === 'yes',
+		// 			exclude: getAddedUsers(),
+		// 			textFormat: orderOptions.userTextFormat,
+		// 		},
+		// 		callbacks: {
+		// 			addUsers( data ) {
+		// 				if ( this.multiple ) {
+		// 					if ( ! $listUsers.length ) {
+		// 						$listUsers = $( LP.template( 'tmpl-order-data-user' )( { multiple: true } ) );
+		// 						$listUsers.LP( 'AdvancedList', advancedListOptions );
 
-								$( '.order-data-user' ).replaceWith( $listUsers );
-							}
-							for ( let i = 0; i < this.selected.length; i++ ) {
-								$listUsers.LP( 'AdvancedList', 'add', [ template( this.textFormat, this.selected[ i ] ), this.selected[ i ].id ] );
-							}
-						} else {
-							const $html = LP.template( 'tmpl-order-data-user' )( {
-								name: template( this.textFormat, this.selected[ 0 ] ),
-								id: this.selected[ 0 ].id,
-							} );
+		// 						$( '.order-data-user' ).replaceWith( $listUsers );
+		// 					}
+		// 					for ( let i = 0; i < this.selected.length; i++ ) {
+		// 						$listUsers.LP( 'AdvancedList', 'add', [ template( this.textFormat, this.selected[ i ] ), this.selected[ i ].id ] );
+		// 					}
+		// 				} else {
+		// 					const $html = LP.template( 'tmpl-order-data-user' )( {
+		// 						name: template( this.textFormat, this.selected[ 0 ] ),
+		// 						id: this.selected[ 0 ].id,
+		// 					} );
 
-							$( '.order-data-user' ).replaceWith( $html );
-						}
+		// 					$( '.order-data-user' ).replaceWith( $html );
+		// 				}
 
-						this.close();
-					},
-				},
-			} );
-		} );
+		// 				this.close();
+		// 			},
+		// 		},
+		// 	} );
+		// } );
+		// search modal v2 not use
 	} );
 }( jQuery ) );

@@ -154,18 +154,18 @@ class LP_Admin_Assets extends LP_Abstract_Assets {
 					0,
 					0
 				),
-				'learn-press-meta-box-order'        => new LP_Asset_Key(
-					$this->url( self::$_folder_source . 'js/admin/partial/meta-box-order' . self::$_min_assets . '.js' ),
-					array(
-						'vue-libs',
-						'advanced-list',
-						'lp-modal-search-courses',
-						'lp-modal-search-users',
-					),
-					array( LP_ORDER_CPT ),
-					0,
-					1
-				),
+				// 'learn-press-meta-box-order'        => new LP_Asset_Key(
+				// 	$this->url( self::$_folder_source . 'js/admin/partial/meta-box-order' . self::$_min_assets . '.js' ),
+				// 	array(
+				// 		'vue-libs',
+				// 		'advanced-list',
+				// 		'lp-modal-search-courses',
+				// 		'lp-modal-search-users',
+				// 	),
+				// 	array( LP_ORDER_CPT ),
+				// 	0,
+				// 	1
+				// ),
 				'learn-press-sync-data'             => new LP_Asset_Key(
 					$this->url( 'js/dist/admin/pages/sync-data' . self::$_min_assets . '.js' ),
 					array(),
@@ -227,11 +227,18 @@ class LP_Admin_Assets extends LP_Abstract_Assets {
 					0,
 					1
 				),
+				// 'lp-modal-search-users'             => new LP_Asset_Key(
+				// 	$this->url( self::$_folder_source . 'js/admin/share/modal-search-users' . self::$_min_assets . '.js' ),
+				// 	array( 'jquery' ),
+				// 	array( LP_ORDER_CPT ),
+				// 	1,
+				// 	1
+				// ),
 				'lp-modal-search-users'             => new LP_Asset_Key(
-					$this->url( self::$_folder_source . 'js/admin/share/modal-search-users' . self::$_min_assets . '.js' ),
-					array( 'jquery' ),
+					$this->url( self::$_folder_source . 'js/admin/share/modal-search-users-v2' . self::$_min_assets . '.js' ),
+					array( 'jquery','wp-api-fetch' ),
 					array( LP_ORDER_CPT ),
-					1,
+					0,
 					1
 				),
 				'lp-tools-course-tab'               => new LP_Asset_Key(

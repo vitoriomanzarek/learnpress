@@ -395,6 +395,9 @@ if ( ! class_exists( 'LearnPress' ) ) {
 			require_once 'inc/rest-api/class-lp-core-api.php';
 			require_once 'inc/rest-api/class-lp-admin-core-api.php';
 
+			//modal using api
+			require_once 'inc/rest-api/v1/admin/modal/class-lp-modal-search-users.php';
+
 			/** Jwt */
 			include_once 'inc/jwt/class-jwt-auth.php';
 
