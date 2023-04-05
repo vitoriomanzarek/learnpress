@@ -932,6 +932,10 @@ class LP_Page_Controller {
 			return LP_PAGE_COURSES;
 		} elseif ( learn_press_is_course() ) {
 			return LP_PAGE_SINGLE_COURSE;
+		} elseif ( self::is_page_single_lesson() ) {
+			return LP_PAGE_SINGLE_LESSON;
+		} elseif ( self::is_page_single_quiz() ) {
+			return LP_PAGE_SINGLE_QUIZ;
 		} elseif ( self::is_page_become_a_teacher() ) {
 			return LP_PAGE_BECOME_A_TEACHER;
 		} elseif ( self::is_page_profile() ) {
@@ -970,6 +974,21 @@ class LP_Page_Controller {
 
 		return false;
 	}
+
+	/**
+	 * @return bool
+	 */
+	public static function is_page_single_lesson(): bool {
+		return is_singular( LP_LESSON_CPT );
+	}
+
+	/**
+	 * @return bool
+	 */
+	public static function is_page_single_quiz(): bool {
+		return is_singular( LP_QUIZ_CPT );
+	}
+
 
 	/**
 	 * Check is page courses

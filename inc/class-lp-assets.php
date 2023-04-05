@@ -40,7 +40,18 @@ class LP_Assets extends LP_Abstract_Assets {
 				'learnpress'         => new LP_Asset_Key(
 					self::url( 'css/learnpress' . $is_rtl . self::$_min_assets . '.css' ),
 					array( 'font-awesome-5-all' ),
-					array( LP_PAGE_COURSES, LP_PAGE_SINGLE_COURSE, LP_PAGE_SINGLE_COURSE_CURRICULUM, LP_PAGE_QUIZ, LP_PAGE_QUESTION, LP_PAGE_CHECKOUT, LP_PAGE_BECOME_A_TEACHER, LP_PAGE_PROFILE ),
+					array(
+						LP_PAGE_COURSES,
+						LP_PAGE_SINGLE_COURSE,
+						LP_PAGE_SINGLE_LESSON,
+						LP_PAGE_SINGLE_QUIZ,
+						LP_PAGE_SINGLE_COURSE_CURRICULUM,
+						LP_PAGE_QUIZ,
+						LP_PAGE_QUESTION,
+						LP_PAGE_CHECKOUT,
+						LP_PAGE_BECOME_A_TEACHER,
+						LP_PAGE_PROFILE,
+					),
 					0
 				),
 				'learnpress-widgets' => new LP_Asset_Key(
@@ -204,7 +215,11 @@ class LP_Assets extends LP_Abstract_Assets {
 							'lp-utils',
 						)
 					),
-					array( LP_PAGE_SINGLE_COURSE ),
+					array(
+						LP_PAGE_SINGLE_COURSE,
+						LP_PAGE_SINGLE_LESSON,
+						LP_PAGE_SINGLE_QUIZ,
+					),
 					0,
 					1
 				),
@@ -247,8 +262,8 @@ class LP_Assets extends LP_Abstract_Assets {
 
 		// Dequeue script 'smoothPageScroll' on item details, it makes can't scroll, when rewrite page item detail, can check to remove.
 		if ( LP_PAGE_SINGLE_COURSE_CURRICULUM === LP_Page_Controller::page_current() ||
-		LP_PAGE_QUIZ === LP_Page_Controller::page_current() ||
-		LP_PAGE_QUESTION === LP_Page_Controller::page_current() ) {
+		     LP_PAGE_QUIZ === LP_Page_Controller::page_current() ||
+		     LP_PAGE_QUESTION === LP_Page_Controller::page_current() ) {
 			wp_dequeue_script( 'smoothPageScroll' );
 		}
 
@@ -281,7 +296,13 @@ class LP_Assets extends LP_Abstract_Assets {
 		$page_current = LP_Page_Controller::page_current();
 		if ( ! in_array(
 			$page_current,
-			array( LP_PAGE_SINGLE_COURSE_CURRICULUM, LP_PAGE_SINGLE_COURSE, LP_PAGE_QUIZ )
+			array(
+				LP_PAGE_SINGLE_COURSE_CURRICULUM,
+				LP_PAGE_SINGLE_COURSE,
+				LP_PAGE_QUIZ,
+				LP_PAGE_SINGLE_LESSON,
+				LP_PAGE_SINGLE_QUIZ,
+			)
 		) ) {
 			return;
 		}
