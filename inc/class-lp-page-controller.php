@@ -36,7 +36,7 @@ class LP_Page_Controller {
 
 		} else {
 			//add_filter( 'post_type_archive_link', [ $this, 'link_archive_course' ], 10, 2 );
-			add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ), -1 );
+			add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ), - 1 );
 			// For return result query course to cache.
 			//add_action( 'posts_pre_query', [ $this, 'posts_pre_query' ], 10, 2 );
 			add_filter( 'template_include', array( $this, 'template_loader' ), 10 );
@@ -119,48 +119,48 @@ class LP_Page_Controller {
 	/**
 	 * @deprecated 4.2.2.4
 	 */
-//	private function has_block_template( $template_name ) {
-//		if ( ! $template_name ) {
-//			return false;
-//		}
-//
-//		$has_template      = false;
-//		$template_name     = str_replace( 'course', LP_COURSE_CPT, $template_name );
-//		$template_filename = $template_name . '.html';
-//		// Since Gutenberg 12.1.0, the conventions for block templates directories have changed,
-//		// we should check both these possible directories for backwards-compatibility.
-//		$possible_templates_dirs = array( 'templates', 'block-templates' );
-//
-//		// Combine the possible root directory names with either the template directory
-//		// or the stylesheet directory for child themes, getting all possible block templates
-//		// locations combinations.
-//		$filepath        = DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . $template_filename;
-//		$legacy_filepath = DIRECTORY_SEPARATOR . 'block-templates' . DIRECTORY_SEPARATOR . $template_filename;
-//		$possible_paths  = array(
-//			get_stylesheet_directory() . $filepath,
-//			get_stylesheet_directory() . $legacy_filepath,
-//			get_template_directory() . $filepath,
-//			get_template_directory() . $legacy_filepath,
-//		);
-//
-//		// Check the first matching one.
-//		foreach ( $possible_paths as $path ) {
-//			if ( is_readable( $path ) ) {
-//				$has_template = true;
-//				break;
-//			}
-//		}
-//
-//		/**
-//		 * Filters the value of the result of the block template check.
-//		 *
-//		 * @since x.x.x
-//		 *
-//		 * @param boolean $has_template value to be filtered.
-//		 * @param string $template_name The name of the template.
-//		 */
-//		return (bool) apply_filters( 'learnpress_has_block_template', $has_template, $template_name );
-//	}
+	//  private function has_block_template( $template_name ) {
+	//      if ( ! $template_name ) {
+	//          return false;
+	//      }
+	//
+	//      $has_template      = false;
+	//      $template_name     = str_replace( 'course', LP_COURSE_CPT, $template_name );
+	//      $template_filename = $template_name . '.html';
+	//      // Since Gutenberg 12.1.0, the conventions for block templates directories have changed,
+	//      // we should check both these possible directories for backwards-compatibility.
+	//      $possible_templates_dirs = array( 'templates', 'block-templates' );
+	//
+	//      // Combine the possible root directory names with either the template directory
+	//      // or the stylesheet directory for child themes, getting all possible block templates
+	//      // locations combinations.
+	//      $filepath        = DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . $template_filename;
+	//      $legacy_filepath = DIRECTORY_SEPARATOR . 'block-templates' . DIRECTORY_SEPARATOR . $template_filename;
+	//      $possible_paths  = array(
+	//          get_stylesheet_directory() . $filepath,
+	//          get_stylesheet_directory() . $legacy_filepath,
+	//          get_template_directory() . $filepath,
+	//          get_template_directory() . $legacy_filepath,
+	//      );
+	//
+	//      // Check the first matching one.
+	//      foreach ( $possible_paths as $path ) {
+	//          if ( is_readable( $path ) ) {
+	//              $has_template = true;
+	//              break;
+	//          }
+	//      }
+	//
+	//      /**
+	//       * Filters the value of the result of the block template check.
+	//       *
+	//       * @since x.x.x
+	//       *
+	//       * @param boolean $has_template value to be filtered.
+	//       * @param string $template_name The name of the template.
+	//       */
+	//      return (bool) apply_filters( 'learnpress_has_block_template', $has_template, $template_name );
+	//  }
 
 	/**
 	 * Set title of pages
@@ -501,6 +501,10 @@ class LP_Page_Controller {
 					$page_template = 'content-single-item.php';
 				}
 			}
+		} elseif ( is_singular( LP_LESSON_CPT ) ) {
+			$page_template = 'single-lesson.php';
+		} elseif ( is_singular( LP_QUIZ_CPT ) ) {
+			$page_template = 'single-quiz.php';
 		} elseif ( learn_press_is_course_taxonomy() ) {
 			$object = get_queried_object();
 
@@ -612,9 +616,9 @@ class LP_Page_Controller {
 	 *
 	 * @return WP_Query
 	 * @editor tungnx
-	 * @since 3.0.0
-	 * @version 4.1.3
 	 * @throws Exception
+	 * @version 4.1.3
+	 * @since 3.0.0
 	 */
 	public function pre_get_posts( WP_Query $q ): WP_Query {
 		// Affect only the main query and not in admin
@@ -644,7 +648,7 @@ class LP_Page_Controller {
 		try {
 			if ( LP_Page_Controller::is_page_courses() ) {
 				if ( LP_Settings_Courses::is_ajax_load_courses() && ! LP_Settings_Courses::is_no_load_ajax_first_courses()
-				&& ! in_array( $theme_current, $theme_no_load_ajax ) ) {
+					 && ! in_array( $theme_current, $theme_no_load_ajax ) ) {
 					LearnPress::instance()->template( 'course' )->remove_callback( 'learn-press/after-courses-loop', 'loop/course/pagination.php', 10 );
 					/**
 					 * If page is archive course - query set posts_per_page = 1
@@ -659,7 +663,7 @@ class LP_Page_Controller {
 				} else {
 					$filter               = new LP_Course_Filter();
 					$filter->only_fields  = [ 'ID' ];
-					$filter->limit        = -1;
+					$filter->limit        = - 1;
 					$is_need_check_in_arr = false;
 					$limit                = LP_Settings::get_option( 'archive_course_limit', 6 );
 
@@ -829,11 +833,20 @@ class LP_Page_Controller {
 	 * Apply for user not admin, instructor, co-instructor
 	 *
 	 * @param WP_Query $q
+	 *
 	 * @editor tungnx
 	 * @since  3.2.7.5
 	 */
 	public function set_link_item_course_default_wp_to_page_404( $q ) {
-		$post_type_apply_404 = apply_filters( 'lp/page-controller/', array( LP_LESSON_CPT, LP_QUIZ_CPT, LP_QUESTION_CPT, 'lp_assignment' ) );
+		$post_type_apply_404 = apply_filters(
+			'lp/page-controller/',
+			array(
+				LP_LESSON_CPT,
+				LP_QUIZ_CPT,
+				LP_QUESTION_CPT,
+				'lp_assignment',
+			)
+		);
 
 		if ( ! isset( $q->query_vars['post_type'] ) || ! in_array( $q->query_vars['post_type'], $post_type_apply_404 ) ) {
 			return $q;
