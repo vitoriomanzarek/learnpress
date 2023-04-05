@@ -541,15 +541,30 @@ class LP_Template_Course extends LP_Abstract_Template {
 	 */
 	public function course_curriculum() {
 		if ( ! learn_press_override_templates() || ( learn_press_override_templates() && has_filter( 'lp/template-course/course_curriculum/skeleton' ) ) ) {
-			$course_item = LP_Global::course_item();
-
-			if ( $course_item ) { // Check if current item is viewable
-				$item_id    = $course_item->get_id();
-				$section_id = LP_Section_DB::getInstance()->get_section_id_by_item_id( absint( $item_id ) );
+			$course_id = '';
+			if ( LP_Page_Controller::is_page_single_quiz() || LP_Page_Controller::is_page_single_lesson() ) {
+				global $wp, $post;
+				$item_id    = $post->ID;
+				$query_vars = $wp->query_vars;
+				$course     = get_page_by_path( $query_vars['course-name'], OBJECT, LP_COURSE_CPT );
+				if ( $course ) {
+					$course_id = $course->ID;
+				}
+			} else {
+				$course_item = LP_Global::course_item();
+				if ( $course_item ) { // Check if current item is viewable
+					$item_id = $course_item->get_id();
+				}
 			}
+
+			if ( empty( $item_id ) ) {
+				return;
+			}
+
+			$section_id = LP_Section_DB::getInstance()->get_section_id_by_item_id( absint( $item_id ) );
 			?>
 			<div class="learnpress-course-curriculum" data-section="<?php echo esc_attr( $section_id ?? '' ); ?>"
-				data-id="<?php echo esc_attr( $item_id ?? '' ); ?>">
+				 data-id="<?php echo esc_attr( $item_id ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>">
 				<ul class="lp-skeleton-animation">
 					<li style="width: 100%; height: 50px"></li>
 					<li style="width: 100%; height: 20px"></li>
@@ -847,7 +862,8 @@ class LP_Template_Course extends LP_Abstract_Template {
 		}
 	}
 
-	public function sidebar() {     }
+	public function sidebar() {
+	}
 
 	public function course_featured_review() {
 		$review_content = get_post_meta( $this->course->get_id(), '_lp_featured_review', true );
@@ -940,7 +956,7 @@ class LP_Template_Course extends LP_Abstract_Template {
 	}
 
 	public function course_comment_template() {
-		 global $post;
+		global $post;
 
 		if ( comments_open() || get_comments_number() ) {
 			add_filter( 'deprecated_file_trigger_error', '__return_false' );

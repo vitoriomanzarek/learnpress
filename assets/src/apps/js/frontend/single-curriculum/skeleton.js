@@ -8,9 +8,13 @@ import { searchCourseContent } from './components/search';
 export default function courseCurriculumSkeleton( courseID = '' ) {
 	let isLoadingItems = false;
 	let isLoadingSections = false;
-	const Sekeleton = () => {
-		const elementCurriculum = document.querySelector( '.learnpress-course-curriculum' );
+	const elementCurriculum = document.querySelector( '.learnpress-course-curriculum' );
 
+	if ( courseID === '' && elementCurriculum && elementCurriculum.getAttribute( 'data-course-id' ) ) {
+		courseID = elementCurriculum.getAttribute( 'data-course-id' );
+	}
+
+	const Sekeleton = () => {
 		if ( ! elementCurriculum ) {
 			return;
 		}

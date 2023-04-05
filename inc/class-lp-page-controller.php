@@ -501,10 +501,8 @@ class LP_Page_Controller {
 					$page_template = 'content-single-item.php';
 				}
 			}
-		} elseif ( is_singular( LP_LESSON_CPT ) ) {
-			$page_template = 'single-lesson.php';
-		} elseif ( is_singular( LP_QUIZ_CPT ) ) {
-			$page_template = 'single-quiz.php';
+		} elseif ( is_singular( LP_LESSON_CPT ) || is_singular( LP_QUIZ_CPT ) ) {
+			$page_template = 'content-single-item.php';
 		} elseif ( learn_press_is_course_taxonomy() ) {
 			$object = get_queried_object();
 
@@ -648,7 +646,7 @@ class LP_Page_Controller {
 		try {
 			if ( LP_Page_Controller::is_page_courses() ) {
 				if ( LP_Settings_Courses::is_ajax_load_courses() && ! LP_Settings_Courses::is_no_load_ajax_first_courses()
-					 && ! in_array( $theme_current, $theme_no_load_ajax ) ) {
+				     && ! in_array( $theme_current, $theme_no_load_ajax ) ) {
 					LearnPress::instance()->template( 'course' )->remove_callback( 'learn-press/after-courses-loop', 'loop/course/pagination.php', 10 );
 					/**
 					 * If page is archive course - query set posts_per_page = 1
