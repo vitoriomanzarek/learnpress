@@ -97,17 +97,17 @@ class LP_Template_Course extends LP_Abstract_Template {
 	public function quiz_meta_questions( $item ) {
 		$count = $item->count_questions();
 		echo '<span class="item-meta count-questions">' . sprintf(
-			$count ? _n(
-				'%d question',
-				'%d questions',
-				$count,
-				'learnpress'
-			) : __(
-				'%d question',
-				'learnpress'
-			),
-			$count
-		) . '</span>';
+				$count ? _n(
+					'%d question',
+					'%d questions',
+					$count,
+					'learnpress'
+				) : __(
+					'%d question',
+					'learnpress'
+				),
+				$count
+			) . '</span>';
 	}
 
 	/**
@@ -557,14 +557,13 @@ class LP_Template_Course extends LP_Abstract_Template {
 				}
 			}
 
-			if ( empty( $item_id ) ) {
-				return;
+			if ( isset( $item_id ) ) {
+				$section_id = LP_Section_DB::getInstance()->get_section_id_by_item_id( absint( $item_id ) );
 			}
-
-			$section_id = LP_Section_DB::getInstance()->get_section_id_by_item_id( absint( $item_id ) );
 			?>
 			<div class="learnpress-course-curriculum" data-section="<?php echo esc_attr( $section_id ?? '' ); ?>"
-				 data-id="<?php echo esc_attr( $item_id ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>">
+				 data-id="<?php echo esc_attr( $item_id ?? '' ); ?>"
+				 data-course-id="<?php echo esc_attr( $course_id ); ?>">
 				<ul class="lp-skeleton-animation">
 					<li style="width: 100%; height: 50px"></li>
 					<li style="width: 100%; height: 20px"></li>
