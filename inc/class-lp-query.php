@@ -56,9 +56,9 @@ class LP_Query {
 	/**
 	 * This function is cloned from wp core function
 	 *
+	 * @return string
 	 * @see WP()->parse_request()
 	 *
-	 * @return string
 	 * @deprecated 4.2.2
 	 */
 	/*public function get_request() {
@@ -173,7 +173,7 @@ class LP_Query {
 				foreach ( $course_item_slugs as $post_type => $course_item_slug ) {
 					$rules['course-with-cat-items'][ $post_type ] = [
 						"^{$course_slug}(?:/{$course_item_slug}/([^/]+))?/?$" =>
-							'index.php?' . LP_COURSE_CPT . '=$matches[2]&course_category=$matches[1]&course-item=$matches[3]&item-type=' . $post_type,
+							'index.php?course-name=$matches[2]&course_category=$matches[1]&' . $post_type . '=$matches[3]',
 					];
 				}
 
@@ -202,7 +202,7 @@ class LP_Query {
 			foreach ( $course_item_slugs as $post_type => $course_item_slug ) {
 				$rules['course-items'][ $post_type ] = [
 					"^{$course_slug}/([^/]+)/{$course_item_slug}/([^/]+)/?$" =>
-					'index.php?course-name=$matches[1]&'.$post_type.'=$matches[2]',
+						'index.php?course-name=$matches[1]&' . $post_type . '=$matches[2]',
 				];
 			}
 
@@ -211,14 +211,14 @@ class LP_Query {
 				$assignment_slug                            = urldecode( sanitize_title_with_dashes( LP_Settings::get_option( 'assignment_slug', 'assignments' ) ) );
 				$rules['course-items'][ LP_ASSIGNMENT_CPT ] = [
 					"^{$course_slug}/([^/]+)(?:/{$assignment_slug}/([^/]+))?/?$" =>
-					'index.php?' . LP_COURSE_CPT . '=$matches[1]&course-item=$matches[2]&item-type=' . LP_ASSIGNMENT_CPT,
+						'index.php?' . LP_COURSE_CPT . '=$matches[1]&course-item=$matches[2]&item-type=' . LP_ASSIGNMENT_CPT,
 				];
 			}
 			if ( class_exists( 'LP_Addon_H5p_Preload' ) ) {
 				$h5p_slug                            = urldecode( sanitize_title_with_dashes( LP_Settings::get_option( 'h5p_slug', 'h5p' ) ) );
 				$rules['course-items'][ LP_H5P_CPT ] = [
 					"^{$course_slug}/([^/]+)(?:/{$h5p_slug}/([^/]+))?/?$" =>
-					'index.php?' . LP_COURSE_CPT . '=$matches[1]&course-item=$matches[2]&item-type=' . LP_H5P_CPT,
+						'index.php?' . LP_COURSE_CPT . '=$matches[1]&course-item=$matches[2]&item-type=' . LP_H5P_CPT,
 				];
 			}
 			// End Fixed
@@ -346,7 +346,7 @@ class LP_Query {
 
 		if ( ! empty( $wp_query->query_vars['s'] ) && ! is_admin() ) {
 			$escaped_s = esc_sql( $wp_query->query_vars['s'] );
-			$where    .= "OR $wpdb->terms.name LIKE '%{$escaped_s}%'";
+			$where     .= "OR $wpdb->terms.name LIKE '%{$escaped_s}%'";
 		}
 
 		return $where;
@@ -380,10 +380,10 @@ class LP_Query {
 	 * Fixed for case: addons Certificates (v4.0.5), FE(4.0.5), Live(4.0.2), Collections(4.0.2) not installed on site client.
 	 * Run only one time when reload page Frontend.
 	 *
-	 * @see get_option() hook in this function.
+	 * @return mixed|array
 	 * @since 4.2.2
 	 * @version 1.0.1
-	 * @return mixed|array
+	 * @see get_option() hook in this function.
 	 */
 	public function update_option_rewrite_rules( $wp_rules ) {
 		if ( ! is_array( $wp_rules ) ) {
