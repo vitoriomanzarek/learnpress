@@ -172,7 +172,7 @@ class LP_Query {
 
 				foreach ( $course_item_slugs as $post_type => $course_item_slug ) {
 					$rules['course-with-cat-items'][ $post_type ] = [
-						"^{$course_slug}(?:/{$course_item_slug}/([^/]+))?/?$" =>
+						"^{$course_slug}(?:/{$course_item_slug}/([^/]+))/?$" =>
 							'index.php?course-name=$matches[2]&course_category=$matches[1]&' . $post_type . '=$matches[3]',
 					];
 				}
@@ -185,14 +185,14 @@ class LP_Query {
 						)
 					);
 					$rules['course-with-cat-items'][ LP_ASSIGNMENT_CPT ] = [
-						"^{$course_slug}(?:/{$assignment_slug}/([^/]+))?/?$" =>
+						"^{$course_slug}(?:/{$assignment_slug}/([^/]+))/?$" =>
 							'index.php?course-name=$matches[2]&course_category=$matches[1]&' . LP_ASSIGNMENT_CPT . '=$matches[3]',
 					];
 				}
 				if ( class_exists( 'LP_Addon_H5p_Preload' ) ) {
 					$h5p_slug                                     = urldecode( sanitize_title_with_dashes( LP_Settings::get_option( 'h5p_slug', 'h5p' ) ) );
 					$rules['course-with-cat-items'][ LP_H5P_CPT ] = [
-						"^{$course_slug}(?:/{$h5p_slug}/([^/]+))?/?$" =>
+						"^{$course_slug}(?:/{$h5p_slug}/([^/]+))/?$" =>
 							'index.php?course-name=$matches[2]&course_category=$matches[1]&' . LP_H5P_CPT . '=$matches[3]',
 					];
 				}
