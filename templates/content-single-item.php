@@ -10,6 +10,16 @@
 
 defined( 'ABSPATH' ) || exit();
 
+if ( LP_Page_Controller::is_page_single_course_item() ) {
+	global $wp, $lp_course_item, $post;
+	$query_vars     = $wp->query_vars;
+	$course         = learn_press_get_course();
+	$lp_course_item = apply_filters( 'learn-press/single-course-request-item', $course->get_item( $post->ID ) );
+	$user           = learn_press_get_current_user();
+	// Set item viewing
+	$user->set_viewing_item( $lp_course_item );
+}
+
 /**
  * @since 4.0.0
  *

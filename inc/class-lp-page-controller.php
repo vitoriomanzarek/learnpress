@@ -43,7 +43,9 @@ class LP_Page_Controller {
 			add_filter( 'template_include', array( $this, 'check_pages' ), 30 );
 			add_filter( 'template_include', array( $this, 'auto_shortcode' ), 50 );
 
-			add_filter( 'the_post', array( $this, 'setup_data_for_item_course' ) );
+			//Remove
+			//add_filter( 'the_post', array( $this, 'setup_data_for_item_course' ) );
+
 			add_filter( 'request', array( $this, 'remove_course_post_format' ), 1 );
 
 			add_shortcode( 'learn_press_archive_course', array( $this, 'archive_content' ) );
@@ -492,16 +494,16 @@ class LP_Page_Controller {
 		if ( is_singular( LP_COURSE_CPT ) ) {
 			$page_template = 'single-course.php';
 
-			if ( $this->_is_single() ) {
-				global $post;
-				setup_postdata( $post );
-
-				$course_item = LP_Global::course_item();
-				if ( $course_item ) {
-					$page_template = 'content-single-item.php';
-				}
-			}
-		} elseif ( is_singular( LP_LESSON_CPT ) || is_singular( LP_QUIZ_CPT ) ) {
+//			if ( $this->_is_single() ) {
+//				global $post;
+//				setup_postdata( $post );
+//
+//				$course_item = LP_Global::course_item();
+//				if ( $course_item ) {
+//					$page_template = 'content-single-item.php';
+//				}
+//			}
+		} elseif ( self::is_page_single_course_item() ) {
 			$page_template = 'content-single-item.php';
 		} elseif ( learn_press_is_course_taxonomy() ) {
 			$object = get_queried_object();
@@ -987,6 +989,12 @@ class LP_Page_Controller {
 		return is_singular( LP_QUIZ_CPT );
 	}
 
+	/**
+	 * @return bool
+	 */
+	public static function is_page_single_course_item(): bool {
+		return self::is_page_single_lesson() || self::is_page_single_quiz();
+	}
 
 	/**
 	 * Check is page courses

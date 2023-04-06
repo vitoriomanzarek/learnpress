@@ -15,16 +15,23 @@ defined( 'ABSPATH' ) || exit();
  * Another page use learn_press_get_course(id)
  *
  * @param int $the_course
- * @since 3.0.0
+ *
+ * @return bool|LP_Course|mixed
  * @version 1.0.1
  * @editor tungnx
- * @return bool|LP_Course|mixed
+ * @since 3.0.0
  */
 function learn_press_get_course( $the_course = 0 ) {
 	$the_course = (int) $the_course;
 
 	if ( 0 === $the_course ) {
-		$the_course = get_the_ID() ? get_the_ID() : 0;
+		if ( LP_Page_Controller::is_page_single_course_item() ) {
+			global $wp;
+			$query_vars = $wp->query_vars;
+			$the_course = get_page_by_path( $query_vars['course-name'], OBJECT, LP_COURSE_CPT )->ID;
+		} else {
+			$the_course = get_the_ID() ? get_the_ID() : 0;
+		}
 	}
 
 	return LP_Course::get_course( $the_course );
@@ -79,10 +86,10 @@ function learn_press_get_course( $the_course = 0 ) {
  * Default: [lp_lesson, lp_quiz]
  *
  * @return mixed
+ * @return array
+ * @version  1.0.1
  * @since 3.0.0
  * @editor tungnx
- * @version  1.0.1
- * @return array
  */
 function learn_press_get_course_item_types( bool $return_only_value = true ): array {
 	return apply_filters(
@@ -521,6 +528,7 @@ function learn_press_get_course_item_permalink( int $course_id = 0, int $item_id
  */
 function learn_press_get_the_course() {
 	_deprecated_function( __FUNCTION__, '4.2.2', 'learn_press_get_course' );
+
 	return learn_press_get_course();
 }
 
@@ -720,15 +728,15 @@ if ( ! function_exists( 'learn_press_edit_item_link' ) ) {
 		if ( $user->can_edit_item( $item_id, $course_id ) ) : ?>
 			<p class="edit-course-item-link">
 				<a href="<?php echo get_edit_post_link( $item_id ); ?>">
-									<?php
-									_e(
-										'Edit this item',
-										'learnpress'
-									);
-									?>
-						</a>
+					<?php
+					_e(
+						'Edit this item',
+						'learnpress'
+					);
+					?>
+				</a>
 			</p>
-			<?php
+		<?php
 		endif;
 	}
 }
