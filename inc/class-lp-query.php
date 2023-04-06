@@ -186,14 +186,14 @@ class LP_Query {
 					);
 					$rules['course-with-cat-items'][ LP_ASSIGNMENT_CPT ] = [
 						"^{$course_slug}(?:/{$assignment_slug}/([^/]+))?/?$" =>
-							'index.php?' . LP_COURSE_CPT . '=$matches[2]&course_category=$matches[1]&course-item=$matches[3]&item-type=' . LP_ASSIGNMENT_CPT,
+							'index.php?course-name=$matches[2]&course_category=$matches[1]&' . LP_ASSIGNMENT_CPT . '=$matches[3]',
 					];
 				}
 				if ( class_exists( 'LP_Addon_H5p_Preload' ) ) {
 					$h5p_slug                                     = urldecode( sanitize_title_with_dashes( LP_Settings::get_option( 'h5p_slug', 'h5p' ) ) );
 					$rules['course-with-cat-items'][ LP_H5P_CPT ] = [
 						"^{$course_slug}(?:/{$h5p_slug}/([^/]+))?/?$" =>
-							'index.php?' . LP_COURSE_CPT . '=$matches[2]&course_category=$matches[1]&course-item=$matches[3]&item-type=' . LP_H5P_CPT,
+							'index.php?course-name=$matches[2]&course_category=$matches[1]&' . LP_H5P_CPT . '=$matches[3]',
 					];
 				}
 				// End Fixed
@@ -211,14 +211,14 @@ class LP_Query {
 				$assignment_slug                            = urldecode( sanitize_title_with_dashes( LP_Settings::get_option( 'assignment_slug', 'assignments' ) ) );
 				$rules['course-items'][ LP_ASSIGNMENT_CPT ] = [
 					"^{$course_slug}/([^/]+)(?:/{$assignment_slug}/([^/]+))?/?$" =>
-						'index.php?' . LP_COURSE_CPT . '=$matches[1]&course-item=$matches[2]&item-type=' . LP_ASSIGNMENT_CPT,
+						'index.php?course-name=$matches[1]&' . LP_ASSIGNMENT_CPT . '=$matches[2]',
 				];
 			}
 			if ( class_exists( 'LP_Addon_H5p_Preload' ) ) {
 				$h5p_slug                            = urldecode( sanitize_title_with_dashes( LP_Settings::get_option( 'h5p_slug', 'h5p' ) ) );
 				$rules['course-items'][ LP_H5P_CPT ] = [
 					"^{$course_slug}/([^/]+)(?:/{$h5p_slug}/([^/]+))?/?$" =>
-						'index.php?' . LP_COURSE_CPT . '=$matches[1]&course-item=$matches[2]&item-type=' . LP_H5P_CPT,
+						'index.php?course-name=$matches[1]&' . LP_H5P_CPT . '=$matches[2]',
 				];
 			}
 			// End Fixed
