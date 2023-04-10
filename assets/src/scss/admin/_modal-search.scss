@@ -106,6 +106,18 @@
             button {
                 float: right;
                 margin-left: 3px;
+				&.button {
+					&.loading{
+						&::before {
+							display: inline-block;
+							font-family: "Font Awesome 5 Free";
+							font-weight: 900;
+							content: "\f110";
+							@include animation(lp-rotating 1s linear infinite);
+							margin-right:10px;
+						}
+					}
+				}
             }
         }
     }

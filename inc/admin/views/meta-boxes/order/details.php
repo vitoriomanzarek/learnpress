@@ -245,6 +245,9 @@ $user_ip      = $order->get_user_ip_address();
 				</tr>
 			</tfoot>
 		</table>
+
+		<!-- modal add items to order -->
+		<?php learn_press_admin_view('meta-boxes/order/search/modal-search-items'); ?>
 	</div>
 </div>
 
@@ -277,7 +280,6 @@ $user_ip      = $order->get_user_ip_address();
 		<input type="hidden" name="order-customer[]" value="{{id}}">
 	</li>
 </script>
-<!-- end search modal v2 not use -->
 
 <?php
 $assets = learn_press_admin_assets();
@@ -299,3 +301,4 @@ wp_enqueue_style( 'jquery-ui' );
 		<button class="lp-close-lightbox button" onclick="LP.MessageBox.hide();"><?php esc_html_e( 'Close', 'learnpress' ); ?></button>
 	</div>
 </script>
+<!-- end search modal v2 not use -->

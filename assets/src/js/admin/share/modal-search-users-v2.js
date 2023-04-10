@@ -1,6 +1,6 @@
 const { addQueryArgs } = wp.url;
 
-const searchUsersOrder = () => {
+const modalUsersOrder = () => {
 	const postID = document.getElementById("post_ID").value;
 
 	if (postID === null) {
@@ -57,7 +57,6 @@ const searchUsersOrder = () => {
 			} else {
 				filterUsers.multiple = "no";
 			}
-
 			//clear search
 			inputSearch.value = "";
 			eleResult.innerHTML = "";
@@ -67,11 +66,15 @@ const searchUsersOrder = () => {
 			eleModal.classList.add("active");
 
 			//exclude user
-			excludeUser(filterUsers);
+			excludeUser({
+				...filterUsers,
+			});
 
 			//event handlers
 			closeModal();
-			searchUsers(filterUsers);
+			searchUsers({
+				...filterUsers,
+			});
 		}
 	});
 
@@ -133,7 +136,9 @@ const searchUsersOrder = () => {
 					filter.term = s;
 					filter.paged = 1;
 
-					requestUsers({ ...filter });
+					requestUsers({
+						...filter,
+					});
 				}, 800);
 			}
 		});
@@ -237,7 +242,9 @@ const searchUsersOrder = () => {
 				}
 
 				filter.paged = paged;
-				requestUsers({ ...filter });
+				requestUsers({
+					...filter,
+				});
 			});
 		});
 	};
@@ -355,5 +362,5 @@ const searchUsersOrder = () => {
 };
 
 document.addEventListener("DOMContentLoaded", function (e) {
-	searchUsersOrder();
+	modalUsersOrder();
 });

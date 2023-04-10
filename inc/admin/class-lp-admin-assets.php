@@ -93,7 +93,7 @@ class LP_Admin_Assets extends LP_Abstract_Assets {
 					0,
 					0
 				),
-				'advanced-list'                     => new LP_Asset_Key( $this->url( self::$_folder_source . 'js/admin/share/advanced-list' . self::$_min_assets . '.js' ) ),
+				//'advanced-list'                     => new LP_Asset_Key( $this->url( self::$_folder_source . 'js/admin/share/advanced-list' . self::$_min_assets . '.js' ) ),
 				'learn-press-global'                => new LP_Asset_Key(
 					$this->url( self::$_folder_source . 'js/global' . self::$_min_assets . '.js' ),
 					array( 'jquery', 'underscore', 'utils', 'jquery-ui-sortable', 'select2' ),
@@ -203,14 +203,21 @@ class LP_Admin_Assets extends LP_Abstract_Assets {
 					0,
 					1
 				),
+				// 'lp-modal-search-courses'           => new LP_Asset_Key(
+				// 	$this->url( self::$_folder_source . 'js/admin/share/modal-search-courses' . self::$_min_assets . '.js' ),
+				// 	array(
+				// 		'vue-libs',
+				// 		'jquery',
+				// 	),
+				// 	array( LP_ORDER_CPT ),
+				// 	1,
+				// 	1
+				// ),
 				'lp-modal-search-courses'           => new LP_Asset_Key(
-					$this->url( self::$_folder_source . 'js/admin/share/modal-search-courses' . self::$_min_assets . '.js' ),
-					array(
-						'vue-libs',
-						'jquery',
-					),
+					$this->url( self::$_folder_source . 'js/admin/share/modal-search-courses-v2' . self::$_min_assets . '.js' ),
+					array( 'wp-api-fetch' ),
 					array( LP_ORDER_CPT ),
-					1,
+					0,
 					1
 				),
 				'lp-admin-tabs'                     => new LP_Asset_Key(
@@ -236,7 +243,7 @@ class LP_Admin_Assets extends LP_Abstract_Assets {
 				// ),
 				'lp-modal-search-users'             => new LP_Asset_Key(
 					$this->url( self::$_folder_source . 'js/admin/share/modal-search-users-v2' . self::$_min_assets . '.js' ),
-					array( 'jquery','wp-api-fetch' ),
+					array( 'wp-api-fetch' ),
 					array( LP_ORDER_CPT ),
 					0,
 					1
