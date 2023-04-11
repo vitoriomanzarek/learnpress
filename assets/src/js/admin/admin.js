@@ -91,6 +91,10 @@
 	};
 
 	$.fn._filter_post_by_author = function() {
+		if ( typeof lpAdminSettings.screen.id !== 'undefined' && lpAdminSettings.screen.id === 'edit-lp_order' ) {
+			return;
+		}
+
 		const $input = $( '#post-search-input' );
 
 		if ( ! $input.length ) {
