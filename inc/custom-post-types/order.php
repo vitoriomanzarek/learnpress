@@ -425,85 +425,48 @@ if ( ! class_exists( 'LP_Order_Post_Type' ) ) {
 				$where   = str_replace( $search, $replace, $where );
 			}
 
-			if ( ! $this->is_page_list_posts_on_backend() || ! $this->_is_search() ) {
-				return $where;
-			}
-
-			// filter by user id
-			preg_match( "#{$wpdb->posts}\.post_author IN\s*\((\d+)\)#", $where, $matches );
-			if ( ! empty( $matches ) && isset( $matches[1] ) ) {
-				$author_id     = intval( $matches[1] );
-				$author_id_str = $wpdb->prepare( '%"%d"%', $author_id );
-				// $sql       = ' ( pm1.meta_value = %d OR pm1.meta_value LIKE %s)';
-
-				$sql = " {$wpdb->posts}.ID IN ( SELECT
-						IF( p.post_parent >0, p.post_parent, p.ID)
-					FROM
-						{$wpdb->posts} AS p
-							INNER JOIN
-						{$wpdb->postmeta} m ON p.ID = m.post_id and p.post_type = %s
-								AND m.meta_key = %s AND  (meta_value = %d OR meta_value like %s )
-							)
-						";
-
-				$sql   = $wpdb->prepare( $sql, array( LP_ORDER_CPT, '_user_id', $author_id, $author_id_str ) );
-				$where = str_replace( $matches[0], $sql, $where );
-			}
-
-			$s = $wp_query->get( 's' );
-
-			if ( $s ) {
-				$s = '%' . $wpdb->esc_like( $s ) . '%';
-				preg_match( "#{$wpdb->posts}\.post_title LIKE#", $where, $matches2 );
-				$sql = " {$wpdb->posts}.ID IN (
-					SELECT
-						IF( p.post_parent >0, p.post_parent, p.ID)
-					FROM
-						{$wpdb->posts} AS p
-							INNER JOIN
-						{$wpdb->postmeta} m ON p.ID = m.post_id and p.post_type = %s
-								AND m.meta_key = %s
-							INNER JOIN
-						{$wpdb->users} u on m.meta_value = u.ID
-					WHERE
-						u.user_login LIKE %s
-						OR u.user_nicename LIKE %s
-						OR u.user_email LIKE %s
-						OR u.display_name LIKE %s
-						OR {$wpdb->posts}.ID LIKE %s
-					) ";
-				$sql = $wpdb->prepare( $sql, array( LP_ORDER_CPT, '_user_id', $s, $s, $s, $s, $s ) );
-				// print_r($sql);die('ccc');
-				// search order via course name
-				$sql .= ' OR ' . $wpdb->prepare(
-					" {$wpdb->posts}.ID IN (
-						SELECT DISTINCT order_id FROM {$wpdb->learnpress_order_items} loi
-						INNER JOIN {$wpdb->learnpress_order_itemmeta} loim ON loi.order_item_id = loim.learnpress_order_item_id AND loim.meta_key LIKE %s
-						WHERE `order_item_name` LIKE %s OR loim.meta_value LIKE %s
-					)",
-					array( '_course_id', $s, $s )
+			if ( isset( $_REQUEST['order-id'] ) && ! empty( $_REQUEST['order-id'] ) ) {
+				$order_id = str_replace( '#', '', $_REQUEST['order-id'] );
+				$where   .= $wpdb->prepare(
+					"
+                    AND {$wpdb->posts}.ID = %s
+                	",
+					$order_id
 				);
-				if ( ! empty( $matches2 ) && isset( $matches2[0] ) ) {
-					$sql  .= $wpdb->prepare( ' OR loi.order_item_name LIKE %s', $s );
-					$where = str_replace( $matches2[0], $sql . ' OR ' . $matches2[0], $where );
-				} else {
-					$where .= ' AND ' . $sql;
-				}
+			}
+
+			if ( isset( $_REQUEST['course-name'] ) && ! empty( $_REQUEST['course-name'] ) ) {
+				$where .= $wpdb->prepare(
+					'
+                    AND loi.order_item_name LIKE %s
+                	',
+					'%' . $wpdb->esc_like( trim( $_REQUEST['course-name'] ) ) . '%'
+				);
+			}
+
+			if ( isset( $_REQUEST['student'] ) && ! empty( $_REQUEST['student'] ) ) {
+				$where .= $wpdb->prepare(
+					"
+                    AND {$wpdb->postmeta}.meta_key = %s AND {$wpdb->postmeta}.meta_value = %s
+                	",
+					'_user_id',
+					$_REQUEST['student']
+				);
 			}
 
 			return $where;
 		}
 
-		public function posts_fields( $fields ) {
-			global $wp_query;
-
-			if ( ! $this->is_page_list_posts_on_backend() || ! $this->_is_search() ) {
-				return $fields;
-			}
-			$fields .= ', uu.ID as user_ID, uu.display_name as user_display_name';
-
-			return $fields;
-		}
+//		public function posts_fields( $fields ) {
+//			global $wp_query;
+//
+//			if ( ! $this->is_page_list_posts_on_backend() || ! $this->_is_search() ) {
+//				return $fields;
+//			}
+//			$fields .= ', uu.ID as user_ID, uu.display_name as user_display_name';
+//
+//			return $fields;
+//		}
 
 		public function posts_orderby( $orderby ) {
 			global $wpdb;
@@ -534,20 +497,17 @@ if ( ! class_exists( 'LP_Order_Post_Type' ) ) {
 		}
 
 		public function posts_join_paged( $join ) {
-			global $wpdb, $wp_query;
+			global $wpdb;
 			if ( ! $this->is_page_list_posts_on_backend() ) {
 				return $join;
 			}
 
-			$s = $wp_query->get( 's' );
-			if ( $s ) {
-				$join .= " INNER JOIN {$wpdb->learnpress_order_items} loi ON {$wpdb->posts}.ID = loi.order_id";
+			if ( isset( $_REQUEST['course-name'] ) && ! empty( $_REQUEST['course-name'] ) ) {
+				$join .= " INNER JOIN {$wpdb->learnpress_order_items} AS loi ON {$wpdb->posts}.ID = loi.order_id";
 			}
 
-			if ( isset( $_REQUEST['author'] ) ) {
-				$join .= " INNER JOIN {$wpdb->postmeta} pm1 ON {$wpdb->posts}.ID = pm1.post_id AND pm1.meta_key = '_user_id'";
-				$join .= " INNER JOIN {$wpdb->postmeta} pm2 ON {$wpdb->posts}.ID = pm2.post_id AND pm2.meta_key = '_order_total'";
-				$join .= " LEFT JOIN {$wpdb->users} uu ON pm1.meta_value = uu.ID";
+			if ( isset( $_REQUEST['student'] ) && ! empty( $_REQUEST['student'] ) ) {
+				$join .= " INNER JOIN {$wpdb->postmeta} ON {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id";
 			}
 
 			return $join;

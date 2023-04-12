@@ -111,6 +111,28 @@
 			$( 'input[name="author"]' ).val( $select.val() );
 		} );
 
+		if ( typeof lpAdminSettings.screen.id !== 'undefined' && lpAdminSettings.screen.id === 'edit-lp_order' ) {
+			$( '<select name="student" id="student"></select>' ).insertAfter( $input ).select2( {
+				ajax: {
+					url: window.location.href + '&lp-ajax=search-authors',
+					dataType: 'json',
+					s: '',
+				},
+				placeholder: wp.i18n.__( 'Search by student', 'learnpress' ),
+				minimumInputLength: 3,
+				allowClear: true,
+			} ).on( 'select2:select', function() {
+				$( 'input[name="author"]' ).val( $select.val() );
+			} );
+
+			const queryString = window.location.search;
+			const urlParams = new URLSearchParams( queryString );
+			const courseNameValue = urlParams.get( 'course-name' ) || '';
+			const orderIdValue = urlParams.get( 'order-id' ) || '';
+			$( `<input type= "search" name="course-name" id="course-name" value="${ courseNameValue }" placeholder="Course Name">` ).insertAfter( $input );
+			$( `<input type= "search" name="order-id" value = "${ orderIdValue }" id="order-id" placeholder="Order ID">` ).insertAfter( $input );
+		}
+
 		$form.on( 'submit', function() {
 			const url = window.location.href.removeQueryVar( 'author' ).addQueryVar( 'author', $select.val() );
 		} );
