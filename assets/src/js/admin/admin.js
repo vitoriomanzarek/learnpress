@@ -47,7 +47,8 @@
 			data: {
 				'lp-hide-upgrade-message': 'yes',
 			},
-			success: function success( res ) {},
+			success: function success( res ) {
+			},
 		} );
 	};
 
@@ -115,6 +116,9 @@
 			$( 'input[name="author"]' ).val( $select.val() );
 		} );
 
+		const courseName = $( '<input type= "search" name="course-name" id="course-name" placeholder="Course Name">' ).insertAfter( $input );
+		const orderID = $( '<input type= "search" name="order-id" id="order-id" placeholder="Order ID">' ).insertAfter( $input );
+		const number = $( '<input type= "number" name="items-per-page" id="items-per-page" placeholder = "Items per page" step = "1" min= "1">' ).insertAfter( $input );
 		$form.on( 'submit', function() {
 			const url = window.location.href.removeQueryVar( 'author' ).addQueryVar( 'author', $select.val() );
 		} );
@@ -219,12 +223,12 @@
 
 								listImages.append(
 									'<li class="lp-meta-box__file_list-item image" data-attachment_id="' + attachment.id + '"><img src="' + attachmentImage +
-							'" /><ul class="actions"><li><a href="#" class="delete"></a></li></ul></li>'
+									'" /><ul class="actions"><li><a href="#" class="delete"></a></li></ul></li>'
 								);
 							} else {
 								listImages.append(
 									'<li class="lp-meta-box__file_list-item image" data-attachment_id="' + attachment.id + '"><img class="is_file" src="' + attachment.icon +
-							'" /><span>' + attachment.filename + '</span><ul class="actions"><li><a href="#" class="delete"></a></li></ul></li>'
+									'" /><span>' + attachment.filename + '</span><ul class="actions"><li><a href="#" class="delete"></a></li></ul></li>'
 								);
 							}
 						}

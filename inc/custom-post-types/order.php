@@ -428,7 +428,7 @@ if ( ! class_exists( 'LP_Order_Post_Type' ) ) {
 			if ( ! $this->is_page_list_posts_on_backend() || ! $this->_is_search() ) {
 				return $where;
 			}
-
+			return $where;
 			// filter by user id
 			preg_match( "#{$wpdb->posts}\.post_author IN\s*\((\d+)\)#", $where, $matches );
 			if ( ! empty( $matches ) && isset( $matches[1] ) ) {
@@ -454,6 +454,7 @@ if ( ! class_exists( 'LP_Order_Post_Type' ) ) {
 
 			if ( $s ) {
 				$s = '%' . $wpdb->esc_like( $s ) . '%';
+
 				preg_match( "#{$wpdb->posts}\.post_title LIKE#", $where, $matches2 );
 				$sql = " {$wpdb->posts}.ID IN (
 					SELECT
@@ -494,16 +495,16 @@ if ( ! class_exists( 'LP_Order_Post_Type' ) ) {
 			return $where;
 		}
 
-		public function posts_fields( $fields ) {
-			global $wp_query;
-
-			if ( ! $this->is_page_list_posts_on_backend() || ! $this->_is_search() ) {
-				return $fields;
-			}
-			$fields .= ', uu.ID as user_ID, uu.display_name as user_display_name';
-
-			return $fields;
-		}
+//		public function posts_fields( $fields ) {
+//			global $wp_query;
+//
+//			if ( ! $this->is_page_list_posts_on_backend() || ! $this->_is_search() ) {
+//				return $fields;
+//			}
+//			$fields .= ', uu.ID as user_ID, uu.display_name as user_display_name';
+//
+//			return $fields;
+//		}
 
 		public function posts_orderby( $orderby ) {
 			global $wpdb;
@@ -533,25 +534,26 @@ if ( ! class_exists( 'LP_Order_Post_Type' ) ) {
 			return $orderby;
 		}
 
-		public function posts_join_paged( $join ) {
-			global $wpdb, $wp_query;
-			if ( ! $this->is_page_list_posts_on_backend() ) {
-				return $join;
-			}
-
-			$s = $wp_query->get( 's' );
-			if ( $s ) {
-				$join .= " INNER JOIN {$wpdb->learnpress_order_items} loi ON {$wpdb->posts}.ID = loi.order_id";
-			}
-
-			if ( isset( $_REQUEST['author'] ) ) {
-				$join .= " INNER JOIN {$wpdb->postmeta} pm1 ON {$wpdb->posts}.ID = pm1.post_id AND pm1.meta_key = '_user_id'";
-				$join .= " INNER JOIN {$wpdb->postmeta} pm2 ON {$wpdb->posts}.ID = pm2.post_id AND pm2.meta_key = '_order_total'";
-				$join .= " LEFT JOIN {$wpdb->users} uu ON pm1.meta_value = uu.ID";
-			}
-
-			return $join;
-		}
+		//Remove
+//		public function posts_join_paged( $join ) {
+//			global $wpdb, $wp_query;
+//			if ( ! $this->is_page_list_posts_on_backend() ) {
+//				return $join;
+//			}
+//
+//			$s = $wp_query->get( 's' );
+//			if ( $s ) {
+//				$join .= " INNER JOIN {$wpdb->learnpress_order_items} AS loi ON {$wpdb->posts}.ID = loi.order_id";
+//			}
+//
+//			if ( isset( $_REQUEST['author'] ) ) {
+//				$join .= " INNER JOIN {$wpdb->postmeta} pm1 ON {$wpdb->posts}.ID = pm1.post_id AND pm1.meta_key = '_user_id'";
+//				$join .= " INNER JOIN {$wpdb->postmeta} pm2 ON {$wpdb->posts}.ID = pm2.post_id AND pm2.meta_key = '_order_total'";
+//				$join .= " LEFT JOIN {$wpdb->users} uu ON pm1.meta_value = uu.ID";
+//			}
+//
+//			return $join;
+//		}
 
 		/**
 		 * Make our custom columns can be sortable
