@@ -131,6 +131,7 @@ if ( ! class_exists( 'LP_Admin_Ajax' ) ) {
 				'search'         => sprintf( '*%s*', esc_attr( LP_Request::get_string( 'term' ) ) ),
 				'search_columns' => array( 'user_login', 'user_email' ),
 			);
+
 			$q     = new WP_User_Query( $args );
 			$users = array();
 
