@@ -104,6 +104,7 @@ class LP_Admin_Menu {
 
 		// Default submenu items
 		$menu_items               = array();
+		$menu_items['orders']     = include_once 'sub-menus/class-lp-orders.php';
 		$menu_items['statistic']  = include_once 'sub-menus/class-lp-submenu-statistics.php';
 		$menu_items['addons']     = include_once 'sub-menus/class-lp-submenu-addons.php';
 		$menu_items['themes']     = include_once 'sub-menus/class-lp-submenu-themes.php';
@@ -119,7 +120,7 @@ class LP_Admin_Menu {
 
 		add_action(
 			'parent_file',
-			function( $parent_file ) {
+			function ( $parent_file ) {
 				global $current_screen;
 
 				$taxonomy = $current_screen->taxonomy;
