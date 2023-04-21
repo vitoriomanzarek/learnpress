@@ -24,6 +24,7 @@ class LP_Admin_Core_API extends LP_Abstract_API {
 
 		$list_rest_admin = array(
 			// 'class-lp-admin-rest-question-controller.php',
+			'class-lp-admin-rest-order-controller.php',
 			'class-lp-admin-rest-database-controller.php',
 			'class-lp-admin-rest-course-controller.php',
 			'class-lp-admin-rest-tools-controller.php',
@@ -43,6 +44,7 @@ class LP_Admin_Core_API extends LP_Abstract_API {
 	public function rest_api_register_routes() {
 		$controllers = array(
 			//'LP_REST_Admin_Question_Controller',
+			'LP_REST_Admin_Order_Controller',
 			'LP_REST_Admin_Database_Controller',
 			'LP_REST_Admin_Course_Controller',
 			'LP_REST_Admin_Tools_Controller',

@@ -10,7 +10,7 @@ class LP_Orders extends LP_Abstract_Submenu {
 	 * LP_Orders constructor.
 	 */
 	public function __construct() {
-		$this->id         = 'learn-press-orders1';
+		$this->id         = 'learnpress-orders';
 		$this->menu_title = __( 'Orders', 'learnpress' );
 		$this->page_title = __( 'Orders', 'learnpress' );
 		$this->priority   = 50;
@@ -21,9 +21,69 @@ class LP_Orders extends LP_Abstract_Submenu {
 		parent::__construct();
 	}
 
+	/**
+	 * @return void
+	 */
+	public function display() {
+		$data = $this;
+		learn_press_get_template( 'admin/order-list.php', compact( 'data' ) );
+	}
 
-	public function page_content() {
+	/**
+	 * @param $number
+	 *
+	 * @return void
+	 */
+	public function select_all( $number ) {
+		?>
+		<td class="manage-column column-cb check-column">
+			<input id="<?php echo esc_attr( 'cb-select-all-' . $number ); ?>" type="checkbox">
+		</td>
+		<?php
+	}
 
+	/**
+	 * @return void
+	 */
+	public function get_thead() {
+		?>
+		<thead>
+		<tr>
+			<?php
+			$this->select_all( 1 );
+			$this->get_columns_label();
+			?>
+		</tr>
+		</thead>
+		<?php
+	}
+
+	public function get_tbody() {
+		?>
+		<tbody id="the-list">
+		</tbody>
+		<?php
+	}
+
+	/**
+	 * @return void
+	 */
+	public function get_tfoot() {
+		?>
+		<tfoot>
+		<tr>
+			<?php
+			$this->select_all( 2 );
+			$this->get_columns_label();
+			?>
+		</tr>
+		</tfoot>
+		<?php
+	}
+
+	public function get_columns_label() {
+		$data = $this;
+		learn_press_get_template( 'admin/order-list/columns-label.php', compact( 'data' ) );
 	}
 }
 
