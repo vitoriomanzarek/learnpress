@@ -16,6 +16,7 @@ module.exports = {
 		'./assets/js/dist/admin/editor/quiz': './assets/src/apps/js/admin/editor/quiz.js',
 		'./assets/js/dist/admin/editor/question': './assets/src/apps/js/admin/editor/question.js',
 		'./assets/js/dist/admin/pages/tools': './assets/src/apps/js/admin/pages/tools.js',
+		'./assets/js/dist/admin/pages/order': './assets/src/apps/js/admin/pages/order.js',
 		'./assets/js/dist/admin/pages/setup': './assets/src/apps/js/admin/pages/setup.js',
 		'./assets/js/dist/admin/pages/statistic': './assets/src/apps/js/admin/pages/statistic.js',
 		'./assets/js/dist/admin/pages/sync-data': './assets/src/apps/js/admin/pages/sync-data.js',

@@ -187,6 +187,13 @@ class LP_Admin_Assets extends LP_Abstract_Assets {
 					0,
 					1
 				),
+				'learn-press-order'                 => new LP_Asset_Key(
+					$this->url( 'js/dist/admin/pages/order' . self::$_min_assets . '.js' ),
+					array(),
+					array( 'learnpress_page_learn-press-orders' ),
+					0,
+					1
+				),
 				'lp-advertisement'                  => new LP_Asset_Key(
 					$this->url( self::$_folder_source . 'js/admin/share/advertisement' . self::$_min_assets . '.js' ),
 					array(),
@@ -199,6 +206,7 @@ class LP_Admin_Assets extends LP_Abstract_Assets {
 						'learnpress_page_learn-press-settings',
 						'learnpress_page_learn-press-tools',
 						'learnpress_page_learn-press-statistics',
+						'learnpress_page_learn-press-order'
 					),
 					0,
 					1

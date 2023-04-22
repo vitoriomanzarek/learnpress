@@ -34,25 +34,25 @@ class LP_REST_Admin_Order_Controller extends LP_Abstract_REST_Controller
         parent::register_routes();
     }
 
-	/**
-	 * @param WP_REST_Request $request
-	 *
-	 * @return WP_Error|WP_HTTP_Response|WP_REST_Response
-	 */
-	public function get_list_orders( WP_REST_Request $request )
+    /**
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_HTTP_Response|WP_REST_Response
+     */
+    public function get_list_orders(WP_REST_Request $request)
     {
         $response = new LP_REST_Response();
         $params         = $request->get_params();
 
         $args = array(
-            'post_type'   => LP_ORDER_CPT,
-            'post_status' => $params['post_status'] ?? 'any',
-            'posts_per_page' => $params['posts_per_page'] ?? 10,
-            'order_by' => $params['order_by'] ?? 'date',
-            'order' => $params['order_by'] ?? 'desc',
+	        'post_type'      => LP_ORDER_CPT,
+	        'post_status'    => $params['post_status'] ?? 'any',
+	        'posts_per_page' => $params['posts_per_page'] ?? 10,
+	        'order_by'       => $params['order_by'] ?? 'date',
+	        'order'          => $params['order_by'] ?? 'desc',
         );
 
-        $data  = array();
+//        $data  = array();
 
         $query = new \WP_Query($args);
 

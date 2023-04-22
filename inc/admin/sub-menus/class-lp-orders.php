@@ -10,7 +10,7 @@ class LP_Orders extends LP_Abstract_Submenu {
 	 * LP_Orders constructor.
 	 */
 	public function __construct() {
-		$this->id         = 'learnpress-orders';
+		$this->id         = 'learn-press-orders';
 		$this->menu_title = __( 'Orders', 'learnpress' );
 		$this->page_title = __( 'Orders', 'learnpress' );
 		$this->priority   = 50;
