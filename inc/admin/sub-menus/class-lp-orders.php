@@ -61,6 +61,9 @@ class LP_Orders extends LP_Abstract_Submenu {
 	public function get_tbody() {
 		?>
 		<tbody id="the-list">
+		<?php
+				$this->get_place_holder();
+		?>
 		</tbody>
 		<?php
 	}
@@ -84,6 +87,35 @@ class LP_Orders extends LP_Abstract_Submenu {
 	public function get_columns_label() {
 		$data = $this;
 		learn_press_get_template( 'admin/order-list/columns-label.php', compact( 'data' ) );
+	}
+
+	/**
+	 * @return void
+	 */
+	private function get_place_holder() {
+		for ( $i = 0; $i < 10; $i ++ ) {
+			?>
+			<tr>
+				<?php
+				for ( $j = 0; $j < 7; $j ++ ) {
+					if ( $j === 0 ) {
+						?>
+						<th>
+							<div class="lp-placeholder"></div>
+						</th>
+						<?php
+					} else {
+						?>
+						<td>
+							<div class="lp-placeholder"></div>
+						</td>
+						<?php
+					}
+				}
+				?>
+			</tr>
+			<?php
+		}
 	}
 }
 

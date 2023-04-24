@@ -1,6 +1,5 @@
-// import searchThemesAddons from './addons/search-lp-addons-themes';
+import orderList from './order/order-list';
 
 document.addEventListener( 'DOMContentLoaded', function( event ) {
-	// searchThemesAddons();
-	console.log( 'sdsds' );
+	orderList();
 } );

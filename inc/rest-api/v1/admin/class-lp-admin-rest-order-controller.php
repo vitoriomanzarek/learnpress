@@ -7,7 +7,6 @@
  */
 class LP_REST_Admin_Order_Controller extends LP_Abstract_REST_Controller
 {
-
     public function __construct()
     {
         $this->namespace = 'lp/v1/admin';
@@ -22,10 +21,10 @@ class LP_REST_Admin_Order_Controller extends LP_Abstract_REST_Controller
     public function register_routes()
     {
         $this->routes = array(
-            'list-order' => array(
+            'order-list' => array(
                 array(
                     'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => array( $this, 'get_list_orders' ),
+                    'callback'            => array( $this, 'get_orders' ),
                     'permission_callback' => '__return_true',
                 ),
             ),
@@ -39,7 +38,7 @@ class LP_REST_Admin_Order_Controller extends LP_Abstract_REST_Controller
      *
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
-    public function get_list_orders(WP_REST_Request $request)
+    public function get_orders(WP_REST_Request $request)
     {
         $response = new LP_REST_Response();
         $params         = $request->get_params();

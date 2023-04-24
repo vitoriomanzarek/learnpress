@@ -2,8 +2,9 @@
 if (! isset($data)) {
     return;
 }
+
 ?>
-<div class="lp-order wrap">
+<div class="lp-order-list wrap">
     <h1 class="wp-heading-inline">
         <?php echo wp_kses_post($data->get_menu_title()); ?>
     </h1>

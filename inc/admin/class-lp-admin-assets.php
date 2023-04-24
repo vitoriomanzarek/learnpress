@@ -189,7 +189,7 @@ class LP_Admin_Assets extends LP_Abstract_Assets {
 				),
 				'learn-press-order'                 => new LP_Asset_Key(
 					$this->url( 'js/dist/admin/pages/order' . self::$_min_assets . '.js' ),
-					array(),
+					array( 'wp-api-fetch' ),
 					array( 'learnpress_page_learn-press-orders' ),
 					0,
 					1
@@ -206,7 +206,7 @@ class LP_Admin_Assets extends LP_Abstract_Assets {
 						'learnpress_page_learn-press-settings',
 						'learnpress_page_learn-press-tools',
 						'learnpress_page_learn-press-statistics',
-						'learnpress_page_learn-press-order'
+						'learnpress_page_learn-press-order',
 					),
 					0,
 					1
