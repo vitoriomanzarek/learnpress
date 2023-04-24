@@ -397,12 +397,12 @@ if ( ! class_exists( 'LP_Order_Post_Type' ) ) {
 				return;
 			}
 			?>
-			<script type="text/javascript">
-				jQuery(function ($) {
-					$('#post-search-input').prop('placeholder',
-						'<?php esc_attr_e( 'Order number, course name, etc.', 'learnpress' ); ?>').css('width', 300)
-				})
-			</script>
+<!--			<script type="text/javascript">-->
+<!--				jQuery(function ($) {-->
+<!--					$('#post-search-input').prop('placeholder',-->
+<!--						'--><?php //esc_attr_e( 'Order number, course name, etc.', 'learnpress' ); ?>//').css('width', 300)
+<!--//				})-->
+<!--//			</script>-->
 			<?php
 		}
 
