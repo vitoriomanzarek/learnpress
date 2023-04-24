@@ -33,6 +33,33 @@ const search = () => {
 
 	searchBtn.addEventListener( 'click', function( event ) {
 		event.preventDefault();
+
+		const orderIdInput = searchForm.querySelector( '#order-id' );
+		const courseNameInput = searchForm.querySelector( '#course-name' );
+		const studentSelect = searchForm.querySelector( '#student' );
+		const authorSelect = searchForm.querySelector( '#author' );
+
+		params = {
+			paged: 1,
+		};
+
+		if ( orderIdInput.value ) {
+			params = { ...params, 'order-id': orderIdInput.value };
+		}
+
+		if ( courseNameInput.value ) {
+			params = { ...params, 'course-name': courseNameInput.value };
+		}
+
+		if ( studentSelect.value ) {
+			params = { ...params, student: studentSelect.value };
+		}
+
+		if ( authorSelect.value ) {
+			params = { ...params, author: authorSelect.value };
+		}
+
+		getOrders( params, false );
 	} );
 };
 

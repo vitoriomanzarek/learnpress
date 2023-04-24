@@ -47,7 +47,8 @@
 			data: {
 				'lp-hide-upgrade-message': 'yes',
 			},
-			success: function success( res ) {},
+			success: function success( res ) {
+			},
 		} );
 	};
 
@@ -91,7 +92,7 @@
 	};
 
 	$.fn._filter_post_by_author = function() {
-		const $input = $( '#post-search-input' );
+		const $input = $( '#course-name' );
 
 		if ( ! $input.length ) {
 			return;
@@ -113,8 +114,9 @@
 
 		const queryString = window.location.search;
 		const urlParams = new URLSearchParams( queryString );
+		const page = urlParams.get( 'page' );
 
-		if ( urlParams.get( 'page' ) !== 'undefined' && urlParams.get( 'page' ) === 'learn-press-orders' ) {
+		if ( typeof page !== 'undefined' && page === 'learn-press-orders' ) {
 			$( '<select name="student" id="student"></select>' ).insertAfter( $input ).select2( {
 				ajax: {
 					url: window.location.href + '&lp-ajax=search-authors',
@@ -233,12 +235,12 @@
 
 								listImages.append(
 									'<li class="lp-meta-box__file_list-item image" data-attachment_id="' + attachment.id + '"><img src="' + attachmentImage +
-							'" /><ul class="actions"><li><a href="#" class="delete"></a></li></ul></li>'
+									'" /><ul class="actions"><li><a href="#" class="delete"></a></li></ul></li>'
 								);
 							} else {
 								listImages.append(
 									'<li class="lp-meta-box__file_list-item image" data-attachment_id="' + attachment.id + '"><img class="is_file" src="' + attachment.icon +
-							'" /><span>' + attachment.filename + '</span><ul class="actions"><li><a href="#" class="delete"></a></li></ul></li>'
+									'" /><span>' + attachment.filename + '</span><ul class="actions"><li><a href="#" class="delete"></a></li></ul></li>'
 								);
 							}
 						}

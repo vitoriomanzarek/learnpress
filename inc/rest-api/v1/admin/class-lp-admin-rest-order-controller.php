@@ -10,6 +10,8 @@ class LP_REST_Admin_Order_Controller extends LP_Abstract_REST_Controller {
 		$this->namespace = 'lp/v1/admin';
 		$this->rest_base = 'order';
 
+		add_filter( 'posts_join_paged', array( $this, 'posts_join_paged' ), 10, 2 );
+		add_filter( 'posts_where_paged', array( $this, 'posts_where_paged' ), 10, 2 );
 		parent::__construct();
 	}
 
@@ -42,20 +44,37 @@ class LP_REST_Admin_Order_Controller extends LP_Abstract_REST_Controller {
 		$args = array(
 			'post_type'      => LP_ORDER_CPT,
 			'post_status'    => $params['post_status'] ?? [
-					'lp-pending',
-					'lp-processing',
-					'lp-completed',
-					'lp-cancelled',
-					'lp-failed',
-				],
+				'lp-pending',
+				'lp-processing',
+				'lp-completed',
+				'lp-cancelled',
+				'lp-failed',
+			],
 			'posts_per_page' => $params['posts_per_page'] ?? 10,
 			'paged'          => $params['paged'] ?? 1,
 			'order_by'       => $params['order_by'] ?? 'date',
 			'order'          => $params['order_by'] ?? 'desc',
 		);
 
+		if ( isset( $params['order-id'] ) ) {
+			$args['order-id'] = $params['order-id'];
+		}
+
+		if ( isset( $params['course-name'] ) ) {
+			$args['course-name'] = $params['course-name'];
+		}
+
+		if ( isset( $params['student'] ) ) {
+			$args['student'] = $params['student'];
+		}
+
+		if ( isset( $params['author'] ) ) {
+			$args['author'] = $params['author'];
+		}
+
 		//        $data  = array();
 		$query = new \WP_Query( $args );
+
 		try {
 			ob_start();
 			if ( $query->have_posts() ) {
@@ -90,5 +109,65 @@ class LP_REST_Admin_Order_Controller extends LP_Abstract_REST_Controller {
 		}
 
 		return rest_ensure_response( $response );
+	}
+
+	/**
+	 * @param $where
+	 * @param $query
+	 *
+	 * @return mixed|string
+	 */
+	public function posts_where_paged( $where, $query ) {
+		global $wpdb;
+		if ( isset( $query->query_vars['order-id'] ) && ! empty( $query->query_vars['order-id'] ) ) {
+			$order_id = str_replace( '#', '', $_REQUEST['order-id'] );
+			$where   .= $wpdb->prepare(
+				"
+                    AND {$wpdb->posts}.ID = %s
+                	",
+				$order_id
+			);
+		}
+
+		if ( isset( $query->query_vars['course-name'] ) && ! empty( $query->query_vars['course-name'] ) ) {
+			$where .= $wpdb->prepare(
+				'
+                    AND loi.order_item_name LIKE %s
+                	',
+				'%' . $wpdb->esc_like( trim( $query->query_vars['course-name'] ) ) . '%'
+			);
+		}
+
+		if ( isset( $query->query_vars['student'] ) && ! empty( $query->query_vars['student'] ) ) {
+			$where .= $wpdb->prepare(
+				"
+                    AND {$wpdb->postmeta}.meta_key = %s AND {$wpdb->postmeta}.meta_value = %s
+                	",
+				'_user_id',
+				$query->query_vars['student']
+			);
+		}
+
+		return $where;
+	}
+
+	/**
+	 * @param $join
+	 * @param $query
+	 *
+	 * @return mixed|string
+	 */
+	public function posts_join_paged( $join, $query ) {
+		global $wpdb;
+
+		if ( isset( $query->query_vars['course-name'] ) && ! empty( $query->query_vars['course-name'] ) ) {
+			$join .= " INNER JOIN {$wpdb->learnpress_order_items} AS loi ON {$wpdb->posts}.ID = loi.order_id";
+		}
+
+		if ( isset( $query->query_vars['student'] ) && ! empty( $query->query_vars['student'] ) ) {
+			$join .= " INNER JOIN {$wpdb->postmeta} ON {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id";
+		}
+
+		return $join;
 	}
 }
