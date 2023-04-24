@@ -50,7 +50,7 @@ class LP_Orders extends LP_Abstract_Submenu {
 		<thead>
 		<tr>
 			<?php
-			$this->select_all( 1 );
+//			$this->select_all( 1 );
 			$this->get_columns_label();
 			?>
 		</tr>
@@ -62,7 +62,7 @@ class LP_Orders extends LP_Abstract_Submenu {
 		?>
 		<tbody id="the-list">
 		<?php
-				$this->get_place_holder();
+			$this->get_place_holder();
 		?>
 		</tbody>
 		<?php
@@ -76,7 +76,7 @@ class LP_Orders extends LP_Abstract_Submenu {
 		<tfoot>
 		<tr>
 			<?php
-			$this->select_all( 2 );
+//			$this->select_all( 2 );
 			$this->get_columns_label();
 			?>
 		</tr>

@@ -1,35 +1,60 @@
 <?php
-if (! isset($data) && ! isset($has_current_page)) {
-    return;
+if ( ! isset( $data ) ) {
+	return;
 }
 
-$num   = wp_count_posts(LP_ORDER_CPT, 'readable');
-$total = array_sum((array) $num);
 
-foreach (get_post_stati(array( 'show_in_admin_all_list' => false )) as $state) {
-    $total -= $num->$state;
-}
+$max_page = $data['max_pages'];
+
+$current_page = $data['paged'];
+$next_page    = $current_page + 1;
+$prev_page    = $current_page - 1;
+$total        = $data['total'];
+
 ?>
-    <div class="tablenav-pages">
-            <span class="displaying-num">
-                <?php
-                printf(esc_html(_n('%s item', '%s items', $total, 'learnpress')), $total);
-                ?>
-            </span>
-        <span class="pagination-links"><span class="tablenav-pages-navspan button disabled">«</span>
-                <?php
-                if (! empty($has_current_page)) {
-                    ?>
-                    <span class="paging-input">
-                        <input class="current-page" id="current-page-selector" type="text" name="paged" value="1"
-                               size="1">
-                        <span class="tablenav-paging-text"> of <span class="total-pages">2</span></span></span>
-                    <?php
-                }
-                ?>
-            <a class="next-page button"><span>›</span></a>
-            <a class="last-page button"><span>»</span></a></span>
-    </div>
+	<div class="tablenav-pages">
+		<span class="displaying-num">
+			<?php
+			printf( esc_html( _n( '%s item', '%s items', $total, 'learnpress' ) ), $total );
+			?>
+		</span>
+		<span class="pagination-links">
+			<?php
+			if ( $current_page === 1 ) {
+				?>
+				<span class="tablenav-pages-navspan button disabled">«</span>
+				<span class="tablenav-pages-navspan button disabled">‹</span>
+				<?php
+			} else {
+				?>
+				<a class="first-page button"><span>«</span></a>
+				<a class="prev-page button"><span>‹</span></a>
+				<?php
+			}
+			?>
+			<span class="paging-input">
+					<input class="current-page" id="current-page-selector" type="text" name="paged"
+						   value="<?php echo esc_attr( $current_page ); ?>"
+						   size="1">
+					<span class="tablenav-paging-text"> of <span
+							class="total-pages"><?php echo esc_html( $max_page ); ?>
+					</span></span>
+			</span>
+			<?php
+			if ( $current_page === intval( $max_page ) ) {
+				?>
+				<span class="tablenav-pages-navspan button disabled">›</span>
+				<span class="tablenav-pages-navspan button disabled">»</span>
+				<?php
+			} else {
+				?>
+				<a class="next-page button"><span>›</span></a>
+				<a class="last-page button"><span>»</span></a>
+				<?php
+			}
+			?>
+
+	</div>
 <?php
 
 

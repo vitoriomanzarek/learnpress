@@ -26,7 +26,7 @@ if ( ! class_exists( 'LP_Order_Post_Type' ) ) {
 		 * @param $post_type
 		 */
 		public function __construct() {
-			add_action( 'admin_init', array( $this, 'register_post_statues' ) );
+			add_action( 'init', array( $this, 'register_post_statues' ) );
 			add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
 			add_action( 'admin_init', array( $this, 'remove_box' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
