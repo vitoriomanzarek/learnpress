@@ -42,12 +42,12 @@ class LP_REST_Admin_Order_Controller extends LP_Abstract_REST_Controller {
 		$args = array(
 			'post_type'      => LP_ORDER_CPT,
 			'post_status'    => $params['post_status'] ?? [
-				'lp-pending',
-				'lp-processing',
-				'lp-completed',
-				'lp-cancelled',
-				'lp-failed',
-			],
+					'lp-pending',
+					'lp-processing',
+					'lp-completed',
+					'lp-cancelled',
+					'lp-failed',
+				],
 			'posts_per_page' => $params['posts_per_page'] ?? 10,
 			'paged'          => $params['paged'] ?? 1,
 			'order_by'       => $params['order_by'] ?? 'date',
@@ -64,6 +64,14 @@ class LP_REST_Admin_Order_Controller extends LP_Abstract_REST_Controller {
 					learn_press_get_template( 'admin/order-list/list-item.php' );
 				}
 				wp_reset_postdata();
+			} else {
+				?>
+				<tr class="no-items">
+					<td class="colspanchange" colspan="6">
+						<?php esc_html_e( 'No order found', 'learnpress' ); ?>
+					</td>
+				</tr>
+				<?php
 			}
 
 			$response->status = 'success';

@@ -74,13 +74,16 @@ const handleStatus = () => {
 
 		event.preventDefault();
 		const currentList = orderStatusList.querySelector( '.current' );
+		if ( currentList ) {
+			currentList.classList.remove( 'current' );
+		}
+
 		if ( target.tagName === 'A' ) {
 			target.classList.add( 'current' );
 		} else {
 			target.closest( 'a' ).classList.add( 'current' );
 		}
 
-		currentList.classList.remove( 'current' );
 		const status = target.closest( 'li' ).className;
 		if ( status !== 'all' ) {
 			params = { ...params, post_status: status };

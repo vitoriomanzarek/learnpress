@@ -97,7 +97,7 @@ class LP_Orders extends LP_Abstract_Submenu {
 			?>
 			<tr>
 				<?php
-				for ( $j = 0; $j < 7; $j ++ ) {
+				for ( $j = 0; $j < 6; $j ++ ) {
 					if ( $j === 0 ) {
 						?>
 						<th>

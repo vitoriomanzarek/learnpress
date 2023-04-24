@@ -11,6 +11,9 @@ $next_page    = $current_page + 1;
 $prev_page    = $current_page - 1;
 $total        = $data['total'];
 
+if(empty($total)){
+	return;
+}
 ?>
 	<div class="tablenav-pages">
 		<span class="displaying-num">
