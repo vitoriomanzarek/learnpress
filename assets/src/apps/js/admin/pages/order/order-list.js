@@ -2,7 +2,7 @@ import adminAPI from '../../api';
 import { addQueryArgs } from '@wordpress/url';
 
 const orderWrap = document.querySelector( '.lp-order-list' );
-let container, skeleton, pagination;
+let container, skeleton, pagination, searchForm;
 let params = {
 	paged: 1,
 };
@@ -19,6 +19,21 @@ const orderList = () => {
 	getOrders( params, true );
 	handlePagination();
 	handleStatus();
+	search();
+};
+
+const search = () => {
+	searchForm = orderWrap.querySelector( '#posts-filter' );
+
+	if ( ! searchForm ) {
+		return;
+	}
+
+	const searchBtn = searchForm.querySelector( '#search-submit' );
+
+	searchBtn.addEventListener( 'click', function( event ) {
+		event.preventDefault();
+	} );
 };
 
 const handlePagination = () => {

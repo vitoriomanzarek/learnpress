@@ -111,6 +111,24 @@
 			$( 'input[name="author"]' ).val( $select.val() );
 		} );
 
+		const queryString = window.location.search;
+		const urlParams = new URLSearchParams( queryString );
+
+		if ( urlParams.get( 'page' ) !== 'undefined' && urlParams.get( 'page' ) === 'learn-press-orders' ) {
+			$( '<select name="student" id="student"></select>' ).insertAfter( $input ).select2( {
+				ajax: {
+					url: window.location.href + '&lp-ajax=search-authors',
+					dataType: 'json',
+					s: '',
+				},
+				placeholder: wp.i18n.__( 'Search by student', 'learnpress' ),
+				minimumInputLength: 3,
+				allowClear: true,
+			} ).on( 'select2:select', function() {
+				$( 'input[name="author"]' ).val( $select.val() );
+			} );
+		}
+
 		$form.on( 'submit', function() {
 			const url = window.location.href.removeQueryVar( 'author' ).addQueryVar( 'author', $select.val() );
 		} );
