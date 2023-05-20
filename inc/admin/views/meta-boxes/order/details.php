@@ -90,20 +90,20 @@ $user_ip      = $order->get_user_ip_address();
 					<ul id="list-users" class="advanced-list <?php echo esc_attr( $order->get_status() === 'completed' ? 'locked' : '' ); ?>">
 						<?php
 							$list_users = $order->get_users();
-							if ( ! empty( $list_users ) ) {
-								foreach( $list_users as $user_id ) {
-									$user = learn_press_get_user( $user_id );
-									$user_email = $user->get_data( 'email' );
-									$user_login   = $user->get_data( 'user_login' );
-									?>
+						if ( ! empty( $list_users ) ) {
+							foreach ( $list_users as $user_id ) {
+								$user       = learn_press_get_user( $user_id );
+								$user_email = $user->get_data( 'email' );
+								$user_login = $user->get_data( 'user_login' );
+								?>
 									<li class="lp-user" data-id="<?php echo $user_id; ?>">
 										<span class="remove-item"></span>
 										<span><?php echo sprintf( '%s (%s)', $user_login, $user_email ); ?></span>
 										<input type="hidden" name="order-customer[]" value="<?php echo $user_id; ?>">
 									</li>
 									<?php
-								}
-							};
+							}
+						};
 						?>
 					</ul>
 
@@ -171,7 +171,7 @@ $user_ip      = $order->get_user_ip_address();
 		</div>
 
 		<!-- modal add user to order -->
-		<?php learn_press_admin_view('meta-boxes/order/search/modal-search-users'); ?>
+		<?php learn_press_admin_view( 'meta-boxes/order/search/modal-search-users' ); ?>
 	</div>
 
 	<div class="order-items">
@@ -248,7 +248,7 @@ $user_ip      = $order->get_user_ip_address();
 		</table>
 
 		<!-- modal add items to order -->
-		<?php learn_press_admin_view('meta-boxes/order/search/modal-search-items'); ?>
+		<?php learn_press_admin_view( 'meta-boxes/order/search/modal-search-items' ); ?>
 	</div>
 </div>
 
