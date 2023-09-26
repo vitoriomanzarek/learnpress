@@ -248,6 +248,87 @@ class SingleCourseTemplate {
 	}
 
 	/**
+	 * Get html Curriculum course.
+	 *
+	 * @param LP_Course $course
+	 * @param int $section_id
+	 * @param int $current_item_id
+	 * @return string
+	 * @since 4.2.4
+	 * @version 1.0.0
+	 */
+	public function html_curriculum( LP_Course $course, int $section_id = 0, int $current_item_id = 0 ): string {
+		$content = '';
+
+		try {
+			$el_div_course_curriculum = sprintf(
+				'<div class="learnpress-course-curriculum" %s %s %s>',
+				sprintf( 'data-course-id="%d"', $course->get_id() ),
+				sprintf( 'data-current-section-id="%d"', $section_id ),
+				sprintf( 'data-current-item-id="%d"', $current_item_id )
+			);
+			$html_wrapper             = [
+				$el_div_course_curriculum => '</div>',
+			];
+			ob_start();
+			lp_skeleton_animation_html( 10 );
+			$content = Template::instance()->nest_elements( $html_wrapper, ob_get_clean() );
+		} catch ( Throwable $e ) {
+			error_log( __METHOD__ . ': ' . $e->getMessage() );
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Get html Section Curriculum course.
+	 *
+	 * @param LP_Course $course
+	 * @return string
+	 */
+	public function html_curriculum_section( LP_Course $course ): string {
+		$content = '';
+
+		try {
+			$html_wrapper = [
+				'<span class="course-curriculum-section">' => '</span>',
+			];
+			$content      = Template::instance()->nest_elements( $html_wrapper, '' );
+		} catch ( Throwable $e ) {
+			error_log( __METHOD__ . ': ' . $e->getMessage() );
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Get item section
+	 *
+	 * @param LP_Course $course
+	 * @return string
+	 */
+	public function html_curriculum_item_section( LP_Course $course ): string {
+		$content = '';
+
+		try {
+			$duration        = $course->get_duration();
+			$duration_arr    = explode( ' ', $duration );
+			$duration_number = $duration_arr[0] ?? 0;
+			$duration_type   = $duration_arr[1] ?? '';
+			$duration_str    = LP_Datetime::get_string_plural_duration( $duration_number, $duration_type );
+
+			$html_wrapper = [
+				'<span class="course-duration">' => '</span>',
+			];
+			$content      = Template::instance()->nest_elements( $html_wrapper, $duration_str );
+		} catch ( Throwable $e ) {
+			error_log( __METHOD__ . ': ' . $e->getMessage() );
+		}
+
+		return $content;
+	}
+
+	/**
 	 * Render string to data content
 	 *
 	 * @param LP_Course $course
