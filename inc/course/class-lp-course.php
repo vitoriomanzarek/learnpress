@@ -677,13 +677,13 @@ if ( ! class_exists( 'LP_Course' ) ) {
 		/**
 		 * Get full sections, items of course via Cache, extra info (if it has)
 		 *
-		 * @return array
+		 * @return object from 4.2.4, array from old version
 		 * @since 4.1.6.9
-		 * @version 1.0.0
+		 * @version 1.0.1
 		 * @author tungnx
 		 */
-		public function get_full_sections_and_items_course(): array {
-			$sections_items = [];
+		public function get_full_sections_and_items_course() {
+			$sections_items = new stdClass();
 			$course_id      = $this->get_id();
 
 			try {
@@ -709,7 +709,7 @@ if ( ! class_exists( 'LP_Course' ) ) {
 				}
 			} catch ( Throwable $e ) {
 				if ( LP_Debug::is_debug() ) {
-					error_log( $e->getMessage() );
+					error_log( __METHOD__ . ':' . $e->getMessage() );
 				}
 			}
 
@@ -720,17 +720,16 @@ if ( ! class_exists( 'LP_Course' ) ) {
 		 * Get all sections and items from database, then handle sort
 		 * Only call when data change or not set
 		 *
-		 * @return array
+		 * @return object { section_id => { 'section_id' => 0, 'items' => { 'item_id' => 0, }, .... }
+		 * @return array for old version lower 4.2.4
 		 * @since 4.1.6.9
-		 * @version 1.0.0
+		 * @version 1.0.1
 		 * @author tungnx
 		 */
-		public function get_sections_and_items_course_from_db_and_sort(): array {
-			$sections_items  = [];
-			$course_id       = $this->get_id();
-			$lp_course_db    = LP_Course_DB::getInstance();
-			$lp_course_cache = LP_Course_Cache::instance();
-			$key_cache       = "$course_id/sections_items";
+		public function get_sections_and_items_course_from_db_and_sort() {
+			$sections_items = [];
+			$course_id      = $this->get_id();
+			$lp_course_db   = LP_Course_DB::getInstance();
 
 			try {
 				$sections_results       = $lp_course_db->get_sections( $course_id );
@@ -740,12 +739,15 @@ if ( ! class_exists( 'LP_Course' ) ) {
 				$section_current        = 0;
 
 				foreach ( $sections_items_results as $index => $sections_item ) {
-					$section_new   = $sections_item->section_id;
-					$section_order = $sections_item->section_order;
-					$item          = new stdClass();
-					$item->id      = $sections_item->item_id;
-					$item->order   = $sections_item->item_order;
-					$item->type    = $sections_item->item_type;
+					$section_new      = $sections_item->section_id;
+					$section_order    = $sections_item->section_order;
+					$item             = new stdClass();
+					$item->id         = $sections_item->item_id; // old field will be deprecated in future
+					$item->item_id    = $sections_item->item_id;
+					$item->order      = $sections_item->item_order; // old field will be deprecated in future
+					$item->item_order = $sections_item->item_order;
+					$item->type       = $sections_item->item_type; // old field will be deprecated in future
+					$item->item_type  = $sections_item->item_type;
 
 					if ( $section_new != $section_current ) {
 						$sections_items[ $section_new ]                      = new stdClass();
@@ -759,26 +761,16 @@ if ( ! class_exists( 'LP_Course' ) ) {
 						$sections_items[ $section_new ]->section_description = html_entity_decode( $sections_item->section_description ); // new field
 						$sections_items[ $section_new ]->items               = [];
 
-						// Sort item by item_order
-						if ( $section_current != 0 ) {
-							usort(
-								$sections_items[ $section_current ]->items,
-								function ( $item1, $item2 ) {
-									return $item1->order - $item2->order;
-								}
-							);
-						}
-
 						$section_current = $section_new;
 					}
 
-					$sections_items[ $section_new ]->items[ $item->id ] = $item;
-
+					$sections_items[ $section_new ]->items[ $item->item_id ] = $item;
+					// Sort items by item_order
 					if ( $index_items_last === $index ) {
-						usort(
+						uasort(
 							$sections_items[ $section_current ]->items,
 							function ( $item1, $item2 ) {
-								return $item1->order - $item2->order;
+								return $item1->item_order - $item2->item_order;
 							}
 						);
 					}
@@ -791,31 +783,31 @@ if ( ! class_exists( 'LP_Course' ) ) {
 						continue;
 					}
 
-					$section_obj                   = new stdClass();
-					$section_obj->id               = $section_id;
-					$section_obj->order            = $section->section_order;
-					$section_obj->title            = html_entity_decode( $section->section_name );
-					$section_obj->description      = html_entity_decode( $section->section_description );
-					$section_obj->items            = [];
-					$sections_items[ $section_id ] = $section_obj;
+					$section_obj                      = new stdClass();
+					$section_obj->id                  = $section_id; // old field will be deprecated in future
+					$section_obj->section_id          = $section_id;
+					$section_obj->order               = $section->section_order; // old field will be deprecated in future
+					$section_obj->section_order       = $section->section_order;
+					$section_obj->title               = html_entity_decode( $section->section_name ); // old field will be deprecated in future
+					$section_obj->section_name        = html_entity_decode( $section->section_name );
+					$section_obj->description         = html_entity_decode( $section->section_description ); // old field will be deprecated in future
+					$section_obj->section_description = html_entity_decode( $section->section_description );
+					$section_obj->items               = [];
+					$sections_items[ $section_id ]    = $section_obj;
 				}
 
 				// Sort section by section_order
-				usort(
+				uasort(
 					$sections_items,
 					function ( $section1, $section2 ) {
-						return $section1->order - $section2->order;
+						return $section1->section_order - $section2->section_order;
 					}
 				);
-
-				$lp_course_cache->set_cache( $key_cache, $sections_items );
 			} catch ( Throwable $e ) {
-				if ( LP_Debug::is_debug() ) {
-					error_log( $e->getMessage() );
-				}
+				error_log( __METHOD__ . ':' . $e->getMessage() );
 			}
 
-			return $sections_items;
+			return json_decode( json_encode( $sections_items ) );
 		}
 
 		/**

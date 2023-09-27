@@ -167,7 +167,7 @@ if ( ! class_exists( 'LP_Background_Single_Course' ) ) {
 				$extra_info->sections_items = $sections_items;
 
 				// Check items removed course, will delete on 'learnpress_user_items', 'learnpress_user_item_results' table
-				$this->delete_user_items_data( $sections_items );
+				$this->delete_user_items_data();
 
 				// @since 4.2.1
 				do_action( 'lp/course/extra-info/before-save', $lp_course, $extra_info );
