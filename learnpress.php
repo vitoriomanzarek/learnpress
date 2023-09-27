@@ -291,10 +291,10 @@ if ( ! class_exists( 'LearnPress' ) ) {
 			CourseMaterialTemplate::instance();
 
 			// Models
-			require_once 'inc/models/class-lp-rest-response.php';
-			include_once 'inc/models/steps/class-lp-group-step.php';
-			include_once 'inc/models/steps/class-lp-step.php';
-			require_once 'inc/models/class-lp-course-extra-info-fast-query-model.php';
+			require_once 'inc/Models/class-lp-rest-response.php';
+			include_once 'inc/Models/steps/class-lp-group-step.php';
+			include_once 'inc/Models/steps/class-lp-step.php';
+			require_once 'inc/Models/class-lp-course-extra-info-fast-query-model.php';
 
 			// Handle steps.
 			require_once 'inc/handle-steps/class-lp-handle-steps.php';
