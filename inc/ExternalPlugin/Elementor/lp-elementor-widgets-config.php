@@ -25,6 +25,7 @@ use LearnPress\ExternalPlugin\Elementor\Widgets\Instructor\Sections\InstructorCo
 use LearnPress\ExternalPlugin\Elementor\Widgets\Instructor\ListInstructorsElementor;
 use LearnPress\ExternalPlugin\Elementor\Widgets\LoginUserFormElementor;
 use LearnPress\ExternalPlugin\Elementor\Widgets\RegisterUserFormElementor;
+
 return [
 	'widgets' => apply_filters(
 		'lp/elementor/widgets',
@@ -41,7 +42,7 @@ return [
 			'login-form'                => LoginUserFormElementor::class,
 			'register-form'             => RegisterUserFormElementor::class,
 			'list-courses'              => CourseListElementor::class,
-			//'list-courses-by-page'      => ListCoursesByPageElementor::class,
+			'list-courses-by-page'      => ListCoursesByPageElementor::class,
 			// Single Course
 			'course-price'              => CoursePriceElementor::class,
 		]
