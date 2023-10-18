@@ -408,6 +408,115 @@ window.lpElWidgetCoursesByPage = ( () => {
 	};
 } )();
 
+function LPELListCourseByPageLoadMore() {
+	const elCourses = document.querySelectorAll( '.learnpress-el-list-courses' );
+
+	elCourses.forEach( ( el ) => {
+		const innerCourse = el.querySelector( '.learnpress-el-list-courses__inner' );
+		const elLoadMore = el.querySelector( '.learnpress-el-list-course__load-more' );
+		const loadMoreButton = elLoadMore.querySelector( '.learnpress-el-list-course__load-more__button' );
+		const loadMoreBtn = loadMoreButton && loadMoreButton.querySelector( 'a' );
+
+		// Dataset
+		let currentPage = elLoadMore.dataset.page ? parseInt( elLoadMore.dataset.page ) : 1;
+		const maxPage = elLoadMore.dataset.maxPage ? parseInt( elLoadMore.dataset.maxPage ) : 1;
+		const isInfinite = elLoadMore.dataset.infinityScroll ? parseInt( elLoadMore.dataset.infinityScroll ) : 0;
+
+		// Flag
+		let isLoading = false;
+
+		const beforeLoading = () => {
+			isLoading = true;
+
+			elLoadMore && elLoadMore.classList.add( 'loading' );
+
+			loadMoreBtn && loadMoreBtn.setAttribute( 'disabled', 'disabled' );
+		};
+
+		const afterLoading = () => {
+			isLoading = false;
+
+			elLoadMore && elLoadMore.classList.remove( 'loading' );
+
+			loadMoreBtn && loadMoreBtn.removeAttribute( 'disabled' );
+		};
+
+		const handleQuery = () => {
+			const nextPageUrl = elLoadMore.dataset.nextPage;
+
+			if ( currentPage >= maxPage ) {
+				elLoadMore.remove();
+				return;
+			}
+
+			if ( isLoading ) {
+				return;
+			}
+
+			beforeLoading();
+
+			currentPage++;
+
+			return fetch( nextPageUrl )
+				.then( ( response ) => response.text() )
+				.then( ( html ) => {
+					const parser = new DOMParser();
+					const doc = parser.parseFromString( html, 'text/html' );
+					const newInner = doc.querySelector( '.learnpress-el-list-courses__inner' );
+					const newLoadMore = doc.querySelector( '.learnpress-el-list-course__load-more' );
+
+					elLoadMore.dataset.page = newLoadMore.dataset.page;
+					elLoadMore.dataset.nextPage = newLoadMore.dataset.nextPage;
+
+					innerCourse.insertAdjacentHTML( 'beforeend', newInner.innerHTML );
+
+					if ( currentPage >= maxPage ) {
+						elLoadMore.remove();
+					}
+
+					afterLoading();
+				} );
+		};
+
+		const loadMore = () => {
+			if ( ! loadMoreBtn ) {
+				return;
+			}
+
+			loadMoreBtn.addEventListener( 'click', ( e ) => {
+				e.preventDefault();
+
+				handleQuery();
+			} );
+		};
+
+		const infinite = () => {
+			if ( ! isInfinite ) {
+				return;
+			}
+
+			const observer = new IntersectionObserver( ( entries ) => {
+				entries.forEach( ( entry ) => {
+					if ( isLoading ) {
+						return;
+					}
+
+					if ( entry.isIntersecting ) {
+						handleQuery();
+					}
+				} );
+			}
+			);
+
+			observer.observe( elLoadMore );
+		};
+
+		loadMore();
+		infinite();
+	} );
+}
+
 document.addEventListener( 'DOMContentLoaded', function() {
 	window.lpElWidgetCoursesByPage.init();
+	LPELListCourseByPageLoadMore();
 } );
