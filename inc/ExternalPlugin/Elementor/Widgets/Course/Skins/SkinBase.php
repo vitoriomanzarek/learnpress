@@ -48,7 +48,7 @@ abstract class SkinBase extends Elementor_Skin_Base {
 			return;
 		}
 
-		$this->render_loop_header();
+		$this->render_loop_header( $query );
 
 		foreach ( $query['courses'] as $course ) {
 			$post = get_post( absint( $course->ID ) );
@@ -72,6 +72,78 @@ abstract class SkinBase extends Elementor_Skin_Base {
 				$this->render_excerpt();
 			$this->render_after_content();
 		$this->render_footer_course();
+	}
+
+	public function render_top_bar( $query ) {
+		?>
+		<div class="learnpress-el-list-course__top-bar">
+			<div class="learnpress-el-list-course__top-bar__inner">
+				<?php
+				$settings = $this->parent->get_settings_for_display();
+
+				if ( $settings['show_result_count'] ) {
+					$this->render_result_count( $query );
+				}
+
+				if ( $settings['show_sorting'] ) {
+					$this->render_ordering(  $query );
+				}
+				?>
+			</div>
+		</div>
+		<?php
+	}
+
+	public function render_result_count( $query ) {
+		$total_rows = absint( $query['total_rows'] );
+		$filter = $query['filter'];
+
+		if ( $total_rows <= 0 ) {
+			return;
+		}
+		?>
+		<p class="learnpress-el-list-course__top-bar__result-count">
+			<?php if ( $total_rows === 1 ) {
+				printf( esc_html__( 'Showing the single result', 'learnpress' ) );
+			} elseif ( $filter->limit === $total_rows ) {
+				printf( esc_html__( 'Showing all %d results', 'learnpress' ), $total_rows );
+			} else {
+				$first = ( $filter->limit * $filter->page ) - $filter->limit + 1;
+				$last = min( $total_rows, $filter->limit * $filter->page );
+
+				printf( esc_html__( 'Showing %d&ndash;%d of %d results', 'learnpress' ), $first, $last, $total_rows );
+			}
+			?>
+		</p>
+		<?php
+	}
+
+	public function render_ordering( $query ) {
+		$filter = $query['filter'];
+		$orderby = isset( $_GET['order_by'] ) ? sanitize_text_field( wp_unslash( $_GET['order_by'] ) ) : 'post_date';
+
+		$options = array(
+			'post_date' => esc_html__( 'Default', 'learnpress' ),
+			'post_title' => esc_html__( 'Oldest', 'learnpress' ),
+			'post_title_desc' => esc_html__( 'Newest', 'learnpress' ),
+			'price_low' => esc_html__( 'Price: Low to High', 'learnpress' ),
+			'price' => esc_html__( 'Price: High to Low', 'learnpress' ),
+		);
+		?>
+		<form method="get" class="learnpress-el-list-course__top-bar__ordering">
+			<label for="learnpress-el-list-course__top-bar__ordering__select">
+				<?php esc_html_e( 'Sort by', 'learnpress' ); ?>
+			</label>
+			<select id="learnpress-el-list-course__top-bar__ordering__select" class="learnpress-el-list-course__top-bar__ordering__select" name="order_by">
+				<?php foreach ( $options as $key => $label ) : ?>
+					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $orderby, $key ); ?>>
+						<?php echo esc_html( $label ); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+			<input type="hidden" name="paged" value="1" />
+		</form>
+		<?php
 	}
 
 	protected function render_meta() {
@@ -133,9 +205,10 @@ abstract class SkinBase extends Elementor_Skin_Base {
 		<?php
 	}
 
-	protected function render_loop_header() {
+	protected function render_loop_header( $query ) {
 		?>
 		<div class="learnpress-el-list-courses">
+			<?php $this->render_top_bar( $query ); ?>
 			<div class="learnpress-el-list-courses__inner">
 		<?php
 	}

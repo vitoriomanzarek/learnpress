@@ -16,6 +16,13 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 		$this->keywords = [ 'list courses', 'by page' ];
 		$this->icon     = 'eicon-post-list';
 
+		wp_register_style(
+			'lp-courses-by-page',
+			LP_PLUGIN_URL . 'assets/css/elementor/course/list-courses-by-page.css',
+			array(),
+			uniqid()
+		);
+
 		wp_register_script(
 			'lp-courses-by-page',
 			LP_PLUGIN_URL . 'assets/js/dist/elementor/courses.js',
@@ -23,6 +30,8 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 			uniqid(),
 			true
 		);
+
+		$this->add_style_depends( 'lp-courses-by-page' );
 		$this->add_script_depends( 'lp-courses-by-page' );
 
 		parent::__construct( $data, $args );
@@ -180,7 +189,7 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 				'return_value' => 'yes',
 				'separator' => 'before',
 				'condition' => array(
-					'query_type!' => '',
+					'query_type' => ['archive', 'instructor'],
 				),
 			)
 		);
@@ -196,7 +205,7 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 				'label_off' => esc_html__( 'No', 'learnpress' ),
 				'return_value' => 'yes',
 				'condition' => array(
-					'query_type!' => '',
+					'query_type' => ['archive', 'instructor'],
 				),
 			)
 		);
