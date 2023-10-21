@@ -516,7 +516,26 @@ function LPELListCourseByPageLoadMore() {
 	} );
 }
 
+function LPListCourseOrderbySubmit() {
+	const form = document.querySelectorAll( '.learnpress-el-list-course__top-bar__ordering' );
+
+	form.forEach( ( el ) => {
+		const select = el.querySelector( '.learnpress-el-list-course__top-bar__ordering__select' );
+
+		if ( ! select ) {
+			return;
+		}
+
+		select.addEventListener( 'change', ( e ) => {
+			e.preventDefault();
+
+			el.submit();
+		} );
+	} );
+}
+
 document.addEventListener( 'DOMContentLoaded', function() {
 	window.lpElWidgetCoursesByPage.init();
 	LPELListCourseByPageLoadMore();
+	LPListCourseOrderbySubmit();
 } );

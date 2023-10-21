@@ -131,7 +131,7 @@ abstract class SkinBase extends Elementor_Skin_Base {
 		);
 		?>
 		<form method="get" class="learnpress-el-list-course__top-bar__ordering">
-			<label for="learnpress-el-list-course__top-bar__ordering__select">
+			<label for="learnpress-el-list-course__top-bar__ordering__label">
 				<?php esc_html_e( 'Sort by', 'learnpress' ); ?>
 			</label>
 			<select id="learnpress-el-list-course__top-bar__ordering__select" class="learnpress-el-list-course__top-bar__ordering__select" name="order_by">
