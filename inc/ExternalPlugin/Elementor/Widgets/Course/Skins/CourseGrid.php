@@ -23,6 +23,7 @@ class CourseGrid extends SkinBase {
 		$this->register_control_thumnail();
 		$this->register_title_controls();
 		$this->register_excerpt_controls();
+		$this->register_read_more();
 	}
 
 	protected function register_control_thumnail() {
@@ -155,6 +156,34 @@ class CourseGrid extends SkinBase {
 				'default' => 'no',
 				'condition' => [
 					$this->get_control_id( 'show_excerpt' ) => 'yes',
+				],
+			]
+		);
+	}
+
+	protected function register_read_more() {
+		// Show Read More
+		$this->add_control(
+			'show_read_more',
+			[
+				'label' => esc_html__( 'Read More', 'learnpress' ),
+				'type' => Controls_Manager::SWITCHER,
+				'label_on' => esc_html__( 'Show', 'learnpress' ),
+				'label_off' => esc_html__( 'Hide', 'learnpress' ),
+				'default' => 'yes',
+				'separator' => 'before',
+			]
+		);
+
+		// Read More Text
+		$this->add_control(
+			'read_more_text',
+			[
+				'label' => esc_html__( 'Read More Text', 'learnpress' ),
+				'type' => Controls_Manager::TEXT,
+				'default' => esc_html__( 'Read More', 'learnpress' ),
+				'condition' => [
+					$this->get_control_id( 'show_read_more' ) => 'yes',
 				],
 			]
 		);

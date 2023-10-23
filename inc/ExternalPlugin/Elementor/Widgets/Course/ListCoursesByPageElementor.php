@@ -364,6 +364,10 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 			$filter->order_by =  $settings['orderby'];
 		}
 
+		if ( ! empty( $settings['category'] ) ) {
+			$filter->term_ids = $settings['category'];
+		}
+
 		$courses = \LP_Course::get_courses( $filter, $total_rows );
 
 		return array(

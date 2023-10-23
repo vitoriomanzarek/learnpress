@@ -70,6 +70,7 @@ abstract class SkinBase extends Elementor_Skin_Base {
 				$this->render_title();
 				$this->render_meta();
 				$this->render_excerpt();
+				$this->render_read_more();
 			$this->render_after_content();
 		$this->render_footer_course();
 	}
@@ -157,6 +158,16 @@ abstract class SkinBase extends Elementor_Skin_Base {
 		?>
 		<div class="learnpress-el-list-course__excerpt">
 		<?php echo wp_kses_post( wp_trim_words( get_the_excerpt( get_the_ID() ), 20, '' ) ); ?>
+		</div>
+		<?php
+	}
+
+	protected function render_read_more() {
+		?>
+		<div class="learnpress-el-list-course__read-more">
+			<a href="<?php the_permalink(); ?>">
+				<?php esc_html_e( 'Read More', 'learnpress' ); ?>
+			</a>
 		</div>
 		<?php
 	}
