@@ -17,6 +17,10 @@ class CourseLoopItem extends SkinBase {
 		return esc_html__( 'Loop Item', 'learnpress' );
 	}
 
+	public function get_container_class() {
+		return 'learnpress-el-list-courses--skin-loop';
+	}
+
 	public function register_controls( Widget_Base $widget, $args ) {
 		$this->parent = $widget;
 

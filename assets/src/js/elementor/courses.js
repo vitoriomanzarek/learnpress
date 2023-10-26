@@ -413,8 +413,13 @@ function LPELListCourseByPageLoadMore() {
 
 	elCourses.forEach( ( el ) => {
 		const innerCourse = el.querySelector( '.learnpress-el-list-courses__inner' );
-		const elLoadMore = el.querySelector( '.learnpress-el-list-course__load-more' );
-		const loadMoreButton = elLoadMore.querySelector( '.learnpress-el-list-course__load-more__button' );
+		const elLoadMore = el.querySelector( '.learnpress-el-list-courses__load-more' );
+
+		if ( ! elLoadMore ) {
+			return;
+		}
+
+		const loadMoreButton = elLoadMore.querySelector( '.learnpress-el-list-courses__load-more__button' );
 		const loadMoreBtn = loadMoreButton && loadMoreButton.querySelector( 'a' );
 
 		// Dataset
@@ -463,12 +468,16 @@ function LPELListCourseByPageLoadMore() {
 					const parser = new DOMParser();
 					const doc = parser.parseFromString( html, 'text/html' );
 					const newInner = doc.querySelector( '.learnpress-el-list-courses__inner' );
-					const newLoadMore = doc.querySelector( '.learnpress-el-list-course__load-more' );
+					const newLoadMore = doc.querySelector( '.learnpress-el-list-courses__load-more' );
 
-					elLoadMore.dataset.page = newLoadMore.dataset.page;
-					elLoadMore.dataset.nextPage = newLoadMore.dataset.nextPage;
+					if ( newLoadMore ) {
+						elLoadMore.dataset.page = newLoadMore.dataset.page;
+						elLoadMore.dataset.nextPage = newLoadMore.dataset.nextPage;
+					}
 
-					innerCourse.insertAdjacentHTML( 'beforeend', newInner.innerHTML );
+					if ( newInner ) {
+						innerCourse.insertAdjacentHTML( 'beforeend', newInner.innerHTML );
+					}
 
 					if ( currentPage >= maxPage ) {
 						elLoadMore.remove();
@@ -517,10 +526,10 @@ function LPELListCourseByPageLoadMore() {
 }
 
 function LPListCourseOrderbySubmit() {
-	const form = document.querySelectorAll( '.learnpress-el-list-course__top-bar__ordering' );
+	const form = document.querySelectorAll( '.learnpress-el-list-courses__top-bar__ordering' );
 
 	form.forEach( ( el ) => {
-		const select = el.querySelector( '.learnpress-el-list-course__top-bar__ordering__select' );
+		const select = el.querySelector( '.learnpress-el-list-courses__top-bar__ordering__select' );
 
 		if ( ! select ) {
 			return;

@@ -81,3 +81,136 @@
 		padding: 7px 30px;
 	}
 }
+
+// New Elementor List Courses by Page.
+.learnpress-el-list-course {
+	&__thumbnail {
+		margin-bottom: 20px;
+
+		a{
+			padding-bottom: calc( 0.63 * 100% );
+			position: relative;
+			display: block;
+			overflow: hidden;
+			inset: 0;
+
+			img {
+				display: block;
+				width: 100%;
+				max-width: none;
+				max-height: none;
+				height: auto !important;
+				position: absolute;
+				top: calc(50% + 1px);
+				left: calc(50% + 1px);
+				transform: scale(1.01) translate(-50%,-50%);
+			}
+		}
+	}
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	&__meta {
+		display: flex;
+		flex-wrap: wrap;
+		column-gap: var( --lp-el-list-course-meta-gap, 20px );
+	}
+
+	&__read-more{
+		a {
+			font-size: 1em;
+			font-weight: 500;
+		}
+	}
+}
+
+// Wrapper.
+.learnpress-el-list-courses {
+	&__top-bar {
+		&__inner {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 20px;
+		}
+
+		&__ordering {
+			&__label {
+				display: none;
+			}
+		}
+	}
+
+	&__inner{
+		display: grid;
+		grid-template-columns: repeat(var(--lp-el-list-courses-grid-columns, 3), 1fr);
+		grid-gap: 30px;
+	}
+
+	&__load-more{
+		margin-top: 20px;
+
+		&__inner{
+			display: flex;
+			gap: 5px;
+		}
+
+		&__spinner{
+			display: none;
+
+			> i {
+				animation: spin 1s linear infinite;
+
+				@keyframes spin {
+					0% {
+						transform: rotate(0deg);
+					}
+
+					100% {
+						transform: rotate(360deg);
+					}
+				}
+			}
+		}
+
+		&__button{
+			a{
+				font-size: 1em;
+				font-weight: 500;
+			}
+		}
+
+		&.loading{
+			.learnpress-el-list-courses__load-more {
+				&__spinner{
+					display: block;
+				}
+			}
+		}
+	}
+
+	&--skin-list{
+		.learnpress-el-list-courses{
+			&__inner {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		.learnpress-el-list-course{
+			display: flex;
+			gap: 30px;
+
+			&__thumbnail {
+				margin: 0;
+			}
+
+			&__content{
+				flex: 1;
+			}
+		}
+	}
+}

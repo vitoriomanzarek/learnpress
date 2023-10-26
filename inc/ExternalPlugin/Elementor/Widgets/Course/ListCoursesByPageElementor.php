@@ -10,10 +10,10 @@ use Elementor\Controls_Manager;
 
 class ListCoursesByPageElementor extends LPElementorWidgetBase {
 
-	public function __construct( $data = [], $args = null ) {
+	public function __construct( $data = array(), $args = null ) {
 		$this->title    = esc_html__( 'List Courses by Page', 'learnpress' );
 		$this->name     = 'list_courses_by_page';
-		$this->keywords = [ 'list courses', 'by page' ];
+		$this->keywords = array( 'list courses', 'by page' );
 		$this->icon     = 'eicon-post-list';
 
 		wp_register_style(
@@ -59,7 +59,7 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 			'section_options',
 			array(
 				'label' => esc_html__( 'Options', 'learnpress' ),
-				'tab' => Controls_Manager::TAB_CONTENT,
+				'tab'   => Controls_Manager::TAB_CONTENT,
 			)
 		);
 
@@ -71,7 +71,7 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 			'section_query',
 			array(
 				'label' => esc_html__( 'Query', 'learnpress' ),
-				'tab' => Controls_Manager::TAB_CONTENT,
+				'tab'   => Controls_Manager::TAB_CONTENT,
 			)
 		);
 
@@ -79,36 +79,36 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 		$this->add_control(
 			'query_type',
 			array(
-				'label' => esc_html__( 'Query Type', 'learnpress' ),
-				'type' => Controls_Manager::SELECT,
+				'label'   => esc_html__( 'Query Type', 'learnpress' ),
+				'type'    => Controls_Manager::SELECT,
 				'default' => '',
 				'options' => array(
-					'' => esc_html__( 'Default', 'learnpress' ),
-					'archive' => esc_html__( 'Archive Course', 'learnpress' ),
+					''           => esc_html__( 'Default', 'learnpress' ),
+					'archive'    => esc_html__( 'Archive Course', 'learnpress' ),
 					'instructor' => esc_html__( 'Single Instructor Page', 'learnpress' ),
-					'related_course' => esc_html__( 'Related Course', 'learnpress' ),
+					// 'related_course' => esc_html__( 'Related Course', 'learnpress' ),
 				),
 			)
 		);
 
 		// Enable Ajax Skeleton.
-		$this->add_control(
-			'enable_ajax_skeleton',
-			array(
-				'label' => esc_html__( 'Enable Ajax', 'learnpress' ),
-				'description' => esc_html__( 'Enable Ajax Skeleton', 'learnpress' ),
-				'type' => Controls_Manager::SWITCHER,
-				'default' => 'yes',
-				'label_on' => esc_html__( 'Yes', 'learnpress' ),
-				'label_off' => esc_html__( 'No', 'learnpress' ),
-				'return_value' => 'yes',
-			)
-		);
+		// $this->add_control(
+		// 'enable_ajax_skeleton',
+		// array(
+		// 'label' => esc_html__( 'Enable Ajax', 'learnpress' ),
+		// 'description' => esc_html__( 'Enable Ajax Skeleton', 'learnpress' ),
+		// 'type' => Controls_Manager::SWITCHER,
+		// 'default' => 'yes',
+		// 'label_on' => esc_html__( 'Yes', 'learnpress' ),
+		// 'label_off' => esc_html__( 'No', 'learnpress' ),
+		// 'return_value' => 'yes',
+		// )
+		// );
 
 		// Select category.
 		$categories = get_terms(
 			array(
-				'taxonomy' => 'course_category',
+				'taxonomy'   => 'course_category',
 				'hide_empty' => false,
 			)
 		);
@@ -124,24 +124,14 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 		$this->add_control(
 			'category',
 			array(
-				'label' => esc_html__( 'Category', 'learnpress' ),
-				'type' => Controls_Manager::SELECT2,
-				'options' => $categories_options,
-				'multiple' => true,
+				'label'       => esc_html__( 'Category', 'learnpress' ),
+				'type'        => Controls_Manager::SELECT2,
+				'options'     => $categories_options,
+				'multiple'    => true,
 				'label_block' => true,
-				'condition' => array(
+				'condition'   => array(
 					'query_type' => '',
 				),
-			)
-		);
-
-		// Limit.
-		$this->add_control(
-			'limit',
-			array(
-				'label' => esc_html__( 'Course Limit', 'learnpress' ),
-				'type' => Controls_Manager::NUMBER,
-				'default' => 10,
 			)
 		);
 
@@ -149,8 +139,8 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 		$this->add_control(
 			'course_per_page',
 			array(
-				'label' => esc_html__( 'Course Per Page', 'learnpress' ),
-				'type' => Controls_Manager::NUMBER,
+				'label'   => esc_html__( 'Course Per Page: Please go to LearnPress > Settings > Courses.', 'learnpress' ),
+				'type'    => Controls_Manager::HEADING,
 				'default' => 10,
 			)
 		);
@@ -159,18 +149,18 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 		$this->add_control(
 			'orderby',
 			array(
-				'label' => esc_html__( 'Order by', 'learnpress' ),
-				'type' => Controls_Manager::SELECT,
-				'options' => array(
-					'' => esc_html__( 'Default', 'learnpress' ),
-					'post_title' => esc_html__( 'Title asc', 'learnpress' ),
+				'label'     => esc_html__( 'Order by', 'learnpress' ),
+				'type'      => Controls_Manager::SELECT,
+				'options'   => array(
+					''                => esc_html__( 'Default', 'learnpress' ),
+					'post_title'      => esc_html__( 'Title asc', 'learnpress' ),
 					'post_title_desc' => esc_html__( 'Title Desc', 'learnpress' ),
-					'post_title' => esc_html__( 'Title', 'learnpress' ),
-					'price_low' => esc_html__( 'Price Low to High', 'learnpress' ),
-					'price' => esc_html__( 'Price High to Low', 'learnpress' ),
-					'popular' => esc_html__( 'Popular', 'learnpress' ),
+					'post_title'      => esc_html__( 'Title', 'learnpress' ),
+					'price_low'       => esc_html__( 'Price Low to High', 'learnpress' ),
+					'price'           => esc_html__( 'Price High to Low', 'learnpress' ),
+					'popular'         => esc_html__( 'Popular', 'learnpress' ),
 				),
-				'default' => 'post_title',
+				'default'   => 'post_title',
 				'condition' => array(
 					'query_type' => '',
 				),
@@ -181,15 +171,15 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 		$this->add_control(
 			'show_result_count',
 			array(
-				'label' => esc_html__( 'Show result count', 'learnpress' ),
-				'type' => Controls_Manager::SWITCHER,
-				'default' => 'yes',
-				'label_on' => esc_html__( 'Yes', 'learnpress' ),
-				'label_off' => esc_html__( 'No', 'learnpress' ),
+				'label'        => esc_html__( 'Show result count', 'learnpress' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => 'yes',
+				'label_on'     => esc_html__( 'Yes', 'learnpress' ),
+				'label_off'    => esc_html__( 'No', 'learnpress' ),
 				'return_value' => 'yes',
-				'separator' => 'before',
-				'condition' => array(
-					'query_type' => ['archive', 'instructor'],
+				'separator'    => 'before',
+				'condition'    => array(
+					'query_type' => array( 'archive', 'instructor' ),
 				),
 			)
 		);
@@ -198,14 +188,14 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 		$this->add_control(
 			'show_sorting',
 			array(
-				'label' => esc_html__( 'Show sorting', 'learnpress' ),
-				'type' => Controls_Manager::SWITCHER,
-				'default' => 'yes',
-				'label_on' => esc_html__( 'Yes', 'learnpress' ),
-				'label_off' => esc_html__( 'No', 'learnpress' ),
+				'label'        => esc_html__( 'Show sorting', 'learnpress' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => 'yes',
+				'label_on'     => esc_html__( 'Yes', 'learnpress' ),
+				'label_off'    => esc_html__( 'No', 'learnpress' ),
 				'return_value' => 'yes',
-				'condition' => array(
-					'query_type' => ['archive', 'instructor'],
+				'condition'    => array(
+					'query_type' => array( 'archive', 'instructor' ),
 				),
 			)
 		);
@@ -217,76 +207,79 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 		$this->start_controls_section(
 			'section_pagination',
 			array(
-				'label' => esc_html__( 'Pagination', 'learnpress' ),
-				'tab' => Controls_Manager::TAB_CONTENT,
+				'label'     => esc_html__( 'Pagination', 'learnpress' ),
+				'tab'       => Controls_Manager::TAB_CONTENT,
+				'condition' => array(
+					'query_type!' => '',
+				),
 			)
 		);
 
 		$this->add_control(
 			'pagination_type',
-			[
-				'label' => esc_html__( 'Pagination', 'learnpress' ),
-				'type' => Controls_Manager::SELECT,
-				'default' => '',
-				'options' => [
-					'' => esc_html__( 'None', 'learnpress' ),
-					'numbers' => esc_html__( 'Numbers', 'learnpress' ),
-					'prev_next' => esc_html__( 'Previous/Next', 'learnpress' ),
+			array(
+				'label'              => esc_html__( 'Pagination', 'learnpress' ),
+				'type'               => Controls_Manager::SELECT,
+				'default'            => '',
+				'options'            => array(
+					''                      => esc_html__( 'None', 'learnpress' ),
+					'numbers'               => esc_html__( 'Numbers', 'learnpress' ),
+					'prev_next'             => esc_html__( 'Previous/Next', 'learnpress' ),
 					'numbers_and_prev_next' => esc_html__( 'Numbers', 'learnpress' ) . ' + ' . esc_html__( 'Previous/Next', 'learnpress' ),
-					'load_more_on_click' => esc_html__( 'Load on Click', 'learnpress' ),
-					'infinite_scroll' => esc_html__( 'Infinite Scroll', 'elementlearnpress' ),
-				],
+					'load_more_on_click'    => esc_html__( 'Load on Click', 'learnpress' ),
+					'infinite_scroll'       => esc_html__( 'Infinite Scroll', 'elementlearnpress' ),
+				),
 				'frontend_available' => true,
-			]
+			)
 		);
 
 		$this->add_control(
 			'pagination_prev_label',
-			[
-				'label' => esc_html__( 'Previous Label', 'learnpress' ),
-				'dynamic' => [
+			array(
+				'label'     => esc_html__( 'Previous Label', 'learnpress' ),
+				'dynamic'   => array(
 					'active' => true,
-				],
-				'default' => esc_html__( '&laquo; Previous', 'learnpress' ),
-				'condition' => [
-					'pagination_type' => [
+				),
+				'default'   => esc_html__( '&laquo; Previous', 'learnpress' ),
+				'condition' => array(
+					'pagination_type' => array(
 						'prev_next',
 						'numbers_and_prev_next',
-					],
-				],
-			]
+					),
+				),
+			)
 		);
 
 		$this->add_control(
 			'pagination_next_label',
-			[
-				'label' => esc_html__( 'Next Label', 'learnpress' ),
-				'default' => esc_html__( 'Next &raquo;', 'learnpress' ),
-				'condition' => [
-					'pagination_type' => [
+			array(
+				'label'     => esc_html__( 'Next Label', 'learnpress' ),
+				'default'   => esc_html__( 'Next &raquo;', 'learnpress' ),
+				'condition' => array(
+					'pagination_type' => array(
 						'prev_next',
 						'numbers_and_prev_next',
-					],
-				],
-				'dynamic' => [
+					),
+				),
+				'dynamic'   => array(
 					'active' => true,
-				],
-			]
+				),
+			)
 		);
 
 		$this->add_control(
 			'load_more_text',
-			[
-				'label' => esc_html__( 'Load more text', 'learnpress' ),
-				'type' => Controls_Manager::TEXT,
-				'dynamic' => [
+			array(
+				'label'     => esc_html__( 'Load more text', 'learnpress' ),
+				'type'      => Controls_Manager::TEXT,
+				'dynamic'   => array(
 					'active' => true,
-				],
-				'default' => esc_html__( 'Load more', 'learnpress' ),
-				'condition' => [
+				),
+				'default'   => esc_html__( 'Load more', 'learnpress' ),
+				'condition' => array(
 					'pagination_type' => 'load_more_on_click',
-				],
-			]
+				),
+			)
 		);
 
 		$this->end_controls_section();
@@ -305,7 +298,7 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 	}
 
 	public function query_courses_auto_detect_page() {
-		$param = $_GET ?? [];
+		$param = $_GET ?? array();
 
 		$param['paged'] = 1;
 
@@ -316,10 +309,6 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 		$filter = new \LP_Course_Filter();
 
 		$total_rows = 0;
-
-		if ( ! empty( $this->get_settings_for_display( 'course_per_page' ) ) ) {
-			$param['limit'] = $this->get_settings_for_display( 'course_per_page' ) ?? 10;
-		}
 
 		if ( $this->query_type() === 'archive' ) {
 			if ( learn_press_is_course_category() || learn_press_is_course_tag() ) {
@@ -333,7 +322,7 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 		$instructor = SingleInstructorTemplate::instance()->detect_instructor_by_page();
 		if ( $instructor && $this->query_type() === 'instructor' ) {
 			$param['c_author'] = $instructor->get_id();
-			$param['order'] = 'DESC';
+			$param['order']    = 'DESC';
 		}
 
 		if ( method_exists( 'LP_Course', 'handle_params_for_query_courses' ) ) {
@@ -343,8 +332,8 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 		$courses = \LP_Course::get_courses( $filter, $total_rows );
 
 		return array(
-			'filter' => $filter,
-			'courses' => $courses,
+			'filter'     => $filter,
+			'courses'    => $courses,
 			'total_rows' => $total_rows,
 		);
 	}
@@ -356,12 +345,8 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 
 		$settings = $this->get_settings_for_display();
 
-		if ( ! empty( $settings['course_per_page' ] ) ) {
-			$filter->limit = $settings['course_per_page' ] ?? 10;
-		}
-
 		if ( ! empty( $settings['orderby'] ) ) {
-			$filter->order_by =  $settings['orderby'];
+			$filter->order_by = $settings['orderby'];
 		}
 
 		if ( ! empty( $settings['category'] ) ) {
@@ -371,8 +356,8 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 		$courses = \LP_Course::get_courses( $filter, $total_rows );
 
 		return array(
-			'filter' => $filter,
-			'courses' => $courses,
+			'filter'     => $filter,
+			'courses'    => $courses,
 			'total_rows' => $total_rows,
 		);
 	}
@@ -386,11 +371,11 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 			$page_limit = $this->query->max_num_pages;
 		}
 
-		$return = [];
+		$return = array();
 
 		$paged = $this->get_current_page();
 
-		$link_template = '<a class="page-numbers %s" href="%s">%s</a>';
+		$link_template     = '<a class="page-numbers %s" href="%s">%s</a>';
 		$disabled_template = '<span class="page-numbers %s">%s</span>';
 
 		if ( $paged > 1 ) {
