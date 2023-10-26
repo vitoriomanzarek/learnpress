@@ -2,12 +2,12 @@
 Contributors: thimpress, tungnx89, nhamdv, hungkv, nguyenlammanh, tunnhn, phonglq.foobla, thongta, kendy73, leehld
 Donate link:
 Tags: elearning, education, course, lms, learning management system
-Requires at least: 5.8
-Tested up to: 6.3.1
+Requires at least: 6.2
+Tested up to: 6.3.2
 Requires PHP: 7.0
-Stable tag: 4.2.4
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Stable tag: 4.2.5.1
+License: GPLv3
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 A WordPress LMS Plugin to create WordPress Learning Management System. Turn your WordPress to LMS WordPress Website with Courses, Lessons, Quizzes & more.
 
@@ -210,7 +210,25 @@ https://www.transifex.com/projects/p/learnpress/
 
 == Changelog ==
 
-= 4.2.4 (2023-10-02) =
+= 4.2.5.3 (2023-10-26) =
+~ Fixed: security issue.
+~ Fixed: miss hook start quiz, retake quiz.
+~ Fixed: minor bug material.
+
+= 4.2.5.2 (2023-10-24) =
+~ Fixed: security issue.
+~ Compatible with WP 6.4.
+
+= 4.2.5 (2023-10-19) =
+~ Tweak: start quiz, retake quiz.
+~ Tweaks: icon social.
+~ Fixed: error font Arabic when export invoice.
+~ Fixed: minus point when skip question.
+~ Fixed: error duplicate message "out of stock" on the single course.
+~ Fixed: error not show material of lesson.
+~ Fixed: error set 0 to not show material.
+
+= 4.2.4 (2023-10-03) =
 ~ Fixed: error Paypal Standard (use IPN), replace to use API REST, client ID, client secret.
 ~ Clean resource.
 ~ Check load Widget Elementor on hooks plugins_loaded.

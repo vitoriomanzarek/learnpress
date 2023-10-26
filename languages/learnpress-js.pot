@@ -4,15 +4,15 @@ msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
 #: assets/src/apps/js/admin/pages/tools/reset-data/course.js:118
-msgid "Reset course progress"
+msgid "Reset Course Progress"
 msgstr ""
 
 #: assets/src/apps/js/admin/pages/tools/reset-data/course.js:120
-msgid "This action will reset progress of a course for all users have enrolled."
+msgid "This action will reset course progress of all users who have enrolled."
 msgstr ""
 
 #: assets/src/apps/js/admin/pages/tools/reset-data/course.js:121
-msgid "Search results only show course have user data."
+msgid "Search results only show if courses have user data."
 msgstr ""
 
 #: assets/src/apps/js/admin/pages/tools/reset-data/course.js:124
@@ -51,11 +51,11 @@ msgstr ""
 msgid "Add Blank"
 msgstr ""
 
-#: assets/src/apps/js/blocks/archive-course/edit.js:13
+#: assets/src/apps/js/blocks/archive-course/edit.js:11
 msgid "Archive Course"
 msgstr ""
 
-#: assets/src/apps/js/blocks/archive-course/edit.js:17
+#: assets/src/apps/js/blocks/archive-course/edit.js:15
 msgid ""
 "This is an editor placeholder for the Archive Course page. Content will "
 "render content of list courses. Should be not remove it"
@@ -76,11 +76,11 @@ msgid ""
 "it"
 msgstr ""
 
-#: assets/src/apps/js/blocks/single-course/edit.js:13
+#: assets/src/apps/js/blocks/single-course/edit.js:11
 msgid "Single Course"
 msgstr ""
 
-#: assets/src/apps/js/blocks/single-course/edit.js:17
+#: assets/src/apps/js/blocks/single-course/edit.js:15
 msgid ""
 "This is an editor placeholder for the Single Course page. Content will "
 "render content of single course. Should be not remove it"
@@ -275,6 +275,10 @@ msgstr ""
 
 #: assets/src/apps/js/frontend/quiz/components/result/index.js:214
 msgid "Skipped"
+msgstr ""
+
+#: assets/src/apps/js/frontend/quiz/components/result/index.js:219
+msgid "Minus points"
 msgstr ""
 
 #: assets/src/apps/js/frontend/quiz/components/status/index.js:93
