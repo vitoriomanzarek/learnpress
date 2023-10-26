@@ -319,10 +319,13 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 			}
 		}
 
-		$instructor = SingleInstructorTemplate::instance()->detect_instructor_by_page();
-		if ( $instructor && $this->query_type() === 'instructor' ) {
-			$param['c_author'] = $instructor->get_id();
-			$param['order']    = 'DESC';
+		if ( $this->query_type() === 'instructor' ) {
+			$instructor = SingleInstructorTemplate::instance()->detect_instructor_by_page();
+
+			if ( $instructor || get_current_user_id() ) { // If instructor is not found, we will query all courses.
+				$param['c_author'] = $instructor ? $instructor->get_id() : get_current_user_id();
+				$param['order']    = 'DESC';
+			}
 		}
 
 		if ( method_exists( 'LP_Course', 'handle_params_for_query_courses' ) ) {
