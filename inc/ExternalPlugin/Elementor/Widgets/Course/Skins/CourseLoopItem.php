@@ -29,6 +29,12 @@ class CourseLoopItem extends SkinBase {
 		$this->register_loop_item();
 	}
 
+	public function register_style_sections( Widget_Base $widget, $args ) {
+		parent::register_style_sections( $widget, $args );
+
+		$this->register_style_pagination();
+	}
+
 	public function register_loop_item() {
 		$this->add_control(
 			'template_id',

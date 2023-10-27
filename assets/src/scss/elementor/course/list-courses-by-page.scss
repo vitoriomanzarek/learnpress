@@ -84,6 +84,8 @@
 
 // New Elementor List Courses by Page.
 .learnpress-el-list-course {
+	border: 0 solid #eee;
+
 	&__thumbnail {
 		margin-bottom: 20px;
 
@@ -148,7 +150,13 @@
 	&__inner{
 		display: grid;
 		grid-template-columns: repeat(var(--lp-el-list-courses-grid-columns, 3), 1fr);
-		grid-gap: 30px;
+		column-gap: var(--lp-el-list-courses-grid-column-gap, 30px);
+		row-gap: var(--lp-el-list-courses-grid-row-gap, 30px);
+	}
+
+	&__pagination {
+		display: flex;
+		gap: 10px;
 	}
 
 	&__load-more{

@@ -31,4 +31,13 @@ class CourseGrid extends SkinBase {
 		$this->register_meta_data_controls();
 		$this->register_read_more();
 	}
+
+	public function register_style_sections( Widget_Base $widget, $args ) {
+		parent::register_style_sections( $widget, $args );
+
+		$this->register_style_item();
+		$this->register_style_image();
+		$this->register_style_content();
+		$this->register_style_pagination();
+	}
 }

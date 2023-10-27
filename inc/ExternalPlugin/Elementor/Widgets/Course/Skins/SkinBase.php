@@ -5,12 +5,15 @@ use Elementor\Skin_Base as Elementor_Skin_Base;
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Utils;
+use Elementor\Group_Control_Typography;
+use Elementor\Group_Control_Border;
 use LearnPress\TemplateHooks\Instructor\SingleInstructorTemplate;
 
 abstract class SkinBase extends Elementor_Skin_Base {
 
 	protected function _register_controls_actions() {
 		add_action( 'elementor/element/learnpress_list_courses_by_page/section_options/before_section_end', array( $this, 'register_controls' ), 10, 2 );
+		add_action( 'elementor/element/learnpress_list_courses_by_page/section_query/after_section_end', array( $this, 'register_style_sections' ), 10, 2 );
 	}
 
 	public function get_container_class() {
@@ -21,6 +24,12 @@ abstract class SkinBase extends Elementor_Skin_Base {
 		$this->parent = $widget;
 
 		$this->register_control_collumn();
+	}
+
+	public function register_style_sections( Widget_Base $widget, $args ) {
+		$this->parent = $widget;
+
+		$this->register_style_layout();
 	}
 
 	protected function register_control_collumn() {
@@ -248,6 +257,791 @@ abstract class SkinBase extends Elementor_Skin_Base {
 				'separator'   => 'before',
 			)
 		);
+
+		$this->add_responsive_control(
+			'meta_gap',
+			array(
+				'label'      => esc_html__( 'Gap', 'learnpress' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', 'em', 'rem', 'custom' ),
+				'range'      => array(
+					'px' => array(
+						'max' => 100,
+					),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}} .learnpress-el-list-course__meta' => 'gap: {{SIZE}}{{UNIT}};',
+				),
+				'condition'  => array(
+					$this->get_control_id( 'meta_data!' ) => array(),
+				),
+			)
+		);
+	}
+
+	protected function register_style_layout() {
+		$this->start_controls_section(
+			'section_design_layout',
+			array(
+				'label' => esc_html__( 'Layout', 'learnpress' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+			)
+		);
+
+		$this->add_responsive_control(
+			'column_gap',
+			array(
+				'label'      => esc_html__( 'Columns Gap', 'learnpress' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', 'em', 'rem', 'custom' ),
+				'default'    => array(
+					'size' => 30,
+				),
+				'range'      => array(
+					'px' => array(
+						'min' => 0,
+						'max' => 100,
+					),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--lp-el-list-courses-grid-column-gap: {{SIZE}}{{UNIT}}',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'row_gap',
+			array(
+				'label'              => esc_html__( 'Rows Gap', 'learnpress' ),
+				'type'               => Controls_Manager::SLIDER,
+				'size_units'         => array( 'px', 'em', 'rem', 'custom' ),
+				'default'            => array(
+					'size' => 35,
+				),
+				'range'              => array(
+					'px' => array(
+						'min' => 0,
+						'max' => 100,
+					),
+				),
+				'frontend_available' => true,
+				'selectors'          => array(
+					'{{WRAPPER}}' => '--lp-el-list-courses-grid-row-gap: {{SIZE}}{{UNIT}}',
+				),
+			)
+		);
+
+		$this->end_controls_section();
+	}
+
+	protected function register_style_item() {
+		$this->start_controls_section(
+			'section_item_layout',
+			array(
+				'label' => esc_html__( 'Item', 'learnpress' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+			)
+		);
+
+		$this->add_control(
+			'item_bg_color',
+			array(
+				'label'     => esc_html__( 'Background Color', 'learnpress' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .learnpress-el-list-course' => 'background-color: {{VALUE}}',
+				),
+			)
+		);
+
+		$this->add_control(
+			'item_border_width',
+			array(
+				'label'      => esc_html__( 'Border Width', 'learnpress' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', '%', 'em', 'rem', 'vw', 'custom' ),
+				'range'      => array(
+					'px' => array(
+						'max' => 20,
+					),
+					'em' => array(
+						'max' => 2,
+					),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}} .learnpress-el-list-course' => 'border-width: {{SIZE}}{{UNIT}}',
+				),
+			)
+		);
+
+		$this->add_control(
+			'item_border_color',
+			array(
+				'label'     => esc_html__( 'Border Color', 'learnpress' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .learnpress-el-list-course' => 'border-color: {{VALUE}}',
+				),
+			)
+		);
+
+		$this->add_control(
+			'item_border_radius',
+			array(
+				'label'      => esc_html__( 'Border Radius', 'learnpress' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', '%', 'em', 'rem', 'custom' ),
+				'range'      => array(
+					'px' => array(
+						'min' => 0,
+						'max' => 200,
+					),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}} .learnpress-el-list-course' => 'border-radius: {{SIZE}}{{UNIT}}',
+				),
+			)
+		);
+
+		$this->end_controls_section();
+	}
+
+	protected function register_style_image() {
+		$this->start_controls_section(
+			'section_design_image',
+			array(
+				'label' => esc_html__( 'Image', 'learnpress' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+			)
+		);
+
+		$this->add_responsive_control(
+			'img_border_radius',
+			array(
+				'label'      => esc_html__( 'Border Radius', 'learnpress' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => array( 'px', '%', 'em', 'rem', 'custom' ),
+				'selectors'  => array(
+					'{{WRAPPER}} .learnpress-el-list-course__thumbnail' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'image_spacing',
+			array(
+				'label'      => esc_html__( 'Spacing', 'learnpress' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', 'em', 'rem', 'custom' ),
+				'range'      => array(
+					'px' => array(
+						'max' => 100,
+					),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}} .learnpress-el-list-courses--skin-list .learnpress-el-list-course' => 'gap: {{SIZE}}{{UNIT}}',
+					'{{WRAPPER}} .learnpress-el-list-courses--skin-grid .learnpress-el-list-course__thumbnail' => 'margin-bottom: {{SIZE}}{{UNIT}}',
+				),
+				'default'    => array(
+					'size' => 20,
+				),
+			)
+		);
+
+		$this->end_controls_section();
+	}
+
+	protected function register_style_content() {
+		$this->start_controls_section(
+			'section_design_content',
+			array(
+				'label' => esc_html__( 'Content', 'learnpress' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+			)
+		);
+
+		$this->add_control(
+			'heading_title_style',
+			array(
+				'label'     => esc_html__( 'Title', 'learnpress' ),
+				'type'      => Controls_Manager::HEADING,
+				'condition' => array(
+					$this->get_control_id( 'show_title' ) => 'yes',
+				),
+			)
+		);
+
+		$this->add_control(
+			'title_color',
+			array(
+				'label'     => esc_html__( 'Color', 'learnpress' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .learnpress-el-list-course__title, {{WRAPPER}} .learnpress-el-list-course__title a' => 'color: {{VALUE}};',
+				),
+				'condition' => array(
+					$this->get_control_id( 'show_title' ) => 'yes',
+				),
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			array(
+				'name'      => 'title_typography',
+				'selector'  => '{{WRAPPER}} .learnpress-el-list-course__title, {{WRAPPER}} .learnpress-el-list-course__title a',
+				'condition' => array(
+					$this->get_control_id( 'show_title' ) => 'yes',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'title_spacing',
+			array(
+				'label'      => esc_html__( 'Spacing', 'learnpress' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', 'em', 'rem', 'custom' ),
+				'range'      => array(
+					'px' => array(
+						'max' => 100,
+					),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}} .learnpress-el-list-course__title' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+				),
+				'condition'  => array(
+					$this->get_control_id( 'show_title' ) => 'yes',
+				),
+			)
+		);
+
+		$this->add_control(
+			'heading_price_style',
+			array(
+				'label'     => esc_html__( 'Price', 'learnpress' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+				'condition' => array(
+					$this->get_control_id( 'show_price' ) => 'yes',
+				),
+			)
+		);
+
+		$this->add_control(
+			'price_color',
+			array(
+				'label'     => esc_html__( 'Color', 'learnpress' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .learnpress-el-list-course__price__inner, {{WRAPPER}} .learnpress-el-list-course__price__inner span' => 'color: {{VALUE}};',
+				),
+				'condition' => array(
+					$this->get_control_id( 'show_price' ) => 'yes',
+				),
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			array(
+				'name'      => 'price_typography',
+				'selector'  => '{{WRAPPER}} .learnpress-el-list-course__price__inner, {{WRAPPER}} .learnpress-el-list-course__price__inner span',
+				'condition' => array(
+					$this->get_control_id( 'show_price' ) => 'yes',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'price_spacing',
+			array(
+				'label'      => esc_html__( 'Spacing', 'learnpress' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', 'em', 'rem', 'custom' ),
+				'range'      => array(
+					'px' => array(
+						'max' => 100,
+					),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}} .learnpress-el-list-course__price__inner' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+				),
+				'condition'  => array(
+					$this->get_control_id( 'show_price' ) => 'yes',
+				),
+			)
+		);
+
+		$this->add_control(
+			'heading_meta_style',
+			array(
+				'label'     => esc_html__( 'Meta', 'learnpress' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+				'condition' => array(
+					$this->get_control_id( 'meta_data!' ) => array(),
+				),
+			)
+		);
+
+		$this->add_control(
+			'meta_color',
+			array(
+				'label'     => esc_html__( 'Color', 'learnpress' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .learnpress-el-list-course__meta' => 'color: {{VALUE}};',
+				),
+				'condition' => array(
+					$this->get_control_id( 'meta_data!' ) => array(),
+				),
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			array(
+				'name'      => 'meta_typography',
+				'selector'  => '{{WRAPPER}} .learnpress-el-list-course__meta',
+				'condition' => array(
+					$this->get_control_id( 'meta_data!' ) => array(),
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'meta_spacing',
+			array(
+				'label'      => esc_html__( 'Spacing', 'learnpress' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', 'em', 'rem', 'custom' ),
+				'range'      => array(
+					'px' => array(
+						'max' => 100,
+					),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}} .learnpress-el-list-course__meta' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+				),
+				'condition'  => array(
+					$this->get_control_id( 'meta_data!' ) => array(),
+				),
+			)
+		);
+
+		$this->add_control(
+			'heading_excerpt_style',
+			array(
+				'label'     => esc_html__( 'Excerpt', 'learnpress' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+				'condition' => array(
+					$this->get_control_id( 'show_excerpt' ) => 'yes',
+				),
+			)
+		);
+
+		$this->add_control(
+			'excerpt_color',
+			array(
+				'label'     => esc_html__( 'Color', 'learnpress' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .learnpress-el-list-course__excerpt' => 'color: {{VALUE}};',
+				),
+				'condition' => array(
+					$this->get_control_id( 'show_excerpt' ) => 'yes',
+				),
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			array(
+				'name'      => 'excerpt_typography',
+				'selector'  => '{{WRAPPER}} .learnpress-el-list-course__excerpt',
+				'condition' => array(
+					$this->get_control_id( 'show_excerpt' ) => 'yes',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'excerpt_spacing',
+			array(
+				'label'      => esc_html__( 'Spacing', 'learnpress' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', 'em', 'rem', 'custom' ),
+				'range'      => array(
+					'px' => array(
+						'max' => 100,
+					),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}} .learnpress-el-list-course__excerpt' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+				),
+				'condition'  => array(
+					$this->get_control_id( 'show_excerpt' ) => 'yes',
+				),
+			)
+		);
+
+		$this->add_control(
+			'heading_readmore_style',
+			array(
+				'label'     => esc_html__( 'Read More', 'learnpress' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+				'condition' => array(
+					$this->get_control_id( 'show_read_more' ) => 'yes',
+				),
+			)
+		);
+
+		$this->add_control(
+			'read_more_color',
+			array(
+				'label'     => esc_html__( 'Color', 'learnpress' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .learnpress-el-list-course__read-more a' => 'color: {{VALUE}};',
+				),
+				'condition' => array(
+					$this->get_control_id( 'show_read_more' ) => 'yes',
+				),
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			array(
+				'name'      => 'read_more_typography',
+				'selector'  => '{{WRAPPER}} .learnpress-el-list-course__read-more a',
+				'condition' => array(
+					$this->get_control_id( 'show_read_more' ) => 'yes',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'read_more_spacing',
+			array(
+				'label'      => esc_html__( 'Spacing', 'learnpress' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', 'em', 'rem', 'custom' ),
+				'range'      => array(
+					'px' => array(
+						'max' => 100,
+					),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}} .learnpress-el-list-course__read-more' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+				),
+				'condition'  => array(
+					$this->get_control_id( 'show_read_more' ) => 'yes',
+				),
+			)
+		);
+
+		$this->end_controls_section();
+	}
+
+	protected function register_style_pagination() {
+		$this->start_controls_section(
+			'section_design_pagination',
+			array(
+				'label'     => esc_html__( 'Pagination', 'learnpress' ),
+				'tab'       => Controls_Manager::TAB_STYLE,
+				'condition' => array(
+					'pagination_type!' => array(
+						'load_more_on_click',
+						'infinite_scroll',
+						'',
+					),
+				),
+			)
+		);
+
+		$this->add_control(
+			'pagination_align',
+			array(
+				'label'     => __( 'Alignment', 'learnpress' ),
+				'type'      => Controls_Manager::CHOOSE,
+				'options'   => array(
+					'flex-start' => array(
+						'title' => __( 'Left', 'learnpress' ),
+						'icon'  => 'eicon-text-align-left',
+					),
+					'center'     => array(
+						'title' => __( 'Center', 'learnpress' ),
+						'icon'  => 'eicon-text-align-center',
+					),
+					'flex-end'   => array(
+						'title' => __( 'Right', 'learnpress' ),
+						'icon'  => 'eicon-text-align-right',
+					),
+				),
+				'default'   => 'center',
+				'selectors' => array(
+					'{{WRAPPER}} .learnpress-el-list-courses__pagination' => 'justify-content: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'pagination_gap',
+			array(
+				'label'      => esc_html__( 'Gap', 'learnpress' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', 'em', '%' ),
+				'selectors'  => array(
+					'{{WRAPPER}} .learnpress-el-list-courses__pagination' => 'gap: {{SIZE}}{{UNIT}};',
+				),
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			array(
+				'name'     => 'pagination_typography',
+				'selector' => '{{WRAPPER}} .learnpress-el-list-courses__pagination',
+				'exclude'  => array( 'letter_spacing', 'font_style', 'text_decoration', 'line_height', 'text_transform', 'word_spacing' ),
+			)
+		);
+
+		$this->add_responsive_control(
+			'pagination_margin',
+			array(
+				'label'      => esc_html__( 'Margin', 'learnpress' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => array( 'px', 'em', '%' ),
+				'selectors'  => array(
+					'{{WRAPPER}} .learnpress-el-list-courses__pagination' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				),
+			)
+		);
+
+		$this->end_controls_section();
+
+		$this->start_controls_section(
+			'section_pagination_loadmore_style',
+			array(
+				'label'     => esc_html__( 'Load More & Infinite', 'learnpress' ),
+				'tab'       => Controls_Manager::TAB_STYLE,
+				'condition' => array(
+					'pagination_type' => array(
+						'load_more_on_click',
+						'infinite_scroll',
+					),
+				),
+			)
+		);
+
+		$this->add_control(
+			'heading_load_more_style_button',
+			array(
+				'label'     => esc_html__( 'Button Load More', 'learnpress' ),
+				'type'      => Controls_Manager::HEADING,
+				'condition' => array(
+					'pagination_type' => 'load_more_on_click',
+				),
+			)
+		);
+
+		$this->add_control(
+			'pagination_loadmore_align',
+			array(
+				'label'     => __( 'Alignment', 'learnpress' ),
+				'type'      => Controls_Manager::CHOOSE,
+				'options'   => array(
+					'flex-start' => array(
+						'title' => __( 'Left', 'learnpress' ),
+						'icon'  => 'eicon-text-align-left',
+					),
+					'center'     => array(
+						'title' => __( 'Center', 'learnpress' ),
+						'icon'  => 'eicon-text-align-center',
+					),
+					'flex-end'   => array(
+						'title' => __( 'Right', 'learnpress' ),
+						'icon'  => 'eicon-text-align-right',
+					),
+				),
+				'default'   => 'center',
+				'selectors' => array(
+					'{{WRAPPER}} .learnpress-el-list-courses__load-more__inner' => 'justify-content: {{VALUE}};',
+				),
+				'condition' => array(
+					'pagination_type' => 'load_more_on_click',
+				),
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			array(
+				'name'      => 'heading_load_more_style_typography',
+				'selector'  => '{{WRAPPER}} .learnpress-el-list-courses__load-more__button',
+				'condition' => array(
+					'pagination_type' => 'load_more_on_click',
+				),
+			)
+		);
+
+		$this->start_controls_tabs(
+			'load_more_tabs_button_style',
+			array(
+				'condition' => array(
+					'pagination_type' => 'load_more_on_click',
+				),
+			)
+		);
+
+		$this->start_controls_tab(
+			'load_more_tab_button_normal',
+			array(
+				'label'     => esc_html__( 'Normal', 'learnpress' ),
+				'condition' => array(
+					'pagination_type' => 'load_more_on_click',
+				),
+			)
+		);
+
+		$this->add_control(
+			'load_more_button_text_color',
+			array(
+				'label'     => esc_html__( 'Text Color', 'learnpress' ),
+				'type'      => Controls_Manager::COLOR,
+				'default'   => '',
+				'selectors' => array(
+					'{{WRAPPER}} .learnpress-el-list-courses__load-more__button a' => 'color: {{VALUE}};',
+				),
+				'condition' => array(
+					'pagination_type' => 'load_more_on_click',
+				),
+			)
+		);
+
+		$this->add_control(
+			'load_more_button_bg_color',
+			array(
+				'label'     => esc_html__( 'Background Color', 'learnpress' ),
+				'type'      => Controls_Manager::COLOR,
+				'default'   => '',
+				'selectors' => array(
+					'{{WRAPPER}} .learnpress-el-list-courses__load-more__button a' => 'background-color: {{VALUE}};',
+				),
+				'condition' => array(
+					'pagination_type' => 'load_more_on_click',
+				),
+			)
+		);
+
+		$this->end_controls_tab();
+
+		$this->start_controls_tab(
+			'load_more_tab_button_hover',
+			array(
+				'label'     => esc_html__( 'Hover', 'learnpress' ),
+				'condition' => array(
+					'pagination_type' => 'load_more_on_click',
+				),
+			)
+		);
+
+		$this->add_control(
+			'load_more_hover_color',
+			array(
+				'label'     => esc_html__( 'Text Color', 'learnpress' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .learnpress-el-list-courses__load-more__button a:hover, {{WRAPPER}} .learnpress-el-list-courses__load-more__button a:focus' => 'color: {{VALUE}};',
+				),
+				'condition' => array(
+					'pagination_type' => 'load_more_on_click',
+				),
+			)
+		);
+
+		$this->add_control(
+			'load_more_bg_hover_color',
+			array(
+				'label'     => esc_html__( 'Background Color', 'learnpress' ),
+				'type'      => Controls_Manager::COLOR,
+				'default'   => '',
+				'selectors' => array(
+					'{{WRAPPER}} .learnpress-el-list-courses__load-more__button a:hover, {{WRAPPER}} .learnpress-el-list-courses__load-more__button a:focus' => 'background-color: {{VALUE}};',
+				),
+				'condition' => array(
+					'pagination_type' => 'load_more_on_click',
+				),
+			)
+		);
+
+		$this->end_controls_tab();
+
+		$this->end_controls_tabs();
+
+		$this->add_group_control(
+			Group_Control_Border::get_type(),
+			array(
+				'name'      => 'load_more_border',
+				'selector'  => '{{WRAPPER}} .learnpress-el-list-courses__load-more__button a',
+				'separator' => 'before',
+				'condition' => array(
+					'pagination_type' => 'load_more_on_click',
+				),
+			)
+		);
+
+		$this->add_control(
+			'load_more_border_radius',
+			array(
+				'label'      => esc_html__( 'Border Radius', 'learnpress' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => array( 'px', '%', 'em', 'rem', 'custom' ),
+				'selectors'  => array(
+					'{{WRAPPER}} .learnpress-el-list-courses__load-more__button a' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				),
+				'condition'  => array(
+					'pagination_type' => 'load_more_on_click',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'load_more_text_padding',
+			array(
+				'label'      => esc_html__( 'Padding', 'learnpress' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => array( 'px', '%', 'em', 'rem', 'vw', 'custom' ),
+				'selectors'  => array(
+					'{{WRAPPER}} .learnpress-el-list-courses__load-more__button a' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				),
+				'separator'  => 'before',
+				'condition'  => array(
+					'pagination_type' => 'load_more_on_click',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'load_more_margin',
+			array(
+				'label'      => esc_html__( 'Margin', 'learnpress' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => array( 'px', '%', 'em', 'rem', 'vw', 'custom' ),
+				'selectors'  => array(
+					'{{WRAPPER}} .learnpress-el-list-courses__load-more' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				),
+				'condition'  => array(
+					'pagination_type' => 'load_more_on_click',
+				),
+			)
+		);
+
+		$this->end_controls_section();
 	}
 
 	public function render() {
