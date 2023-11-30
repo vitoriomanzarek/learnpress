@@ -314,8 +314,8 @@ class ListCoursesByPageElementor extends LPElementorWidgetBase {
 			if ( learn_press_is_course_category() || learn_press_is_course_tag() ) {
 				$queried_object = get_queried_object();
 
-				$param['term_id']  = $cat->term_id;
-				$param['taxonomy'] = $cat->taxonomy;
+				$param['term_id']  = $queried_object->term_id;
+				$param['taxonomy'] = $queried_object->taxonomy;
 			}
 		}
 
