@@ -15,6 +15,7 @@ use LearnPress\ExternalPlugin\Elementor\Widgets\Course\Dynamic\CourseDurationDyn
 use LearnPress\ExternalPlugin\Elementor\Widgets\Course\Dynamic\CourseLevelDynamicElementor;
 use LearnPress\ExternalPlugin\Elementor\Widgets\Course\ListCoursesByPageElementor;
 use LearnPress\ExternalPlugin\Elementor\Widgets\Course\Sections\CoursePriceElementor;
+use LearnPress\ExternalPlugin\Elementor\Widgets\Course\FilterCourseElementor;
 use LearnPress\ExternalPlugin\Elementor\Widgets\CourseListElementor;
 use LearnPress\ExternalPlugin\Elementor\Widgets\Instructor\Sections\InstructorButtonViewElementor;
 use LearnPress\ExternalPlugin\Elementor\Widgets\Instructor\Sections\InstructorDescriptionElementor;
@@ -25,6 +26,8 @@ use LearnPress\ExternalPlugin\Elementor\Widgets\Instructor\Sections\InstructorCo
 use LearnPress\ExternalPlugin\Elementor\Widgets\Instructor\ListInstructorsElementor;
 use LearnPress\ExternalPlugin\Elementor\Widgets\LoginUserFormElementor;
 use LearnPress\ExternalPlugin\Elementor\Widgets\RegisterUserFormElementor;
+use LearnPress\ExternalPlugin\Elementor\Widgets\Course\Dynamic\CountCoursesFreeDynamicElementor;
+use LearnPress\ExternalPlugin\Elementor\Widgets\Course\Dynamic\CountStudentDynamicElementor;
 
 return [
 	'widgets' => apply_filters(
@@ -45,6 +48,7 @@ return [
 			'list-courses-by-page'      => ListCoursesByPageElementor::class,
 			// Single Course
 			'course-price'              => CoursePriceElementor::class,
+			'filter-course'				=> FilterCourseElementor::class
 		]
 	),
 	'dynamic' => apply_filters(
@@ -58,6 +62,8 @@ return [
 			'course-author-name'    => CourseAuthorNameElementor::class,
 			'course-author-avatar'  => CourseAuthorAvatarElementor::class,
 			'course-author-url'     => CourseAuthorUrlElementor::class,
+			'count-student-courses' => CountStudentDynamicElementor::class,
+			'course-courses-free'   => CountCoursesFreeDynamicElementor::class,
 		]
 	),
 ];

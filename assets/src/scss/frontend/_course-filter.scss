@@ -11,10 +11,7 @@
 	padding-bottom: 12px;
 	.lp-form-course-filter{
 		&__title{
-			font-size: 1.125em;
 			font-weight: 500;
-			margin-bottom: 12px;
-			text-transform: capitalize;
 		}
 		&__content{
 			position: relative;
@@ -34,6 +31,9 @@
 				input{
 					&:focus{
 						outline: none;
+					}
+					&[disabled] {
+						cursor: not-allowed;
 					}
 				}
 				label{

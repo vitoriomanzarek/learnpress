@@ -77,6 +77,7 @@ class LP_Course_DB extends LP_Database {
 		// Check accept call from function 'get_sections_and_items_course_from_db_and_sort'
 		if ( 'get_sections_and_items_course_from_db_and_sort' !== $method_called_to ) {
 			error_log( 'You can not call direct this function' );
+
 			return [];
 		}
 
@@ -113,6 +114,7 @@ class LP_Course_DB extends LP_Database {
 		// Check accept call from function 'get_sections_and_items_course_from_db_and_sort'
 		if ( 'get_sections_and_items_course_from_db_and_sort' !== $method_called_to ) {
 			error_log( 'You can not call direct this function' );
+
 			return [];
 		}
 
@@ -203,7 +205,7 @@ class LP_Course_DB extends LP_Database {
 		return $first_item_id;
 	}
 
-	public function get_recent_courses( LP_Course_Filter $filter ) : array {
+	public function get_recent_courses( LP_Course_Filter $filter ): array {
 		global $wpdb;
 
 		$limit = $filter->limit ?? - 1;
@@ -231,10 +233,10 @@ class LP_Course_DB extends LP_Database {
 		return $wpdb->get_col( $query );
 	}
 
-	public function get_featured_courses( LP_Course_Filter $filter ) : array {
+	public function get_featured_courses( LP_Course_Filter $filter ): array {
 		global $wpdb;
 
-		$limit    = ! empty( $filter->limit ) ? $filter->limit : -1;
+		$limit    = ! empty( $filter->limit ) ? $filter->limit : - 1;
 		$order_by = ! empty( $filter->order_by ) ? $filter->order_by : 'post_date';
 		$order    = ! empty( $filter->order ) ? $filter->order : 'DESC';
 
@@ -359,10 +361,11 @@ class LP_Course_DB extends LP_Database {
 	 * Get total items of course
 	 *
 	 * @param int $course_id
-	 * @author tungnx
+	 *
+	 * @return null|object
 	 * @since 4.1.4.1
 	 * @version 1.0.0
-	 * @return null|object
+	 * @author tungnx
 	 */
 	public function get_total_items( int $course_id = 0 ) {
 		// Get cache
@@ -378,7 +381,7 @@ class LP_Course_DB extends LP_Database {
 			$query_count = $this->wpdb->prepare( 'SUM(s.section_course_id = %d) AS count_items,', $course_id );
 
 			foreach ( $item_types as $item_type ) {
-				$i++;
+				++$i;
 				if ( $i == $count_item_types ) {
 					$query_count .= $this->wpdb->prepare( 'SUM(s.section_course_id = %d AND si.item_type = %s) AS %s', $course_id, $item_type, $item_type );
 				} else {
@@ -488,40 +491,24 @@ class LP_Course_DB extends LP_Database {
 			$filter->where[]    = $this->wpdb->prepare( 'AND p.post_status IN (' . $post_status_format . ')', $filter->post_status );
 		}
 
-		// Has term ids and tag ids
-		if ( ! empty( $filter->term_ids ) && ! empty( $filter->tag_ids ) ) {
-			$term_ids_format = LP_Helper::db_format_array( $filter->term_ids, '%d' );
-			$tag_ids_format  = LP_Helper::db_format_array( $filter->tag_ids, '%d' );
-
+		// Term ids
+		if ( ! empty( $filter->term_ids ) ) {
 			$filter->join[] = "INNER JOIN $this->tb_term_relationships AS r_term ON p.ID = r_term.object_id";
+			$filter->join[] = "INNER JOIN $this->tb_term_taxonomy AS tx ON r_term.term_taxonomy_id = tx.term_taxonomy_id";
 
-			// Get all course ids by term ids
-			$filter_course_ids_by_term                      = new LP_Course_Filter();
-			$filter_course_ids_by_term->only_fields         = array( 'ID' );
-			$filter_course_ids_by_term->join[]              = "INNER JOIN $this->tb_term_relationships AS r_term ON p.ID = r_term.object_id";
-			$filter_course_ids_by_term->where[]             = $this->wpdb->prepare( 'AND r_term.term_taxonomy_id IN (' . $term_ids_format . ')', $filter->term_ids );
-			$filter_course_ids_by_term->return_string_query = true;
-			$course_ids_by_term                             = LP_Course_DB::getInstance()->get_courses( $filter_course_ids_by_term );
+			$term_ids_format = LP_Helper::db_format_array( $filter->term_ids, '%d' );
+			$filter->where[] = $this->wpdb->prepare( 'AND tx.term_id IN (' . $term_ids_format . ')', $filter->term_ids );
+			$filter->where[] = $this->wpdb->prepare( 'AND tx.taxonomy = %s', LP_COURSE_CATEGORY_TAX );
+		}
 
-			// Get all course ids by tag ids
-			$filter->where[] = $this->wpdb->prepare( 'AND r_term.term_taxonomy_id IN (' . $tag_ids_format . ')', $filter->tag_ids );
-			$filter->where[] = 'AND p.ID IN(' . $course_ids_by_term . ')';
-		} else {
-			// Term ids
-			if ( ! empty( $filter->term_ids ) ) {
-				$filter->join[] = "INNER JOIN $this->tb_term_relationships AS r_term ON p.ID = r_term.object_id";
+		// Tag ids
+		if ( ! empty( $filter->tag_ids ) ) {
+			$filter->join[] = "INNER JOIN $this->tb_term_relationships AS r_tag ON p.ID = r_tag.object_id";
+			$filter->join[] = "INNER JOIN $this->tb_term_taxonomy AS tag ON r_tag.term_taxonomy_id = tag.term_taxonomy_id";
 
-				$term_ids_format = LP_Helper::db_format_array( $filter->term_ids, '%d' );
-				$filter->where[] = $this->wpdb->prepare( 'AND r_term.term_taxonomy_id IN (' . $term_ids_format . ')', $filter->term_ids );
-			}
-
-			// Tag ids
-			if ( ! empty( $filter->tag_ids ) ) {
-				$filter->join[] = "INNER JOIN $this->tb_term_relationships AS r_term ON p.ID = r_term.object_id";
-
-				$tag_ids_format  = LP_Helper::db_format_array( $filter->tag_ids, '%d' );
-				$filter->where[] = $this->wpdb->prepare( 'AND r_term.term_taxonomy_id IN (' . $tag_ids_format . ')', $filter->tag_ids );
-			}
+			$tag_ids_format  = LP_Helper::db_format_array( $filter->tag_ids, '%d' );
+			$filter->where[] = $this->wpdb->prepare( 'AND tag.term_id IN (' . $tag_ids_format . ')', $filter->tag_ids );
+			$filter->where[] = $this->wpdb->prepare( 'AND tag.taxonomy = %s', LP_COURSE_TAXONOMY_TAG );
 		}
 
 		// Level
@@ -573,7 +560,7 @@ class LP_Course_DB extends LP_Database {
 	 * @author tungnx
 	 * @version 1.0.0
 	 */
-	public function get_courses_order_by_price( LP_Course_Filter $filter ): LP_Course_Filter {
+	public function get_courses_order_by_price( LP_Course_Filter &$filter ): LP_Course_Filter {
 		$filter->join[]   = "INNER JOIN $this->tb_postmeta AS pm ON p.ID = pm.post_id";
 		$filter->where[]  = $this->wpdb->prepare( 'AND pm.meta_key = %s', '_lp_price' );
 		$filter->order_by = 'CAST( pm.meta_value AS UNSIGNED )';
@@ -591,7 +578,7 @@ class LP_Course_DB extends LP_Database {
 	 * @author tungnx
 	 * @version 1.0.0
 	 */
-	public function get_courses_sort_by_sale( LP_Course_Filter $filter ): LP_Course_Filter {
+	public function get_courses_sort_by_sale( LP_Course_Filter &$filter ): LP_Course_Filter {
 		$filter->join[]  = "INNER JOIN $this->tb_postmeta AS pm ON p.ID = pm.post_id";
 		$filter->where[] = $this->wpdb->prepare( 'AND pm.meta_key = %s', '_lp_course_is_sale' );
 
@@ -608,7 +595,7 @@ class LP_Course_DB extends LP_Database {
 	 * @version 1.0.0
 	 * @since 4.2.3.2
 	 */
-	public function get_courses_sort_by_free( LP_Course_Filter $filter ): LP_Course_Filter {
+	public function get_courses_sort_by_free( LP_Course_Filter &$filter ): LP_Course_Filter {
 		$filter_course_price                      = new LP_Course_Filter();
 		$filter_course_price->only_fields         = [ 'DISTINCT(ID)' ];
 		$filter_course_price                      = $this->get_courses_sort_by_paid( $filter_course_price );
@@ -647,7 +634,7 @@ class LP_Course_DB extends LP_Database {
 	 * @version 1.0.0
 	 * @since 4.1.5
 	 */
-	public function get_courses_sort_by_feature( LP_Course_Filter $filter ): LP_Course_Filter {
+	public function get_courses_sort_by_feature( LP_Course_Filter &$filter ): LP_Course_Filter {
 		$filter->join[]  = "INNER JOIN $this->tb_postmeta AS pm ON p.ID = pm.post_id";
 		$filter->where[] = $this->wpdb->prepare( 'AND pm.meta_key = %s', '_lp_featured' );
 		$filter->where[] = $this->wpdb->prepare( 'AND pm.meta_value = %s', 'yes' );
@@ -656,8 +643,34 @@ class LP_Course_DB extends LP_Database {
 	}
 
 	/**
+	 * Count total courses free on category
+	 *
+	 * @param LP_Course_Filter $filter
+	 *
+	 * @return int
+	 * @since 4.2.5.4
+	 * @version 1.0.0
+	 */
+	public function count_course_free( LP_Course_Filter $filter ): int {
+		$count = 0;
+
+		try {
+			$filter->only_fields = [ 'COUNT( DISTINCT(ID) )' ];
+			$this->get_courses_sort_by_free( $filter );
+			$filter->return_string_query = true;
+			$query_count                 = LP_Course::get_courses( $filter, $count );
+			$count                       = $this->wpdb->get_var( $query_count );
+		} catch ( Throwable $e ) {
+			error_log( __METHOD__ . ': ' . $e->getMessage() );
+		}
+
+		return $count;
+	}
+
+	/**
 	 * Get list courses is on popular
 	 * Use "UNION" to merge 2 query
+	 *
 	 * @param LP_Course_Filter $filter
 	 *
 	 * @return  LP_Course_Filter

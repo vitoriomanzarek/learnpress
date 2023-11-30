@@ -1,9 +1,9 @@
-import API from './api';
-import { lpAddQueryArgs, lpFetchAPI, lpGetCurrentURLNoParam } from '../utils/utils';
+import API from '../api';
+import { lpAddQueryArgs, lpFetchAPI, lpGetCurrentURLNoParam } from '../utils';
 import Cookies from '../utils/cookies';
 
-if ( 'undefined' === typeof lpGlobalSettings ) {
-	console.log( 'lpGlobalSettings is undefined' );
+if ( 'undefined' === typeof lpData || 'undefined' === typeof lpSettingCourses ) {
+	console.log( 'lpData || lpSettingCourses is undefined' );
 }
 
 // Call API load courses.
@@ -48,24 +48,25 @@ window.lpCourseList = ( () => {
 	const classListCourse = 'learn-press-courses';
 	const classPaginationCourse = 'learn-press-pagination';
 	const classSkeletonArchiveCourse = 'lp-archive-course-skeleton';
-	const lpArchiveLoadAjax = lpGlobalSettings.lpArchiveLoadAjax || 0;
-	const lpArchiveNoLoadAjaxFirst = lpGlobalSettings.lpArchiveNoLoadAjaxFirst || 0;
-	const lpArchiveSkeletonParam = lpGlobalSettings.lpArchiveSkeleton || 0;
+	const classCoursesPageResult = 'courses-page-result';
+	const lpArchiveLoadAjax = parseInt( lpSettingCourses.lpArchiveLoadAjax || 0 );
+	const lpArchiveNoLoadAjaxFirst = parseInt( lpSettingCourses.lpArchiveNoLoadAjaxFirst ) === 1;
+	const lpArchiveSkeletonParam = lpData.urlParams || [];
 	const currentUrl = lpGetCurrentURLNoParam();
 	let filterCourses = {};
-	const typePagination = lpGlobalSettings.lpArchivePaginationType || 'number';
+	const typePagination = lpSettingCourses.lpArchivePaginationType || 'number';
 	let typeEventBeforeFetch;
 	let timeOutSearch;
 	let isLoadingInfinite = false;
 	const fetchAPI = ( args, callBack = {} ) => {
 		//console.log( 'Fetch API Courses' );
-		const url = lpAddQueryArgs( API.apiCourses, args );
+		const url = lpAddQueryArgs( API.frontend.apiCourses, args );
 		let paramsFetch = {};
 
-		if ( 0 !== lpGlobalSettings.user_id ) {
+		if ( 0 !== parseInt( lpData.user_id ) ) {
 			paramsFetch = {
 				headers: {
-					'X-WP-Nonce': lpGlobalSettings.nonce,
+					'X-WP-Nonce': lpData.nonce,
 				},
 			};
 		}
@@ -123,9 +124,10 @@ window.lpCourseList = ( () => {
 			}
 		},
 		clickNumberPage: ( e, target ) => {
-			if ( ! lpArchiveLoadAjax || lpGlobalSettings.noLoadCoursesJs ) {
+			if ( ! lpArchiveLoadAjax || parseInt( lpSettingCourses.noLoadCoursesJs ) ) {
 				return;
 			}
+
 			if ( target.classList.contains( 'page-numbers' ) ) {
 				const parentArchive = target.closest( `.${ classArchiveCourse }` );
 				if ( ! parentArchive ) {
@@ -276,6 +278,12 @@ window.lpCourseList = ( () => {
 					// Insert Pagination.
 					const pagination = res.data.pagination || '';
 					elListCourse.insertAdjacentHTML( 'afterend', pagination );
+
+					// Set showing results page.
+					const elCoursesPageResult = document.querySelector( `.${ classCoursesPageResult }` );
+					if ( elCoursesPageResult ) {
+						elCoursesPageResult.innerHTML = res.data.from_to || '';
+					}
 				},
 				error: ( error ) => {
 					elListCourse.innerHTML += `<div class="lp-ajax-message error" style="display:block">${ error.message || 'Error' }</div>`;
@@ -370,6 +378,12 @@ window.lpCourseList = ( () => {
 				success: ( res ) => {
 					elListCourse.insertAdjacentHTML( 'beforeend', res.data.content || '' );
 					elListCourse.insertAdjacentHTML( 'afterend', res.data.pagination || '' );
+
+					// Set showing results page.
+					const elCoursesPageResult = document.querySelector( `.${ classCoursesPageResult }` );
+					if ( elCoursesPageResult ) {
+						elCoursesPageResult.innerHTML = res.data.from_to || '';
+					}
 				},
 				error: ( error ) => {
 					elListCourse.innerHTML += `<div class="lp-ajax-message error" style="display:block">${ error.message || 'Error' }</div>`;
@@ -411,6 +425,12 @@ window.lpCourseList = ( () => {
 
 					if ( res.data.pagination ) {
 						elListCourse.insertAdjacentHTML( 'afterend', res.data.pagination || '' );
+					}
+
+					// Set showing results page.
+					const elCoursesPageResult = document.querySelector( `.${ classCoursesPageResult }` );
+					if ( elCoursesPageResult ) {
+						elCoursesPageResult.innerHTML = res.data.from_to || '';
 					}
 				},
 				error: ( error ) => {
@@ -469,7 +489,6 @@ window.lpCourseList = ( () => {
 		},
 		ajaxEnableLoadPage: () => { // For case enable AJAX when load page.
 			let countTime = 0;
-
 			if ( ! lpArchiveNoLoadAjaxFirst ) {
 				let detectedElArchive;
 				const callBack = {
@@ -494,6 +513,12 @@ window.lpCourseList = ( () => {
 
 								const pagination = res.data.pagination || '';
 								elListCourse.insertAdjacentHTML( 'afterend', pagination );
+
+								// Set showing results page.
+								const elCoursesPageResult = document.querySelector( `.${ classCoursesPageResult }` );
+								if ( elCoursesPageResult ) {
+									elCoursesPageResult.innerHTML = res.data.from_to || '';
+								}
 							}
 						}, 1 );
 					},

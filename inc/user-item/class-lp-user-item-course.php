@@ -316,6 +316,10 @@ class LP_User_Item_Course extends LP_User_Item {
 				return LP_User_Items_Result_DB::instance()->get_result( $this->get_user_item_id() );
 			}
 
+			if ( $this->get_status() !== LP_COURSE_ENROLLED ) {
+				return $results;
+			}
+
 			$count_items           = $course->count_items();
 			$count_items_completed = $this->count_items_completed();
 
@@ -376,7 +380,7 @@ class LP_User_Item_Course extends LP_User_Item {
 
 			LP_Cache::cache_load_first( 'set', $key_first_cache, $results );
 		} catch ( Throwable $e ) {
-
+			error_log( __METHOD__ . ': ' . $e->getMessage() );
 		}
 
 		return $results;

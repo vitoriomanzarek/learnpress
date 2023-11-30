@@ -3,9 +3,9 @@ Contributors: thimpress, tungnx89, nhamdv, hungkv, nguyenlammanh, tunnhn, phongl
 Donate link:
 Tags: elearning, education, course, lms, learning management system
 Requires at least: 6.2
-Tested up to: 6.3.2
+Tested up to: 6.4.1
 Requires PHP: 7.0
-Stable tag: 4.2.5.1
+Stable tag: 4.2.5.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -210,10 +210,41 @@ https://www.transifex.com/projects/p/learnpress/
 
 == Changelog ==
 
-= 4.2.5.3 (2023-10-26) =
+= 4.2.5.6 (2023-11-24) =
+~ Tweak: logic load Widget Filter Courses.
+~ Dev: assign/unassign course to user.
+~ Fixed: error still show price when user has bought course but not start course.
+~ Fixed: search suggest courses on Widget Filter Courses.
+~ Fixed: not call function calculate price when edit course with user is instructor.
+
+= 4.2.5.5 (2023-11-16) =
+~ Fixed: security issue.
+~ Added: new feature Statistic on the Backend.
+~ Fixed: minor bug material.
+~ Added: strategy defer/async for some script (WP 6.3 or higher will run).
+~ Fixed: label 'Free' not show on the single free course.
+~ Fixed: error sanitize key, make certificate can't save.
+
+= 4.2.5.4 (2023-11-07) =
+~ Fixed: security issue.
+~ Tweak: display Category for filter courses.
+~ Added: attribute disable if filter count = 0.
+~ Tweak: widgets.js use fetch instead of wp.apiFetch.
+~ Added: page tool clear cache.
+
+= 4.2.5.3 (2023-11-02) =
+~ Fixed: security issue.
+~ Tweak: only show 1 level categories right behind cate parent, on the widget "Course Filter".
+~ Added: method count students enrolled of course.
+~ Added: method count courses free.
+~ Added: cache for count.
+
+= 4.2.5.3 (2023-10-27) =
 ~ Fixed: security issue.
 ~ Fixed: miss hook start quiz, retake quiz.
 ~ Fixed: minor bug material.
+~ Fixed: error same course when access any single course.
+~ Fixed: error don't hide info price/free when user enrolled course.
 
 = 4.2.5.2 (2023-10-24) =
 ~ Fixed: security issue.

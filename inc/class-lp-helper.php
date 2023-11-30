@@ -93,6 +93,7 @@ class LP_Helper {
 	 * Load posts from database into cache by ids
 	 *
 	 * @param array|int $ids
+	 *
 	 * @Todo: tungnx - need to review code
 	 * @deprecated 4.1.6.9
 	 */
@@ -104,9 +105,9 @@ class LP_Helper {
 	 * Sort an array by a field.
 	 * Having some issue with default PHP usort function.
 	 *
-	 * @param array  $array .
+	 * @param array $array .
 	 * @param string $field .
-	 * @param int    $default .
+	 * @param int $default .
 	 */
 	public static function sort_by_priority( &$array, $field = 'priority', $default = 10 ) {
 		foreach ( $array as $k => $item ) {
@@ -315,7 +316,7 @@ class LP_Helper {
 	 * Wrap function ksort of PHP itself and support recursive.
 	 *
 	 * @param array $array
-	 * @param int   $sort_flags
+	 * @param int $sort_flags
 	 *
 	 * @return bool
 	 * @since 3.3.0
@@ -339,11 +340,13 @@ class LP_Helper {
 	 *
 	 * @param array|string $props
 	 * @param array|object $obj
-	 * @deprecated 4.2.5.3
+	 *
 	 * @return array|object
+	 * @deprecated 4.2.5.3
 	 */
 	public function pick( $props, $obj ) {
 		_deprecated_function( __METHOD__, '4.2.5.3' );
+
 		return [];
 		$is_array  = is_array( $obj );
 		$new_array = array();
@@ -430,9 +433,9 @@ class LP_Helper {
 	/**
 	 * Check request is rest api
 	 *
-	 * @since 4.1.6.6
-	 * @author tungnx
 	 * @return bool
+	 * @author tungnx
+	 * @since 4.1.6.6
 	 */
 	public static function isRestApiLP(): bool {
 		return strpos( self::getUrlCurrent(), '/wp-json/lp/' ) || strpos( self::getUrlCurrent(), '/wp-json/learnpress/' );
@@ -442,7 +445,7 @@ class LP_Helper {
 	 * Sanitize string and array
 	 *
 	 * @param array|string $value
-	 * @param string       $type_content
+	 * @param string $type_content
 	 *
 	 * @return array|string
 	 * @since  3.2.7.1
@@ -477,7 +480,8 @@ class LP_Helper {
 			}
 		} elseif ( is_array( $value ) ) {
 			foreach ( $value as $k => $v ) {
-				$value[ $k ] = self::sanitize_params_submitted( $v, $type_content );
+				unset( $value[ $k ] );
+				$value[ sanitize_text_field( $k ) ] = self::sanitize_params_submitted( $v, $type_content );
 			}
 		}
 
@@ -488,7 +492,7 @@ class LP_Helper {
 	 * Wrap function $wpdb->prepare(...) to support arguments as
 	 * array.
 	 *
-	 * @param string      $query
+	 * @param string $query
 	 * @param array|mixed $args
 	 *
 	 * @return string
@@ -499,6 +503,7 @@ class LP_Helper {
 	 */
 	public static function prepare( $query, $args ) {
 		_deprecated_function( __METHOD__, '4.2.5.3' );
+
 		return '';
 		global $wpdb;
 
@@ -572,13 +577,13 @@ class LP_Helper {
 	 * @param string $str
 	 * @param null $associative
 	 *
-	 * @since 4.1.6.4
-	 * @version 1.0.1
 	 * @return mixed
 	 * @throws Exception
+	 * @since 4.1.6.4
+	 * @version 1.0.1
 	 */
 	public static function json_decode( string $str, $associative = null ) {
-		$obj = json_decode( $str );
+		$obj = json_decode( $str, $associative );
 		if ( json_last_error() !== JSON_ERROR_NONE ) {
 			throw new Exception( json_last_error_msg() );
 		}
@@ -623,7 +628,7 @@ class LP_Helper {
 
 			if ( ! empty( $terms ) ) {
 				$terms = wp_list_sort( $terms, 'term_id' );
-				// order by ID
+				// order by IDF
 				$category_object = apply_filters(
 					'learn_press_course_post_type_link_course_category',
 					$terms[0],
@@ -651,5 +656,37 @@ class LP_Helper {
 		}
 
 		return str_replace( $find, $replace, $post_link );
+	}
+
+	/**
+	 * Print variable script inline script tag.
+	 * If $name_variable_script is empty,
+	 * the script will be print as json with set $tag_args['type'] = application/json.
+	 *
+	 * @param string $name_variable_script
+	 * @param array $data
+	 * @param array $tag_args as ['type' => 'text/javascript', 'id' => '']
+	 *
+	 * @return void
+	 * @version 1.0.1
+	 * @since 4.2.5.5
+	 */
+	public static function print_inline_script_tag( string $name_variable_script, array $data, array $tag_args = [] ) {
+		foreach ( $data as $key => $value ) {
+			if ( ! is_scalar( $value ) ) {
+				continue;
+			}
+
+			$data[ $key ] = html_entity_decode( (string) $value, ENT_QUOTES, 'UTF-8' );
+		}
+
+		$data_json = wp_json_encode( $data );
+		$script    = '';
+		if ( ! empty( $name_variable_script ) ) {
+			$script = "var {$name_variable_script} = {$data_json};";
+		} elseif ( isset( $tag_args['type'] ) && $tag_args['type'] === 'application/json' ) {
+			$script = $data_json;
+		}
+		wp_print_inline_script_tag( $script, $tag_args );
 	}
 }
